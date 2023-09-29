@@ -1,4 +1,4 @@
-# Projektantrag: vegastro
+# Projektantrag: Maturaball Manager
 ## Inhalt
 - [Team](#team)
 - [Projektauftraggeber](#projektauftraggeber)
