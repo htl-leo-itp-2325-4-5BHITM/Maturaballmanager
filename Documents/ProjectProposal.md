@@ -45,7 +45,7 @@ Die Maturaball Manager- Website und App sind da, um bei der Organisation vom Mat
 unserer Plattform können nicht nur die Mitglieder des Ballkomitess, sondern auch alle, die Tickets für den
 Maturaball erwerben möchten, Unterstützung finden. 
 
-Wenn man Teil des Ballkomitess ist und keine Erfahrung in der Planung hat, braucht man sich keine Sorgen zu
+Wenn man Teil des Ballkomitees ist und keine Erfahrung in der Planung hat, braucht man sich keine Sorgen zu
 machen. Unsere Plattform bietet eine Schritt-für-Schritt-Anleitung und eine praktische Checkliste, die
 dabei hilft, alles genau zu planen.
 
