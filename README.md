@@ -1,16 +1,15 @@
 # Maturaball-Manager
-___
 
 Eine Plattform zur Unterstützung bei der Planung und Durchführung von Maturabällen sowie zum Online-Ticketverkauf.
 
-##Team
+## Team
 
 Ana Paripovic
 Tommy Neumaier
 Tuana Sevik
 Oliver Schatzberger
 
-##Funktionen
+## Funktionen
 
 * Online-Ticketverkauf
 
@@ -21,13 +20,11 @@ Verwendung von Scrum
 Tools: GitHub, Clockify und E-Mail
 Deadline: März 2025
 
-##Ziele
+## Ziele
 
 Effizienter Ticketverkauf
 Benutzerfreundlichkeit und Zugänglichkeit für alle
 
-##Abschluss
+## Abschluss
 
 Ein funktionsfähiges Maturaballverkaufs- und Verwaltungssystem, gemessen an Nutzerfeedback und Verkaufszahlen.
-
-#
