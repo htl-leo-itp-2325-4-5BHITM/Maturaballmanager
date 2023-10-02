@@ -1,21 +1,23 @@
 # Projektantrag: Maturaball-Manager
 ## Inhalt
-- [Team](#team)
-- [Projektauftraggeber](#projektauftraggeber)
-- [Projektbezeichnung](#projektbezeichnung)
-- [Ausgangssituation](#ausgangssituation)
-	- [Problemstellung](#problemstellung)
-	- [Lösung](#lösung)
-- [Generelle Richtlinien](#richtlinien)
-- [Projektphasen / Meilensteine](#meilensteine)
-- [Projektziele](#projektziele)
-  - [Ziele](#ziele)
-	- [Nicht-Ziele](#nichtZiele)
-	- [Nice-to-have](#nice)
-- [Stakeholder](#stakeholder)
-- [Projektendergebnis](#projektendergebnis)
-  - [Welches Ergebnis soll am Projektende vorliegen?](#ergebnis)
-  - [Messbare Eigenschaften](#messbar)
+- [Projektantrag: Maturaball-Manager](#projektantrag-maturaball-manager)
+	- [Inhalt](#inhalt)
+	- [Team](#team)
+	- [Projektauftraggeber](#projektauftraggeber)
+	- [Projektbezeichnung](#projektbezeichnung)
+	- [Ausgangssituation](#ausgangssituation)
+		- [Problemstellung](#problemstellung)
+		- [Lösung](#lösung)
+	- [Generelle Richtlinien](#generelle-richtlinien)
+	- [Projektphasen / Meilensteine](#projektphasen--meilensteine)
+	- [Projektziele](#projektziele)
+		- [Ziele](#ziele)
+		- [Nicht-Ziele](#nicht-ziele)
+		- [Nice-to-have](#nice-to-have)
+	- [Stakeholder](#stakeholder)
+	- [Projektendergebnis](#projektendergebnis)
+		- [Welches Ergebnis soll am Projektende vorliegen?](#welches-ergebnis-soll-am-projektende-vorliegen)
+		- [Welche messbaren Eigenschaften hat das Endergebnis, damit von einem Projekterfolg gesprochen werden kann?](#welche-messbaren-eigenschaften-hat-das-endergebnis-damit-von-einem-projekterfolg-gesprochen-werden-kann)
 ## Team
 - Ana Paripovic
 - Tommy Neumaier
@@ -48,7 +50,7 @@ machen. Unsere Plattform bietet eine Schritt-für-Schritt-Anleitung und eine pra
 dabei hilft, alles genau zu planen.
 
 Und für diejenigen, die Tickets für den Maturaball kaufen möchten, wollen wir es so einfach wie möglich gestalten.
-Wir wollen einen Erwerb der Karten bequem von zu Hause aus ermöglichen.
+Wir wollen einen Erwerb der Karten bequem, von zu Hause aus, ermöglichen.
 
 <a id="richtlinien"></a>
 ## Generelle Richtlinien
