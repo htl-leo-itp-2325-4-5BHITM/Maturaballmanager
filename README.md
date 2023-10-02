@@ -4,26 +4,26 @@ Eine Plattform zur Unterst체tzung bei der Planung und Durchf체hrung von Maturab�
 
 ## Team
 
-Ana Paripovic
-Tommy Neumaier
-Tuana Sevik
-Oliver Schatzberger
+* Ana Paripovic
+* Tommy Neumaier
+* Tuana Sevik
+* Oliver Schatzberger
 
 ## Funktionen
 
 * Online-Ticketverkauf
-
 * Planungsanleitung und Checklisten f체r das Ballkomitee
-##Richtlinien
+  
+## Richtlinien
 
-Verwendung von Scrum
-Tools: GitHub, Clockify und E-Mail
-Deadline: M채rz 2025
+* Verwendung von Scrum als Projektmanagementmethode
+* Tools: GitHub, Clockify und E-Mail
+* Deadline: M채rz 2025
 
 ## Ziele
 
-Effizienter Ticketverkauf
-Benutzerfreundlichkeit und Zug채nglichkeit f체r alle
+* Effizienter Ticketverkauf
+* Benutzerfreundlichkeit und Zug채nglichkeit f체r alle
 
 ## Abschluss
 
