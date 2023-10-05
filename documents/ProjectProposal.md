@@ -65,13 +65,13 @@ Wir wollen einen Erwerb der Karten bequem, von zu Hause aus, ermöglichen.
 | Phase | Meilenstein / Ergebnis | Soll - Termin | Ist - Termin |
 | ----- | ---------------------- | ------------- | ------------ |
 | 1 | Der Projektstart ist erfolgt | 29.09.23 | 29.09.23 |
-| 2 | Das Backend wurde konzipiert  | / | / | 
-| 3 | Ein Click-Dummy des GUIs wurde erstellt | / | / |
-| 4 | Das Design des Werbe- und Infoplakats wurde graphisch umgesetzt | / | / |
-| 5 | Das Werbevideo wurde fertiggestellt | / | / |
-| 6 | Die Backend-Software wurde mitsamt Datenbankzugriffen entwickelt | / | / |
-| 7 | Die Benutzeroberfläche wurde fertig umgesetzt | / | / | 
-| 8 | Es wurden sämtliche Erweiterungen und Bugfixes abgeschlossen| / | / | 
+| 2 | Das Backend wurde konzipiert  | 04.12.23 | / | 
+| 3 | Ein Click-Dummy des GUIs wurde erstellt | 25.10.23 | / |
+| 4 | Das Design des Werbe- und Infoplakats wurde graphisch umgesetzt | 21.12.23 | / |
+| 5 | Das Werbevideo wurde fertiggestellt | 08.03.23 | / |
+| 6 | Die Backend-Software wurde mitsamt Datenbankzugriffen entwickelt | 17.04.23 | / |
+| 7 | Die Benutzeroberfläche wurde fertig umgesetzt | 03.05.23 | / | 
+| 8 | Es wurden sämtliche Erweiterungen und Bugfixes abgeschlossen| 31.05.23 | / | 
 | 9 | Das Projekt wurde präsentiert und somit ordnungsgemäß beendet | März 2025 | / |
 
 ## Projektziele
