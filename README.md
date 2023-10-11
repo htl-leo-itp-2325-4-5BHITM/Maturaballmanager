@@ -18,7 +18,7 @@ Eine Plattform zur Unterstützung bei der Planung und Durchführung von Maturab�
 
 * Verwendung von Scrum als Projektmanagementmethode
 * Tools: GitHub, Clockify und E-Mail
-* Deadline: März 2025
+* Deadline: Juni 2024
 
 ## Ziele
 
