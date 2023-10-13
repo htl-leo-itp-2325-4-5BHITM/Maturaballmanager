@@ -27,5 +27,6 @@
 * Als Mitglied des Maturaballkomitees möchte ich die Möglichkeit haben eine Budgetverwaltungsfunktion auf der Plattform zu nutzen um Ausgaben und Einnahmen für den Maturaball zu verfolgen.
 * Als Mitglied des Maturaballkomitees möchte ich die Möglichkeit haben, verschiedene Zahlungsmethoden für den Ticketverkauf auf der Website anzubieten, um die Bezahlung für Maturaballbesucher bequemer zu gestalten.
 * Als Mitglied des Maturaballkomitees möchte ich die Möglichkeit haben, Feedback und Bewertungen von Maturaballbesuchern auf der Plattform zu sammeln und zu analysieren, um Verbesserungen vorzunehmen.
-* Als Mitglied des Maturaballkomitees möchte ich eine Ansicht der ganzen Sponsoren haben.
+* Als Mitglied des Maturaballkomitees möchte ich eine Ansicht der ganzen Sponsoren in Form einer Checkliste haben.
+* Als Mitglied des Maturaballkomitees möchte ich den Beitrag der jeweiligen Sponsoren eintragen können und eine Rechnung bekommen.
 * Als Mitglied des Maturaballkomitees würde ich gerne die Sponsoren bearbeiten, hinzufügen und entfernen können.
