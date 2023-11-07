@@ -1,16 +1,28 @@
 package at.maturaballmanager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 @Entity
 public class Company implements Serializable {
+
+    private static final Pattern WEBSITE_PATTERN = Pattern.compile("^(http|https)://(.+)$");
+
+    @SequenceGenerator(name = "companySeq", sequenceName = "COMPANY_SEQ", initialValue = 1, allocationSize = 1)
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "companySeq")
     private Long id;
+
+    private String name;
+
+    private String address;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private ContactPerson contactPerson;
+
+    private String website;
 
     public Company() {
 
