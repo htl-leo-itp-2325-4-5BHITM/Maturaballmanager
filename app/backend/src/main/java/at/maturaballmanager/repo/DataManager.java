@@ -33,6 +33,15 @@ public class DataManager {
     }
 
     @Transactional
+    public void delete(String clazz, Long id) {
+        try {
+            em.remove(em.find(Class.forName("at.maturaballmanager.model." + clazz.substring(0,1).toUpperCase() + clazz.substring(1)), id));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
     public void update(Object o) {
         em.merge(o);
     }

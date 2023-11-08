@@ -39,10 +39,17 @@ public class Router {
 
     @DELETE
     @Path("/deleteCompany/{id}")
-    public Response deleteCompany(Long id) {
+    public Response deleteCompany(@PathParam("id") Long id) {
         Company c = dm.get(Company.class, id);
         dm.delete(c);
-        return Response.ok().build();
+        return Response.ok().status(200).build();
+    }
+
+    @DELETE
+    @Path("/deleteCompany/{id}/{clazz}")
+    public Response deleteCompany(@PathParam("id") Long id,@PathParam("clazz") String clazz) {
+        dm.delete(clazz, id);
+        return Response.ok().status(200).build();
     }
 
     @PUT
@@ -50,6 +57,13 @@ public class Router {
     @Path("/updateCompany")
     public Response updateCompany(Company c) {
         dm.update(c);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/uploadCompanies")
+    public Response uploadCompanies() {
         return Response.ok().build();
     }
 }
