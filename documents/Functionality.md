@@ -3,7 +3,7 @@
 ## Technologien
 * **App:** Swift, Kotlin
 * **Backend:** Quarkus
-* **Frontend:** Angular, Tailwind
+* **Frontend:** Webpack, Tailwind
 
 ## Website (allgemein)
 * Mit Schulaccounts anmelden

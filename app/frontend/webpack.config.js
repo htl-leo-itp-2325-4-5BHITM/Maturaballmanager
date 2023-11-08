@@ -15,8 +15,8 @@ module.exports = env => ({
                 exclude: /node_modules/,
             },
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
             },
         ],
     },
@@ -53,8 +53,8 @@ module.exports = env => ({
         compress: true,
         port: 4200,
         proxy: {
-            '/api': 'http://localhost:8080',
-            '/maturaballmanager': 'http://localhost:8080'
+            '/api': 'http://localhost:8081',
+            '/maturaballmanager': 'http://localhost:8081'
         },
         historyApiFallback: true,
     },
