@@ -28,5 +28,3 @@ Eine Plattform zur Unterstützung bei der Planung und Durchführung von Maturab�
 ## Abschluss
 
 Ein funktionsfähiges Maturaballverkaufs- und Verwaltungssystem, gemessen an Nutzerfeedback und Verkaufszahlen.
-
-commit test
