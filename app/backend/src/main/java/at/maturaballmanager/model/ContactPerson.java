@@ -1,15 +1,12 @@
 package at.maturaballmanager.model;
 
-import io.quarkus.devui.runtime.jsonrpc.JsonRpcResponse;
 import jakarta.persistence.*;
-import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.reactive.RestResponse;
 
-import java.util.Optional;
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 @Entity
-public class ContactPerson {
+public class ContactPerson implements Serializable {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 

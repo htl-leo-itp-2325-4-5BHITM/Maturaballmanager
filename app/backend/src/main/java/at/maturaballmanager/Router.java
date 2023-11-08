@@ -3,14 +3,13 @@ package at.maturaballmanager;
 import at.maturaballmanager.model.Company;
 import at.maturaballmanager.repo.DataManager;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/maturaballmanager/")
+import java.util.List;
+
+@Path("/api/")
 public class Router {
 
     @Inject
@@ -30,5 +29,27 @@ public class Router {
     public Response getCompany(Long id) {
         Company c = dm.get(Company.class, id);
         return Response.ok(c).build();
+    }
+
+    @GET
+    @Path("/getCompanyList")
+    public Response getCompanyList() {
+        return Response.ok(dm.getCompanyList()).build();
+    }
+
+    @DELETE
+    @Path("/deleteCompany/{id}")
+    public Response deleteCompany(Long id) {
+        Company c = dm.get(Company.class, id);
+        dm.delete(c);
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/updateCompany")
+    public Response updateCompany(Company c) {
+        dm.update(c);
+        return Response.ok().build();
     }
 }

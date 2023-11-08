@@ -15,13 +15,16 @@ public class Company implements Serializable {
     @GeneratedValue(generator = "companySeq")
     private Long id;
 
+    @Column
     private String name;
 
+    @Column
     private String address;
 
     @OneToOne(cascade = CascadeType.ALL)
     private ContactPerson contactPerson;
 
+    @Column
     private String website;
 
     public Company() {
@@ -34,5 +37,17 @@ public class Company implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 }
