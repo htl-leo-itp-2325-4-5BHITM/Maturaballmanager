@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const baseHref = '/';
 
 module.exports = env => ({
-  entry: './src/index.ts',
+  entry: './src/ts/index.ts',
   mode: 'development',
   module: {
     rules: [
