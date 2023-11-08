@@ -7,6 +7,7 @@ interface CompanyPerson {
 }
 
 interface Company {
+    id: number;
     name: string;
     address: string;
     website: string;

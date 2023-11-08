@@ -4,7 +4,7 @@ import '../styles/main.scss'
 
 // index.ts is the entry point it's configured in the config file
 async function loaded() {
-    const companies = await getCompanies();
+    const companies =  await getCompanies();
     render(companies);
 }
 
