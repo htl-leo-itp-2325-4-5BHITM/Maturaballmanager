@@ -69,3 +69,70 @@ tr:hover {
     font-size: 20px;
   }
 }
+
+/* Button Styles */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Primary Button Style */
+.primary-button {
+  background-color: #007BFF;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.primary-button:hover {
+  background-color: #0056b3;
+}
+
+/* Secondary Button Style */
+.secondary-button {
+  background-color: #6c757d;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.secondary-button:hover {
+  background-color: #495057;
+}
+
+/* Success Button Style */
+.success-button {
+  background-color: #28a745;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.success-button:hover {
+  background-color: #218838;
+}
+
+/* Danger Button Style */
+.danger-button {
+  background-color: #dc3545;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.danger-button:hover {
+  background-color: #c82333;
+}
+
+/* Rounded Corners Button Style */
+.rounded-button {
+  border-radius: 25px;
+}
+
+/* Large Button Style */
+.large-button {
+  padding: 15px 30px;
+  font-size: 20px;
+}
