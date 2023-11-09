@@ -18,6 +18,11 @@ module.exports = env => ({
                 test: /\.scss$/,
                 use: ['style-loader', 'css-loader', 'sass-loader'],
             },
+            {
+                test: /\.css$/i,
+                include: path.resolve(__dirname, 'src'),
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
+            },
         ],
     },
     devtool: 'cheap-module-source-map', // Source-Map for development
