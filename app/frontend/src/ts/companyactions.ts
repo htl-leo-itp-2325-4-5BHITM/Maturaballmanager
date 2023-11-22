@@ -24,7 +24,7 @@ let myArray1: Array<HTMLElement> = [];
 
 let myArray2: Array<number> = [];
 
-
+/*
 export async function deleteEntry(companyId: number, element: HTMLElement): Promise<void> {
     const config = {
         headers: {
@@ -42,6 +42,24 @@ export async function deleteEntry(companyId: number, element: HTMLElement): Prom
     }
 }
 
+
+ */
+
+export async function addEntry() {
+    let field1 = document.getElementById("field1") as HTMLInputElement;
+    let field2 = document.getElementById("field2")  as HTMLInputElement;
+    let field3 = document.getElementById("field3" )  as HTMLInputElement;
+
+    const myJson = {
+        companyname: field1.value,
+        adresse: field2.value,
+        website: field3.value
+    }
+
+    console.log("Dein JSON Objekt Schatzi<33")
+    console.log(myJson)
+}
+
 export async function deleteAllEntries(): Promise<void> {
     const config = {
         headers: {
@@ -55,6 +73,8 @@ export async function deleteAllEntries(): Promise<void> {
             console.log(response.data);
             myArray1[i].parentElement?.parentElement?.remove();
         }
+        myArray1.splice(0, myArray1.length);
+        myArray2.splice(0, myArray2.length);
     } catch (error) {
         console.log(error);
         throw error;
@@ -71,8 +91,6 @@ export function collectEntry(companyId: number, element: HTMLElement) {
 
     myArray1.push(element);
     myArray2.push(companyId);
-
-
 }
 
 

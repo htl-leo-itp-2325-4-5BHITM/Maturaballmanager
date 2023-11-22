@@ -1,5 +1,5 @@
 import { Company } from "Model/model";
-import {collectEntry, deleteAllEntries, deleteEntry} from "./companyactions";
+import {addEntry, collectEntry, deleteAllEntries} from "./companyactions";
 
 export function render(companies: Company[]) {
     const tbody = document.querySelector("tbody");
@@ -21,6 +21,15 @@ export function render(companies: Company[]) {
     deletebutton.addEventListener("click", () => {
         deleteAllEntries();
     })
+
+
+    const addbutton = document.getElementById("addbutton")
+
+    addbutton.addEventListener("click", () => {
+        addEntry();
+    })
+
+
 
 
 
