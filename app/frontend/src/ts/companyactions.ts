@@ -18,7 +18,7 @@ export async function deleteEntry(companyid: number) : Promise<any> {
 }
 */
 
-import axios from "axios";
+import axios from "axios"
 
 export async function deleteEntry(companyId: number, element: HTMLElement): Promise<void> {
     const config = {
