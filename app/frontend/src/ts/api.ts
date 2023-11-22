@@ -45,5 +45,27 @@ async function addCompany(company: Company): Promise<Company> {
     }
 }
 
+/*async function searchCompanyByName(searchTerm: String): Promise<Company> {
+    const companies =  await getCompanies();
+}*/
+
+// not implemented in frontend yet
+async function updateCompany(company: Company): Promise<Company> {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    try {
+        const response = await axios.post('http://localhost:4200/api/updateCompany', company, config);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export {getCompanies};
 export {addCompany};
+export {updateCompany};
