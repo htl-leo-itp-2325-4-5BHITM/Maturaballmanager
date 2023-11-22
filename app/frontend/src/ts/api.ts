@@ -13,7 +13,7 @@ async function getCompanies() {
     }
 }*/
 
-async function getCompanies():  Promise<Company[]> {
+async function getCompanies(): Promise<Company[]> {
     const config = {
         headers: {
             Accept: 'application/json'
@@ -27,9 +27,23 @@ async function getCompanies():  Promise<Company[]> {
         console.log(error);
         throw error;
     }
-
 }
 
-
+async function addCompany(company: Company): Promise<Company> {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    try {
+        const response = await axios.post('http://localhost:4200/api/addCompany', company, config);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 export {getCompanies};
+export {addCompany};
