@@ -4,7 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Maturaballmanager</title>
+    <style>
+        /* Equivalent styles for Tailwind CSS classes */
+        .py-6 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
 
 </head>
 
@@ -13,25 +29,34 @@
     <h1 class="text-4xl font-bold text-indigo-700 mb-4">Maturaballmanager</h1>
     <h2 class="text-2xl font-bold text-gray-700 mb-8">Sponsorenverwaltung</h2>
 
+    <!-- Table -->
     <table class="w-full border rounded-lg overflow-hidden text-lg">
         <thead class="bg-indigo-700 text-white">
         <tr>
             <th class="py-4 px-6">Firmenname</th>
             <th class="py-4 px-6">Adresse</th>
             <th class="py-4 px-6">Webseite</th>
+            <th class="py-4 px-6">.</th>
         </tr>
         </thead>
-        <tbody class="text-gray-700">
+        <tbody class="text-gray-700 mt-16">
         <!-- Add your data from the backend using a loop or other dynamic method -->
         <!-- Example row -->
-        <tr class="bg-white border-b hover:bg-gray-100">
-            <td class="p-20 text-center">Company A</td>
-            <td class="p-20 text-center">123 Street, City</td>
-            <td class="p-20 text-center"><a href="https://www.example.com" class="text-blue-500 hover:underline">www.example.com</a></td>
-        </tr>
+
         <!-- Add more rows as needed -->
         </tbody>
     </table>
+
+    <!-- Buttons and Search Bar -->
+    <div class="flex items-center space-x-4 mt-12">
+        <button class="bg-indigo-700 text-white px-4 py-2 rounded-lg">Add</button>
+        <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
+        <label for="file-upload" class="bg-green-500 text-white px-4 py-2 rounded-lg cursor-pointer">Upload</label>
+        <input type="file" id="file-upload" class="hidden">
+        <div class="flex-1">
+            <input type="text" placeholder="Search..." class="w-full border rounded-lg px-4 py-2">
+        </div>
+    </div>
 </div>
 </body>
 
