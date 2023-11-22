@@ -45,9 +45,10 @@ async function addCompany(company: Company): Promise<Company> {
     }
 }
 
-/*async function searchCompanyByName(searchTerm: String): Promise<Company> {
+async function searchCompanyByName(searchTerm: String): Promise<Company | undefined> {
     const companies =  await getCompanies();
-}*/
+    return companies.find(company => company.name === searchTerm);
+}
 
 // not implemented in frontend yet
 async function updateCompany(company: Company): Promise<Company> {
@@ -69,3 +70,4 @@ async function updateCompany(company: Company): Promise<Company> {
 export {getCompanies};
 export {addCompany};
 export {updateCompany};
+export {searchCompanyByName};
