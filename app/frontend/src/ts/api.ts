@@ -29,14 +29,21 @@ async function getCompanies(): Promise<Company[]> {
     }
 }
 
-async function addCompany(company: Company): Promise<Company> {
+async function addCompany(newName: String, newAddress: String, newWebsite: String): Promise<Company> {
+
+    const newCompany = {
+        name: newName,
+        address: newAddress,
+        website: newWebsite
+    };
+
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     };
     try {
-        const response = await axios.post('http://localhost:4200/api/addCompany', company, config);
+        const response = await axios.post('http://localhost:4200/api/addCompany', newCompany, config);
         console.log(response.data);
         return response.data;
     } catch (error) {
