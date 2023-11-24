@@ -3,6 +3,7 @@ package at.maturaballmanager;
 import at.maturaballmanager.model.Company;
 import at.maturaballmanager.repo.DataManager;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -49,7 +50,7 @@ public class Router {
 
     @DELETE
     @Path("/deleteCompany/{id}/{clazz}")
-    public Response deleteCompany(@PathParam("id") Long id,@PathParam("clazz") String clazz) {
+    public Response deleteCompany(@PathParam("id") Long id, @PathParam("clazz") String clazz) {
         dm.delete(clazz, id);
         return Response.ok().status(200).build();
     }
@@ -67,5 +68,29 @@ public class Router {
     @Path("/uploadCompanies")
     public Response uploadCompanies() {
         return Response.ok().build();
+    }
+
+    @DELETE
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/deleteCompanies")
+    public Response deleteCompanies(List<Long> ids) {
+        try {
+            dm.deleteCompanies(ids);
+            return Response.ok().build();
+        } catch (IllegalArgumentException excp) {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getCompanyNames")
+    public Response getCompanyNames(List<Long> ids) {
+        try {
+            return Response.ok(dm.getSelectedCompanyNames(ids)).build();
+        } catch (IllegalArgumentException excp) {
+            return Response.serverError().build();
+        }
     }
 }

@@ -6,6 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
+import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
@@ -35,7 +37,7 @@ public class DataManager {
     @Transactional
     public void delete(String clazz, Long id) {
         try {
-            em.remove(em.find(Class.forName("at.maturaballmanager.model." + clazz.substring(0,1).toUpperCase() + clazz.substring(1)), id));
+            em.remove(em.find(Class.forName("at.maturaballmanager.model." + clazz.substring(0, 1).toUpperCase() + clazz.substring(1)), id));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -46,7 +48,21 @@ public class DataManager {
         em.merge(o);
     }
 
-    public void flush() {
-        em.flush();
+    public void deleteCompanies(List<Long> ids) {
+        if (ids == null) throw new IllegalArgumentException("Invalid list");
+        ids.forEach((id) -> {
+            if (id == null) throw new IllegalArgumentException("Invalid list item");
+        });
+        ids.forEach((id) -> em.remove(em.find(Company.class, id)));
+    }
+
+    public List<String> getSelectedCompanyNames(List<Long> ids) {
+        List<String> companyNames = new LinkedList<>();
+
+        ids.forEach((id) -> {
+            Company company = em.find(Company.class, id);
+            companyNames.add(company.getName());
+        });
+        return companyNames;
     }
 }
