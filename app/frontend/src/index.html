@@ -24,8 +24,26 @@
         .input-field {
             width: calc(33.33% - 1rem);
         }
-    </style>
 
+        /* Added styles for scrollable table */
+        .table-container {
+            max-height: 400px; /* Adjust the max height as needed */
+            overflow-y: auto;
+        }
+
+        /* Offcanvas styles */
+        #offcanvas {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -39,37 +57,55 @@
         <input id="field3" type="text" placeholder="Field 3" class="input-field border rounded-lg px-4 py-2">
     </div>
 
+    <!-- Table Container -->
+    <div class="table-container">
+        <!-- Table -->
+        <table class="w-full border rounded-lg overflow-hidden text-lg">
+            <thead class="bg-indigo-700 text-white">
+            <tr>
+                <th class="py-4 px-6">Firmenname</th>
+                <th class="py-4 px-6">Adresse</th>
+                <th class="py-4 px-6">Webseite</th>
+                <th class="py-4 px-6">.</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700 mt-16">
+            <!-- Add your data from the backend using a loop or other dynamic method -->
+            <!-- Example row -->
 
-    <!-- Table -->
-    <table class="w-full border rounded-lg overflow-hidden text-lg">
-        <thead class="bg-indigo-700 text-white">
-        <tr>
-            <th class="py-4 px-6">Firmenname</th>
-            <th class="py-4 px-6">Adresse</th>
-            <th class="py-4 px-6">Webseite</th>
-            <th class="py-4 px-6">.</th>
-        </tr>
-        </thead>
-        <tbody class="text-gray-700 mt-16">
-        <!-- Add your data from the backend using a loop or other dynamic method -->
-        <!-- Example row -->
-
-        <!-- Add more rows as needed -->
-        </tbody>
-    </table>
+            <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
 
     <!-- Buttons and Search Bar -->
     <div class="flex items-center space-x-4 mt-12">
         <button id="addbutton" class="bg-indigo-700 text-white px-4 py-2 rounded-lg">Add</button>
         <button id="deletebutton" class="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
-        <label for="file-upload" class="bg-green-500 text-white px-4 py-2 rounded-lg cursor-pointer">Upload</label>
-        <input type="file" id="file-upload" class="hidden">
+        <label id="searchbutton" class="bg-green-500 text-white px-4 py-2 rounded-lg cursor-pointer">Search</label>
         <div class="flex-1">
-            <input type="text" placeholder="Search..." class="w-full border rounded-lg px-4 py-2">
+            <input id="searchbar" type="text" placeholder="Search..." class="w-full border rounded-lg px-4 py-2">
+        </div>
+    </div>
+
+    <!-- Offcanvas for Delete Button -->
+    <div id="offcanvas">
+        <p class="text-gray-700">Are you sure you want to delete?</p>
+        <div class="mt-4 flex space-x-4">
+            <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Confirm</button>
+            <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg" onclick="document.getElementById('offcanvas').style.display = 'none';">Cancel</button>
         </div>
     </div>
 </div>
-</body>
 
+<script>
+    const deleteButton = document.getElementById('deletebutton');
+
+    deleteButton.addEventListener('click', () => {
+        document.getElementById('offcanvas').style.display = 'block';
+    });
+</script>
+
+</body>
 
 </html>

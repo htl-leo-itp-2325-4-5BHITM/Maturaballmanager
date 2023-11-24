@@ -54,6 +54,7 @@ async function addCompany(newName: String, newAddress: String, newWebsite: Strin
 
 async function searchCompanyByName(searchTerm: String): Promise<Company | undefined> {
     const companies =  await getCompanies();
+    console.log(companies.find(company => company.name === searchTerm))
     return companies.find(company => company.name === searchTerm);
 }
 

@@ -19,6 +19,9 @@ export async function deleteEntry(companyid: number) : Promise<any> {
 */
 
 import axios from "axios"
+import {Company} from "Model/model";
+import {render} from "./render-table";
+import {getCompanies} from "./api";
 
 let myArray1: Array<HTMLElement> = [];
 
@@ -58,6 +61,34 @@ export async function addEntry() {
 
     console.log("Dein JSON Objekt Schatzi<33")
     console.log(myJson)
+
+    addCompany(field1.value, field2.value, field3.value)
+}
+
+async function addCompany(newName: String, newAddress: String, newWebsite: String): Promise<Company> {
+
+    const newCompany = {
+        name: newName,
+        address: newAddress,
+        website: newWebsite
+    };
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    try {
+        const response = await axios.post('http://localhost:4200/api/addCompany', newCompany, config);
+        console.log(response.data);
+        const companies =  await getCompanies();
+        render(companies);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+
 }
 
 export async function deleteAllEntries(): Promise<void> {

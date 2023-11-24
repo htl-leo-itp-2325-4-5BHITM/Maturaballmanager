@@ -31,6 +31,12 @@ public class Company implements Serializable {
 
     }
 
+    public Company(String name, String address, String website) {
+        this.name = name;
+        this.address = address;
+        this.website = website;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

@@ -18,8 +18,10 @@ public class Router {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addCompany")
-    public Response addCompany() {
-        Company c = new Company();
+    public Response addCompany(Company c) {
+        //Company c = new Company();
+        //c.id = null;
+        //Company newC = new Company(c.getName(), c.getAddress(), c.getWebsite());
         dm.save(c);
         return Response.ok().build();
     }

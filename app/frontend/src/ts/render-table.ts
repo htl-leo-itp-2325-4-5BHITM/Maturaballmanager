@@ -1,5 +1,6 @@
-import { Company } from "Model/model";
+import {Company} from "Model/model";
 import {addEntry, collectEntry, deleteAllEntries} from "./companyactions";
+import {searchCompanyByName} from "./api";
 
 export function render(companies: Company[]) {
     const tbody = document.querySelector("tbody");
@@ -16,18 +17,26 @@ export function render(companies: Company[]) {
     });
 }
 
-    const deletebutton = document.getElementById("deletebutton")
+const searchbar = document.getElementById("searchbar") as HTMLInputElement;
 
-    deletebutton.addEventListener("click", () => {
-        deleteAllEntries();
-    })
+const searchbutton = document.getElementById("searchbutton");
+
+searchbutton.addEventListener("click", () => {
+        searchCompanyByName(searchbar.value)
+});
+
+const deletebutton = document.getElementById("deletebutton")
+
+deletebutton.addEventListener("click", () => {
+    deleteAllEntries();
+})
 
 
-    const addbutton = document.getElementById("addbutton")
+const addbutton = document.getElementById("addbutton")
 
-    addbutton.addEventListener("click", () => {
-        addEntry();
-    })
+addbutton.addEventListener("click", () => {
+    addEntry();
+})
 
 
 
