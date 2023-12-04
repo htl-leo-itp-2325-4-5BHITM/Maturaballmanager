@@ -20,7 +20,7 @@ public class Router {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addCompany")
     public Response addCompany(Company c) {
-        //Company c = new Company();
+        //Company qc = new Company();
         //c.id = null;
         //Company newC = new Company(c.getName(), c.getAddress(), c.getWebsite());
         dm.save(c);

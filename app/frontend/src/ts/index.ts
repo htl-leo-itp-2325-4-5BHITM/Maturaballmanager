@@ -1,4 +1,4 @@
-import { render } from "./render-table";
+import { render } from "./render-companylist";
 import { getCompanies } from "./api";
 import '../styles/style.css'
 
