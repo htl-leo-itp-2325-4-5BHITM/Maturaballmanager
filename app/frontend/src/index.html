@@ -6,7 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maturaballmanager</title>
     <style>
-        /* Equivalent styles for Tailwind CSS classes */
+        #addOffcanvas,
+        #offcanvas {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff; /* Solid background color */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999; /* Ensure the offcanvas appears above the overlay */
+        }
+
+    /* Equivalent styles for Tailwind CSS classes */
         .py-6 {
             padding-top: 1.5rem;
             padding-bottom: 1.5rem;
@@ -30,19 +44,17 @@
             max-height: 400px; /* Adjust the max height as needed */
             overflow-y: auto;
         }
+         #overlay {
+             display: none;
+             position: fixed;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             background: rgba(0, 0, 0, 0.5); /* Semi-transparent background color */
+             z-index: 998; /* Ensure the overlay appears beneath the offcanvas */
+         }
 
-        /* Offcanvas styles */
-        #offcanvas {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 
@@ -93,7 +105,19 @@
             <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg" onclick="document.getElementById('offcanvas').style.display = 'none';">Cancel</button>
         </div>
     </div>
+
+    <!-- Offcanvas for Add Button -->
+    <div id="addOffcanvas">
+        <h2 class="text-xl font-bold mb-4">Add New Entry</h2>
+        <input id="newField1" type="text" placeholder="Field 1" class="input-field border rounded-lg px-4 py-2 mb-2">
+        <input id="newField2" type="text" placeholder="Field 2" class="input-field border rounded-lg px-4 py-2 mb-2">
+        <input id="newField3" type="text" placeholder="Field 3" class="input-field border rounded-lg px-4 py-2 mb-4">
+        <button id="confirmAddButton" class="bg-indigo-700 text-white px-4 py-2 rounded-lg mr-2">Add</button>
+        <button id="cancelAddButton" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg" onclick="closeAddOffcanvas()">Cancel</button>
+    </div>
 </div>
+
+<div id="overlay"></div>
 
 </body>
 

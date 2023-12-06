@@ -17,7 +17,7 @@ export const collectEntry = (companyId: number, element: HTMLElement) => (
 export const getSearchBarValues = async () => {
     const [field1, field2, field3] = ["field1", "field2", "field3"].map(id => document.getElementById(id) as HTMLInputElement);
 
-    const myJson = { companyname: field1.value, adresse: field2.value, website: field3.value };
+    const myJson = {companyname: field1.value, adresse: field2.value, website: field3.value};
 
     console.log("Dein JSON Objekt Schatzi<33");
     console.log(myJson);
@@ -27,9 +27,9 @@ export const getSearchBarValues = async () => {
 
 
 const addCompany = async (newName: string, newAddress: string, newWebsite: string): Promise<Company> => {
-    const newCompany = { name: newName, address: newAddress, website: newWebsite };
+    const newCompany = {name: newName, address: newAddress, website: newWebsite};
 
-    const config = { headers: { 'Content-Type': 'application/json' } };
+    const config = {headers: {'Content-Type': 'application/json'}};
 
     try {
         const response = await axios.post('http://localhost:4200/api/addCompany', newCompany, config);
@@ -45,7 +45,7 @@ const addCompany = async (newName: string, newAddress: string, newWebsite: strin
 
 
 export const deleteAllEntries = async (): Promise<void> => {
-    const config = { headers: { Accept: 'application/json' } };
+    const config = {headers: {Accept: 'application/json'}};
 
     try {
         for (let i = 0; i < myArray1.length; i++) {

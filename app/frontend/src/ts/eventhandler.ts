@@ -29,9 +29,58 @@ export function exportEvents() {
     const addbutton = document.getElementById("addbutton")
 
     addbutton.addEventListener("click", () => {
+        console.log("Opened Window")
         getSearchBarValues();
     })
+
+    // Offcanvas for Add Button
+    const addOffcanvas = document.getElementById("addOffcanvas") as HTMLElement;
+    const newField1 = document.getElementById("newField1") as HTMLInputElement;
+    const newField2 = document.getElementById("newField2") as HTMLInputElement;
+    const newField3 = document.getElementById("newField3") as HTMLInputElement;
+    const confirmAddButton = document.getElementById("confirmAddButton") as HTMLElement;
+    const cancelAddButton = document.getElementById("cancelAddButton") as HTMLElement;
+
+    // Function to open the Add Offcanvas
+    const openAddOffcanvas = () => {
+        addOffcanvas.style.display = 'block';
+    };
+
+// Function to close the Add Offcanvas
+    const closeAddOffcanvas = () => {
+        addOffcanvas.style.display = 'none';
+        // Clear input fields after closing
+        newField1.value = '';
+        newField2.value = '';
+        newField3.value = '';
+    };
+
+// Add event listener for click event on the Add button
+    addbutton.addEventListener("click", () => {
+        openAddOffcanvas();
+    });
+
+// Add event listener for click event on the Confirm Add button
+    confirmAddButton.addEventListener("click", () => {
+        // Add logic to handle the new entry
+        console.log("Adding new entry");
+        // You can call your addCompany function or perform any necessary actions
+        // Clear input fields after adding
+        newField1.value = '';
+        newField2.value = '';
+        newField3.value = '';
+        closeAddOffcanvas();
+    });
+
+// Add event listener for click event on the Cancel Add button
+    cancelAddButton.addEventListener("click", () => {
+        closeAddOffcanvas();
+    });
+
 }
+
+
+
 
 
 
