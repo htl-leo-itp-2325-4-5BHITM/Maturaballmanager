@@ -2,6 +2,7 @@ import axios from "axios"
 import {Company} from "Model/model";
 import {render} from "./render-companylist";
 import {getCompanies} from "./api";
+import {Document} from "postcss";
 
 let myArray1: Array<HTMLElement> = [];
 
@@ -15,8 +16,9 @@ export const collectEntry = (companyId: number, element: HTMLElement) => (
 
 
 export const getSearchBarValues = async () => {
-    const [field1, field2, field3] = ["field1", "field2", "field3"].map(id => document.getElementById(id) as HTMLInputElement);
-
+    let field1 = document.getElementById('newField1') as HTMLInputElement;
+    let field2 = document.getElementById('newField2')  as HTMLInputElement;
+    let field3 = document.getElementById('newField3') as HTMLInputElement;
     const myJson = {companyname: field1.value, adresse: field2.value, website: field3.value};
 
     console.log("Dein JSON Objekt Schatzi<33");

@@ -30,7 +30,7 @@ export function exportEvents() {
 
     addbutton.addEventListener("click", () => {
         console.log("Opened Window")
-        getSearchBarValues();
+        //getSearchBarValues();
     })
 
     // Offcanvas for Add Button
@@ -64,6 +64,7 @@ export function exportEvents() {
     confirmAddButton.addEventListener("click", () => {
         // Add logic to handle the new entry
         console.log("Adding new entry");
+        getSearchBarValues();
         // You can call your addCompany function or perform any necessary actions
         // Clear input fields after adding
         newField1.value = '';
@@ -76,6 +77,7 @@ export function exportEvents() {
     cancelAddButton.addEventListener("click", () => {
         closeAddOffcanvas();
     });
+
 
 }
 
