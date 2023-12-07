@@ -1,11 +1,13 @@
 package at.maturaballmanager.repo;
 
 import at.maturaballmanager.model.Company;
+import at.maturaballmanager.services.CSVExport;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +55,15 @@ public class DataManager {
         ids.forEach((id) -> {
             if (id == null) throw new IllegalArgumentException("Invalid list item");
         });
-        ids.forEach((id) -> em.remove(em.find(Company.class, id)));
+
+        ids.forEach((id) -> {
+            Company c = em.find(Company.class, id);
+            em.remove(c);
+        });
+    }
+
+    public ByteArrayInputStream loadCSVExport() {
+        return CSVExport.employeesToCSV(getCompanyList());
     }
 
     public List<String> getSelectedCompanyNames(List<Long> ids) {

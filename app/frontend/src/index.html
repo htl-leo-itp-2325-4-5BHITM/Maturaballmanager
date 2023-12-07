@@ -7,7 +7,7 @@
     <title>Maturaballmanager</title>
     <style>
         #addOffcanvas,
-        #offcanvas {
+        #offcanvas, #exportOffcanvas {
             display: none;
             position: fixed;
             top: 50%;
@@ -95,6 +95,7 @@
     <div class="flex items-end space-x-4 mt-12">
         <button id="addbutton" class="bg-indigo-700 text-white px-4 py-2 rounded-lg">Add Item</button>
         <button id="deletebutton" class="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
+        <button id="exportbutton"  class="bg-green-500 text-white px-4 py-2 rounded-lg">Export data</button>
     </div>
 
     <!-- Offcanvas for Delete Button -->
@@ -108,12 +109,21 @@
 
     <!-- Offcanvas for Add Button -->
     <div id="addOffcanvas">
-        <h2 class="text-xl font-bold mb-4">Add New Entry</h2>
-        <input id="newField1" type="text" placeholder="Field 1" class="input-field border rounded-lg px-4 py-2 mb-2">
-        <input id="newField2" type="text" placeholder="Field 2" class="input-field border rounded-lg px-4 py-2 mb-2">
-        <input id="newField3" type="text" placeholder="Field 3" class="input-field border rounded-lg px-4 py-2 mb-4">
+        <h2 class="text-xl font-bold mb-4">Add New Company</h2>
+        <input id="newField1" type="text" placeholder="Name" class="input-field border rounded-lg px-4 py-2 mb-2">
+        <input id="newField2" type="text" placeholder="Address" class="input-field border rounded-lg px-4 py-2 mb-2">
+        <input id="newField3" type="text" placeholder="Website" class="input-field border rounded-lg px-4 py-2 mb-4">
         <button id="confirmAddButton" class="bg-indigo-700 text-white px-4 py-2 rounded-lg mr-2">Add</button>
         <button id="cancelAddButton" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg" onclick="closeAddOffcanvas()">Cancel</button>
+    </div>
+
+    <!-- Offcanvas for Export Button -->
+    <div id="exportOffcanvas">
+        <p class="text-gray-700">Export all your data into CSV</p>
+        <div class="mt-4 flex space-x-4">
+            <button id="downloadbutton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Download</button>
+            <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg" onclick="document.getElementById('exportOffcanvas').style.display = 'none';">Cancel</button>
+        </div>
     </div>
 </div>
 

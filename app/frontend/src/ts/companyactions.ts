@@ -62,3 +62,16 @@ export const deleteAllEntries = async (): Promise<void> => {
         throw error;
     }
 };
+
+export const downloadData = async(): Promise<void> => {
+    const config = {headers: {Accept: 'application/octet-stream'}};
+
+    try {
+        const response = await axios.get('http://localhost:4200/api/downloadCompanies', config);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

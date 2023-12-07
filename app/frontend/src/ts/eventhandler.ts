@@ -1,5 +1,5 @@
 import {searchCompanyByName} from "./api";
-import {getSearchBarValues, deleteAllEntries} from "./companyactions";
+import {getSearchBarValues, deleteAllEntries, downloadData} from "./companyactions";
 
 export function exportEvents() {
 
@@ -7,6 +7,9 @@ export function exportEvents() {
     const searchbutton = document.getElementById("searchbutton") as HTMLElement;
     const deletebutton = document.getElementById("deletebutton") as HTMLElement;
     const confirmbutton = document.getElementById("confirmbutton") as HTMLElement;
+    const exportbutton = document.getElementById("exportbutton") as HTMLElement;
+    const downloadbutton = document.getElementById("downloadbutton") as HTMLElement;
+    const exportoffcanvas = document.getElementById("exportOffcanvas") as HTMLElement;
     const offcanvas = document.getElementById("offcanvas");
 
     searchbutton.addEventListener("click", () => {
@@ -46,6 +49,14 @@ export function exportEvents() {
         addOffcanvas.style.display = 'block';
     };
 
+    const openExportOffCanvas = () => {
+        exportoffcanvas.style.display = 'block';
+    }
+
+    const closeExportOffCanvas = () => {
+        exportoffcanvas.style.display = 'none';
+    }
+
 // Function to close the Add Offcanvas
     const closeAddOffcanvas = () => {
         addOffcanvas.style.display = 'none';
@@ -60,6 +71,10 @@ export function exportEvents() {
         openAddOffcanvas();
     });
 
+    exportbutton.addEventListener("click", () => {
+        openExportOffCanvas();
+    })
+
 // Add event listener for click event on the Confirm Add button
     confirmAddButton.addEventListener("click", () => {
         // Add logic to handle the new entry
@@ -72,6 +87,11 @@ export function exportEvents() {
         newField3.value = '';
         closeAddOffcanvas();
     });
+
+    downloadbutton.addEventListener("click", () => {
+        downloadData();
+        closeAddOffcanvas();
+    })
 
 // Add event listener for click event on the Cancel Add button
     cancelAddButton.addEventListener("click", () => {

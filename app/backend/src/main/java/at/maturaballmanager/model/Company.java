@@ -10,7 +10,7 @@ public class Company implements Serializable {
 
     private static final Pattern WEBSITE_PATTERN = Pattern.compile("^(http|https)://(.+)$");
 
-    @SequenceGenerator(name = "companySeq", sequenceName = "COMPANY_SEQ", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "companySeq", sequenceName = "COMPANY_SEQ", initialValue = 10, allocationSize = 1)
     @Id
     @GeneratedValue(generator = "companySeq")
     private Long id;

@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dca25f81-fbef-48f1-8c03-35c46706d78e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/services/CSVExport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/Router.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/Router.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/model/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/model/Company.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/repo/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/at/maturaballmanager/repo/DataManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ts/companyactions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ts/companyactions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ts/eventhandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ts/eventhandler.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

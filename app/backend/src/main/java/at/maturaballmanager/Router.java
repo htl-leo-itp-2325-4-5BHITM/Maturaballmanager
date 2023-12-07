@@ -17,6 +17,7 @@ public class Router {
     DataManager dm;
 
     @POST
+    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addCompany")
     public Response addCompany(Company c) {
@@ -41,6 +42,7 @@ public class Router {
     }
 
     @DELETE
+    @Transactional
     @Path("/deleteCompany/{id}")
     public Response deleteCompany(@PathParam("id") Long id) {
         Company c = dm.get(Company.class, id);
@@ -49,6 +51,7 @@ public class Router {
     }
 
     @DELETE
+    @Transactional
     @Path("/deleteCompany/{id}/{clazz}")
     public Response deleteCompany(@PathParam("id") Long id, @PathParam("clazz") String clazz) {
         dm.delete(clazz, id);
@@ -70,7 +73,7 @@ public class Router {
         return Response.ok().build();
     }
 
-    @DELETE
+    @POST
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/deleteCompanies")
@@ -92,5 +95,16 @@ public class Router {
         } catch (IllegalArgumentException excp) {
             return Response.serverError().build();
         }
+    }
+
+    @GET
+    @Path("downloadCompanies")
+    public Response exportCSV() {
+        return Response.ok(dm.loadCSVExport(),
+                        MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition",
+                        "attachment; filename = companies.csv").
+                build();
+
     }
 }
