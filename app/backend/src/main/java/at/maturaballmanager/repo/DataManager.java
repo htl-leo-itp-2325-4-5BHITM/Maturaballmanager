@@ -71,7 +71,7 @@ public class DataManager {
 
         ids.forEach((id) -> {
             Company company = em.find(Company.class, id);
-            companyNames.add(company.getName());
+            companyNames.add(company.name);
         });
         return companyNames;
     }

@@ -1,59 +1,50 @@
 package at.maturaballmanager.model;
 
+import at.maturaballmanager.services.ValidationTool;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 @Entity
-public class Company implements Serializable {
+public class Company extends PanacheEntity implements Serializable {
 
-    private static final Pattern WEBSITE_PATTERN = Pattern.compile("^(http|https)://(.+)$");
+    @Column(length = 50)
+    public String name;
 
-    @SequenceGenerator(name = "companySeq", sequenceName = "COMPANY_SEQ", initialValue = 10, allocationSize = 1)
-    @Id
-    @GeneratedValue(generator = "companySeq")
-    private Long id;
+    @OneToMany(mappedBy = "company")
+    public Set<Bill> bills;
 
-    @Column
-    private String name;
-
-    @Column
-    private String address;
+    @OneToOne
+    @JoinTable(name = "FK_ContactPerson_Address")
+    public Address address;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private ContactPerson contactPerson;
+    @JoinTable(name = "FK_ContactPerson_Company")
+    public ContactPerson contactPerson;
 
-    @Column
-    private String website;
+    @Column(length = 100, nullable = false)
+    public String website;
 
-    public Company() {
+    @Column(length = 50)
+    @JsonIgnore
+    public String imagePath;
 
-    }
-
-    public Company(String name, String address, String website) {
+    public Company(String name, Address address, String website) {
         this.name = name;
         this.address = address;
         this.website = website;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Company() {
+
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getWebsite() {
-        return website;
+    @PrePersist
+    @PreUpdate
+    private void validate() {
+        this.website = ValidationTool.validateWebsite(website);
     }
 }

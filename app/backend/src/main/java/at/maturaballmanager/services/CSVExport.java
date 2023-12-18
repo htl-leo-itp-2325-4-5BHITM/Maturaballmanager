@@ -24,7 +24,7 @@ public class CSVExport {
                 CSVPrinter csvPrinter =
                         new CSVPrinter(new PrintWriter(out), format);) {
             for (Company comp : companies) {
-                List<String> data = Arrays.asList(comp.getId().toString(), comp.getName(), comp.getAddress(), comp.getWebsite());
+                List<String> data = Arrays.asList(comp.id.toString(), comp.name, comp.address.toString(), comp.website);
                 csvPrinter.printRecord(data);
             }
 

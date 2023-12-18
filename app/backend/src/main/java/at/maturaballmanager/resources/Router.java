@@ -1,4 +1,4 @@
-package at.maturaballmanager;
+package at.maturaballmanager.resources;
 
 import at.maturaballmanager.model.Company;
 import at.maturaballmanager.repo.DataManager;
@@ -21,9 +21,6 @@ public class Router {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addCompany")
     public Response addCompany(Company c) {
-        //Company qc = new Company();
-        //c.id = null;
-        //Company newC = new Company(c.getName(), c.getAddress(), c.getWebsite());
         dm.save(c);
         return Response.ok().build();
     }
@@ -102,7 +99,7 @@ public class Router {
     public Response exportCSV() {
         return Response.ok(dm.loadCSVExport(),
                         MediaType.APPLICATION_OCTET_STREAM)
-                .header("content-disposition",
+                .header("Content-Disposition",
                         "attachment; filename = companies.csv").
                 build();
 
