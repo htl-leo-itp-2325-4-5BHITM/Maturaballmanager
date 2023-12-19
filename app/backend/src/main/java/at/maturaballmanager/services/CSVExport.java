@@ -14,7 +14,7 @@ import java.util.List;
 public class CSVExport {
 
     public static ByteArrayInputStream
-    employeesToCSV(List<Company> companies) {
+    companiesToCSV(List<Company> companies) {
         final CSVFormat format = CSVFormat.DEFAULT.
                 withHeader("ID", "Name", "Address", "Website");
 

@@ -1,7 +1,7 @@
 package at.maturaballmanager.resources;
 
 import at.maturaballmanager.model.Company;
-import at.maturaballmanager.repo.DataManager;
+import at.maturaballmanager.repo.CompanyManager;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,10 +11,10 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/api/")
-public class Router {
+public class CompanyResource {
 
     @Inject
-    DataManager dm;
+    CompanyManager dm;
 
     @POST
     @Transactional

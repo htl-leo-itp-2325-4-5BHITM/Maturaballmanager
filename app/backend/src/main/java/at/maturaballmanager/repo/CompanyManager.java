@@ -8,12 +8,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import java.io.ByteArrayInputStream;
-import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
-public class DataManager {
+public class CompanyManager {
 
     @Inject
     EntityManager em;
@@ -63,7 +62,7 @@ public class DataManager {
     }
 
     public ByteArrayInputStream loadCSVExport() {
-        return CSVExport.employeesToCSV(getCompanyList());
+        return CSVExport.companiesToCSV(getCompanyList());
     }
 
     public List<String> getSelectedCompanyNames(List<Long> ids) {
