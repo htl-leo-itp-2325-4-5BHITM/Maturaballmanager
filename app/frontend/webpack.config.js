@@ -58,8 +58,8 @@ module.exports = env => ({
         compress: true,
         port: 4200,
         proxy: {
-            '/api': 'http://localhost:8081',
-            '/maturaballmanager': 'http://localhost:8081'
+            '/api': 'http://127.0.0.1:8899',
+            '/maturaballmanager': 'http://127.0.0.1:8899'
         },
         historyApiFallback: true,
     },

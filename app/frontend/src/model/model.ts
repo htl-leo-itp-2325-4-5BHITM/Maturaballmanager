@@ -15,7 +15,15 @@ interface Company {
 }
 
 interface Model {
-    companies: Company[];
+    companies: Company[]
+    todos: Todo[]
 }
 
-export { Company, CompanyPerson, Model };
+interface Todo {
+    userId: number
+    id: number
+    title: string
+    completed: boolean
+}
+
+export { Company, CompanyPerson, Model, Todo };
