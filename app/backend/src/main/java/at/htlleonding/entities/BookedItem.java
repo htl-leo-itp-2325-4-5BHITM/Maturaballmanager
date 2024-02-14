@@ -1,14 +1,11 @@
 package at.htlleonding.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class BookedItem extends Item {
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public Bill bill;
 
     public BookedItem() {

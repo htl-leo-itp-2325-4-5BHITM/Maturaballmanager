@@ -9,21 +9,19 @@ interface CompanyPerson {
 interface Company {
     id: number;
     name: string;
-    address: string;
+    officeMail: string;
     website: string;
+    address: Address;
     contact: CompanyPerson;
 }
 
-interface Model {
-    companies: Company[]
-    todos: Todo[]
+interface Address {
+    street: string;
+    houseNumber: string;
+    floor: string;
+    door: string;
+    zipCode: string;
+    town: string;
 }
 
-interface Todo {
-    userId: number
-    id: number
-    title: string
-    completed: boolean
-}
-
-export { Company, CompanyPerson, Model, Todo };
+export { Company, CompanyPerson };

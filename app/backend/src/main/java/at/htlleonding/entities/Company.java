@@ -7,10 +7,11 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+@SequenceGenerator(name = "company_seq", initialValue = 50, allocationSize = 1)
 public class Company {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "company_seq")
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -26,7 +27,7 @@ public class Company {
     @Embedded
     private ContactPerson contactPerson;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private Set<Bill> bills;
 
     public Company() {

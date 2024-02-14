@@ -1,7 +1,8 @@
 import {html, render} from "lit-html"
 import {style} from '../styles/style'
-import {loadAllTodos} from "../services/todo-service"
-import {Todo} from "../model/model";
+import {loadData} from "../services/loadData-service"
+import {Company} from "../model/model";
+import {deleteCompany} from "../services/changeData-service";
 
 class SponsorTableComponent extends HTMLElement {
 
@@ -11,30 +12,59 @@ class SponsorTableComponent extends HTMLElement {
     }
 
     async connectedCallback() {
-        console.log("voll guter")
-        const todos = await loadAllTodos();
-        render(this.template(todos), this.shadowRoot)
+        const data = await loadData();
+        render(this.template(data), this.shadowRoot)
     }
 
-    template(todos: Todo[]) {
-        const rows = todos.map(todo => html`
+    template(data: Company[]) {
+        const rows = data.map(element => html`
             <tr>
-                <td>${todo.id}</td>
-                <td>${todo.title}</td>
+                <td>${element.name}</td>
+                <td>${element.officeMail}</td>
+                <td>${element.website}</td>
+                <td><input type="checkbox" class="delete-checkbox"></td>
             </tr>
         `)
         return html`
             ${style}
-            <table>
+            <table id="sponsor-table">
                 <thead>
-                <th>Id</th>
-                <th>Title</th>
+                <th>Firmenname</th>
+                <th>Office Mail</th>
+                <th>Website</th>
+                <th>&nbsp;</th>
                 </thead>
                 <tbody>
                 ${rows}
+                
                 </tbody>
             </table>
+            <div @click=${() => this.deleteCompany()} id="delete-button">delete</div>
         `
+    }
+
+    private deleteCompany() {
+        const checkboxes = this.shadowRoot.querySelectorAll('.delete-checkbox');
+
+        checkboxes.forEach((checkbox) => {
+            if ((checkbox as HTMLInputElement).checked) {
+                const row = checkbox.closest('tr');
+                if (row) {
+                    const name = row.children[0].textContent;
+                    const officeMail = row.children[1].textContent;
+                    const website = row.children[2].textContent;
+
+                    deleteCompany(name, officeMail, website)
+                        .then(() => {
+                            console.log(`Deleted: ${name}`);
+                            row.remove();
+                        })
+                        .catch((error) => {
+                            console.error(`Error at ${name}:`, error);
+                        });
+                }
+            }
+        });
     }
 
 }

@@ -9,15 +9,14 @@ class TitleComponent extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log("voll guter")
         render(this.template(), this.shadowRoot)
     }
 
     template() {
         return html`
             ${style}
-            <h1 class="text-4xl font-bold text-indigo-700 mb-4">Maturaballmanager</h1>
-            <h2 class="text-2xl font-bold text-gray-700 mb-8">Sponsorenverwaltung</h2>
+            <h1>Maturaballmanager</h1>
+            <h2>Sponsorenverwaltung</h2>
         `
     }
 
