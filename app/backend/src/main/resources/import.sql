@@ -1,18 +1,31 @@
+<<<<<<< HEAD
 -- Columns are sorted alphabetically descending
-INSERT INTO contactperson VALUES (1, 'john.doe@gmail.com', 'John', 'Doe', '', '1234567890');
-INSERT INTO contactperson VALUES (2, 'jane.doe@gmail.com', 'Jane', 'Doe', '', '1234567899');
-INSERT INTO contactperson VALUES (3, 'john.smith@gmail.com', 'John', 'Smith', '', '1234567898');
-INSERT INTO contactperson VALUES (4, 'jane.wilson@hotmail.com', 'Jane', 'Wilson', '', '+1-594-990-9699x0538');
-INSERT INTO contactperson VALUES (5, 'william.wilson@hotmail.com', 'William', 'Wilson', '', '001-199-673-7570x0988');
-INSERT INTO contactperson VALUES (6, 'thomas.garcia@gmail.com', 'Thomas', 'Garcia', '', '805-655-4732x78550');
-INSERT INTO contactperson VALUES (7, 'michael.williams@yahoo.com', 'Michael', 'Williams', '', '+1-714-459-8747');
-INSERT INTO contactperson VALUES (8, 'michael.jones@hotmail.com', 'Michael', 'Jones', '', '158-758-7950x56279');
+INSERT INTO person(id, phonenumber, firstname, lastname, email) VALUES (9, '+1', 'Tommy', 'Neumaier', 'neumaier.tommy@gmail.com');
+INSERT INTO mbmuser(role, id, password) VALUES (2, 9, 'Dasd');
+INSERT INTO company(id, name, website) VALUES (1, 'Facebook', 'Facebook.com');
+=======
+insert into company(id, name, website, officeMail) VALUES (1, 'Facebook', 'https://facebook.com', 'office@facebook.com');
+insert into company(id, name, website, officeMail) VALUES (2, 'Google', 'https://facebook.com', 'office@facebook.com');
+insert into company(id, name, website, officeMail) VALUES (3, 'Amazon', 'https://facebook.com', 'office@facebook.com');
+insert into company(id, name, website, officeMail) VALUES (4, 'HTL', 'https://facebook.com', 'office@facebook.com');
+insert into company(id, name, website, officeMail) VALUES (5, 'Hures', 'https://facebook.com', 'office@facebook.com');
 
-INSERT INTO company VALUES (1, 1, 'Google Street 123', 'Google', 'https://google.com/');
-INSERT INTO company VALUES (2, 2, 'Facebook Way 123', 'Facebook', 'https://facebook.com/');
-INSERT INTO company VALUES (3, 3, 'Microsoft Street 123', 'Microsoft', 'https://microsoft.com/');
-INSERT INTO company VALUES (4, 4, '559 Rose Village, Thomasberg, GA 28405', 'Development Group', 'https://developmentgroup.com/');
-INSERT INTO company VALUES (5, 5, '751 Donald Stream Apt. 305, Morristown, GA 46735', 'Electronics Inc', 'https://electronicsinc.com/');
-INSERT INTO company VALUES (6, 6, '4754 Traci Stravenue Suite 029, Port Patricia, AR 36525', 'Automotive Ltd', 'https://automotiveltd.com/');
-INSERT INTO company VALUES (7, 7, '544 Hamilton Mission, East Michaelchester, TN 09768', 'Automotive and Sons', 'https://automotiveandsons.com/');
-INSERT INTO company VALUES (8, 8, '5599 Susan Place Apt. 303, Lake Ryanstad, CA 48810', 'Logistics Group', 'https://logisticsgroup.com/');
+INSERT INTO bill (id, company_id, bookingDate) VALUES (1,1, '2024-01-01');
+INSERT INTO bill (id, company_id, bookingDate) VALUES (2,2, '2024-01-02');
+INSERT INTO bill (id, company_id, bookingDate) VALUES (3,3, '2024-01-03');
+INSERT INTO bill (id, company_id, bookingDate) VALUES (4,4, '2024-01-04');
+INSERT INTO bill (id, company_id, bookingDate) VALUES (5,5, '2024-01-05');
+
+INSERT INTO itemtemplate (id,name, price) VALUES (1,'Eintrittskarten, klein', 250);
+INSERT INTO itemtemplate (id,name, price) VALUES (2,'Eintrittskarten, groß', 500);
+INSERT INTO itemtemplate (id,name, price) VALUES (3,'Maturazeitung, A5', 500);
+INSERT INTO itemtemplate (id,name, price) VALUES (4,'Maturazeitung, A4', 750);
+INSERT INTO itemtemplate (id,name, price) VALUES (5,'Tischkarte', 200);
+
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (6,1, 'Eintrittskarten, klein', 500);
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (7,1, 'Programmheft, groß', 250);
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (8,1, 'Maturazeitung, klein', 550);
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (9,2, 'Beamerpräsentation, kurz', 250);
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (10,2, 'Plakat, A5', 200);
+INSERT INTO bookeditem (id,bill_id, name, price) VALUES (11,3, 'Website, groß', 300);
+>>>>>>> c4d1d8b (reworked backend totally)

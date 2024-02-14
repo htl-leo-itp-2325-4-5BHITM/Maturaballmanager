@@ -8,17 +8,17 @@ data:
     DROP database if exists mbm;
     DROP user if exists mbm;
     CREATE USER mbm WITH
-      LOGIN
-      NOSUPERUSER
-      NOCREATEDB
-      NOCREATEROLE
-      INHERIT
-      NOREPLICATION
-      CONNECTION LIMIT -1
-      PASSWORD 'mbm';
+        LOGIN
+        NOSUPERUSER
+        NOCREATEDB
+        NOCREATEROLE
+        INHERIT
+        NOREPLICATION
+        CONNECTION LIMIT -1
+        PASSWORD 'mbm';
     
     CREATE DATABASE mbm
-        WITH 
+        WITH
         OWNER = mbm
         ENCODING = 'UTF8'
         CONNECTION LIMIT = -1;
