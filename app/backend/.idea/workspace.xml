@@ -5,21 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="545987de-ffbe-4828-b71d-3c39ed4b7b89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/MailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/PDFService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/MailService/billMail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/PDFService/billPDF.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/BillResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/InvoiceResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Invoice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/BookedItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/BookedItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/BillDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/InvoiceDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/BillManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/InvoiceManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/PDFService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/PDFService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/import.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/import.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/build-analytics-event.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/build-analytics-event.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/import.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/import.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +75,7 @@
     "Quarkus.maturaballmanager.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "2a412d8a",
+    "git-widget-placeholder": "0f95f9c6",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -232,7 +223,7 @@
       <workItem from="1707920675158" duration="577000" />
       <workItem from="1707922624988" duration="2786000" />
       <workItem from="1707926407697" duration="1354000" />
-      <workItem from="1707984232492" duration="896000" />
+      <workItem from="1707984232492" duration="1100000" />
     </task>
     <servers />
   </component>

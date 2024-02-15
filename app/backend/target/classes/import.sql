@@ -11,15 +11,15 @@ VALUES (4, 'HTL', 'https://facebook.com', 'office@facebook.com');
 insert into company(id, name, website, officeMail)
 VALUES (5, 'Hures', 'https://facebook.com', 'office@facebook.com');
 
-INSERT INTO bill (id, company_id, bookingDate)
+INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (1, 1, '2024-01-01');
-INSERT INTO bill (id, company_id, bookingDate)
+INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (2, 2, '2024-01-02');
-INSERT INTO bill (id, company_id, bookingDate)
+INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (3, 3, '2024-01-03');
-INSERT INTO bill (id, company_id, bookingDate)
+INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (4, 4, '2024-01-04');
-INSERT INTO bill (id, company_id, bookingDate)
+INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (5, 5, '2024-01-05');
 
 INSERT INTO itemtemplate (id, name, price)
