@@ -1,9 +1,9 @@
 package at.htlleonding.repo;
 
-import at.htlleonding.entities.Bill;
+import at.htlleonding.entities.Invoice;
 import at.htlleonding.entities.BookedItem;
 import at.htlleonding.entities.Company;
-import at.htlleonding.model.dto.BillDTO;
+import at.htlleonding.model.dto.InvoiceDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BillManager {
+public class InvoiceManager {
 
     @Inject
     EntityManager em;
@@ -20,11 +20,11 @@ public class BillManager {
     @Inject
     CompanyManager cm;
 
-    public void addBill(BillDTO dto) {
+    public void addBill(InvoiceDTO dto) {
         Company company = cm.getCompanyByName(dto.companyName());
         if(company == null) throw new IllegalArgumentException();
 
-        Bill bill = new Bill(company);
+        Invoice bill = new Invoice(company);
         Set<BookedItem> bookedItemSet = new HashSet<>();
         dto.items().forEach((itemDTO -> {
             if(!itemDTO.itemName().isBlank() || !itemDTO.itemName().isEmpty()) {
@@ -37,12 +37,12 @@ public class BillManager {
     }
 
     public void deleteBill(Long id) {
-        Bill bill = getBill(id);
+        Invoice bill = getBill(id);
         if(bill == null) throw new IllegalArgumentException();
         em.remove(bill);
     }
 
-    public Bill getBill(Long id) {
-        return em.find(Bill.class, id);
+    public Invoice getBill(Long id) {
+        return em.find(Invoice.class, id);
     }
 }

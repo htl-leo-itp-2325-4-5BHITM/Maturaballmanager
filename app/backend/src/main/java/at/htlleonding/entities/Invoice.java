@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-public class Bill {
+public class Invoice {
 
     @Id
     @GeneratedValue
@@ -22,11 +22,11 @@ public class Bill {
     @CreationTimestamp
     private LocalDate bookingDate;
 
-    public Bill() {
+    public Invoice() {
 
     }
 
-    public Bill(Company company) {
+    public Invoice(Company company) {
         this();
         this.setCompany(company);
     }
@@ -36,7 +36,7 @@ public class Bill {
         return id;
     }
 
-    public Bill setId(Long id) {
+    public Invoice setId(Long id) {
         this.id = id;
         return this;
     }
@@ -45,7 +45,7 @@ public class Bill {
         return bookingDate;
     }
 
-    public Bill setBookingDate(LocalDate bookingDate) {
+    public Invoice setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
         return this;
     }
@@ -54,7 +54,7 @@ public class Bill {
         return company;
     }
 
-    public Bill setCompany(Company company) {
+    public Invoice setCompany(Company company) {
         this.company = company;
         return this;
     }
@@ -63,7 +63,7 @@ public class Bill {
         return items;
     }
 
-    public Bill setItems(Set<BookedItem> items) {
+    public Invoice setItems(Set<BookedItem> items) {
         this.items = items;
         return this;
     }

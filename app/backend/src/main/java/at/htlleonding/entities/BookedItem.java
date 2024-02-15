@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class BookedItem extends Item {
 
     @ManyToOne(cascade = CascadeType.ALL)
-    public Bill bill;
+    public Invoice bill;
 
     public BookedItem() {
         super();
@@ -17,11 +17,11 @@ public class BookedItem extends Item {
     }
 
     //<editor-fold desc="Getter & Setter">
-    public Bill getBill() {
+    public Invoice getBill() {
         return bill;
     }
 
-    public BookedItem setBill(Bill bill) {
+    public BookedItem setBill(Invoice bill) {
         this.bill = bill;
         return this;
     }

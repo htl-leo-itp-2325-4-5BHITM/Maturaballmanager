@@ -1,18 +1,18 @@
 package at.htlleonding.boundary;
 
-import at.htlleonding.model.dto.BillDTO;
-import at.htlleonding.repo.BillManager;
+import at.htlleonding.model.dto.InvoiceDTO;
+import at.htlleonding.repo.InvoiceManager;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/bills")
-public class BillResource {
+@Path("/invoice")
+public class InvoiceResource {
 
     @Inject
-    BillManager bm;
+    InvoiceManager bm;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -21,7 +21,7 @@ public class BillResource {
     }
 
     @POST
-    @Path("/getBill")
+    @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBill(Long id) {
         try {
@@ -32,10 +32,10 @@ public class BillResource {
     }
 
     @POST
-    @Path("/addBill")
+    @Path("/add")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addBill(BillDTO dto) {
+    public Response addBill(InvoiceDTO dto) {
         try {
            bm.addBill(dto);
            return Response.ok().build();
@@ -45,7 +45,7 @@ public class BillResource {
     }
 
     @POST
-    @Path("/deleteBill")
+    @Path("/delete")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteBill(Long id) {

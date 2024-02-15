@@ -28,7 +28,7 @@ public class Company {
     private ContactPerson contactPerson;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<Bill> bills;
+    private Set<Invoice> bills;
 
     public Company() {
 
@@ -55,7 +55,7 @@ public class Company {
         this.id = id;
     }
 
-    public Set<Bill> getBills() {
+    public Set<Invoice> getBills() {
         return bills;
     }
 
@@ -68,7 +68,7 @@ public class Company {
         return this;
     }
 
-    public Company setBills(Set<Bill> bills) {
+    public Company setBills(Set<Invoice> bills) {
         this.bills = bills;
         return this;
     }

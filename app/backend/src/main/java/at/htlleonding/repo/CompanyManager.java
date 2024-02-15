@@ -1,6 +1,5 @@
 package at.htlleonding.repo;
 
-import at.htlleonding.entities.Bill;
 import at.htlleonding.entities.Company;
 import at.htlleonding.model.Address;
 import at.htlleonding.model.ContactPerson;
@@ -12,10 +11,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
