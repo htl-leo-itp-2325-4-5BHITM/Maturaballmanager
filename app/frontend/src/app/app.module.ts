@@ -22,9 +22,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SponsorenComponent } from './sponsoren/sponsoren.component';
+import { CompanyOverviewItemComponent } from './company-overview-item/company-overview-item.component';
 
 @NgModule({
-  declarations: [AppComponent, InvAddEditComponent, SponsorenComponent],
+  declarations: [AppComponent, InvAddEditComponent, SponsorenComponent, CompanyOverviewItemComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {InvAddEditComponent} from "../inv-add-edit/inv-add-edit.component";
-import {InvoiceService} from "../services/invoice.service";
-import {HttpClient} from '@angular/common/http';
+import {CompanyService} from "../services/company.service";
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, SortDirection} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from "@angular/material/table";
+import {CompanyOverviewDTO} from "../../model/CompanyOverviewDTO";
 
 @Component({
   selector: 'app-sponsoren',
@@ -17,15 +15,15 @@ import {MatTableDataSource} from "@angular/material/table";
 export class SponsorenComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'address',
-    'addressnr',
+    'name',
+    'officemail',
     'title'];
   dataSource!: MatTableDataSource<any>
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _dialog: MatDialog, private _invoiceService: InvoiceService) {
+  constructor(private _dialog: MatDialog, private _invoiceService: CompanyService) {
   }
 
   ngOnInit() {
@@ -37,9 +35,11 @@ export class SponsorenComponent implements OnInit {
   }
 
   getEmployeeList() {
-    this._invoiceService.getInvoiceList().subscribe({
+    this._invoiceService.getCompanyList().subscribe({
       next: (res) => {
-        console.log(res)
+        res.forEach((company: CompanyOverviewDTO) => {
+          console.log(company)
+        })
       },
       error: (err) => {
         console.log(err)

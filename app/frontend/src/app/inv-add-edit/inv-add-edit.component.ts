@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {InvoiceService} from "../services/invoice.service";
+import {CompanyService} from "../services/company.service";
 import {DialogRef} from "@angular/cdk/dialog";
 
 @Component({
@@ -18,7 +18,7 @@ export class InvAddEditComponent {
   ]
 
 
-  constructor(private invForm: FormBuilder, private _invService: InvoiceService, private _dialogRef: DialogRef<InvAddEditComponent>) {
+  constructor(private invForm: FormBuilder, private _invService: CompanyService, private _dialogRef: DialogRef<InvAddEditComponent>) {
     this.invoiceForm = this.invForm.group({
       companyname: '',
       address: '',
@@ -33,7 +33,7 @@ export class InvAddEditComponent {
     if (this.invoiceForm.valid) {
       // log the form
       console.log(this.invoiceForm.value)
-      this._invService.addInvoice(this.invoiceForm.value).subscribe({
+      this._invService.addCompany(this.invoiceForm.value).subscribe({
         next: (val: any) => {
           alert('Invoice added successfully')
           this._dialogRef.close();
