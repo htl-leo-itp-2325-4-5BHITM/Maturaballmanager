@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {InvAddEditComponent} from "./inv-add-edit/inv-add-edit.component";
-import {InvoiceService} from "./services/invoice.service";
+import {InvAddEditComponent} from "../inv-add-edit/inv-add-edit.component";
+import {InvoiceService} from "../services/invoice.service";
 import {HttpClient} from '@angular/common/http';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, SortDirection} from '@angular/material/sort';
@@ -10,11 +10,11 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-sponsoren',
+  templateUrl: './sponsoren.component.html',
+  styleUrls: ['./sponsoren.component.scss']
 })
-export class AppComponent implements OnInit{
+export class SponsorenComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'address',
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit{
   getEmployeeList() {
     this._invoiceService.getInvoiceList().subscribe({
       next: (res) => {
-          console.log(res)
+        console.log(res)
       },
       error: (err) => {
         console.log(err)
