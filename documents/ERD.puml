@@ -1,0 +1,27 @@
+' Entities
+entity Package {
+<b>ID</b> : primary key
+
+<u>companyID</u> : foreign key
+price
+}
+
+entity Company {
+<b>ID</b> : primary key
+
+name
+contactPerson
+contactEmail
+}
+
+entity Bill {
+<b>ID</b> : primary key
+
+<u>package_id</u> : foreign key
+<u>company_id</u> : foreign key
+billingDate
+}
+
+' Relationships
+Company o-|> Bill : 1..n
+Package - Bill : 1:1

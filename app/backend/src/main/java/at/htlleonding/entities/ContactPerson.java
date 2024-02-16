@@ -1,2 +1,88 @@
-package at.htlleonding.entities;public class ContactPerson {
+package at.htlleonding.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@SequenceGenerator(name = "contactPersonSeq", initialValue = 1, allocationSize = 1)
+public class ContactPerson {
+
+    @Id
+    @GeneratedValue(generator = "contactPersonSeq")
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String mail;
+
+    private String position;
+
+    @ManyToOne
+    private Company company;
+
+    public ContactPerson() {
+
+    }
+
+    public ContactPerson(String firstName, String lastName, String mail, String position) {
+        this();
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+        this.setMail(mail);
+        this.setPosition(position);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public ContactPerson setFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public ContactPerson setLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public ContactPerson setPosition(String position) {
+        this.position = position;
+        return this;
+    }
+
+    public ContactPerson setMail(String mail) {
+        this.mail = mail;
+        return this;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public ContactPerson setCompany(Company company) {
+        this.company = company;
+        return this;
+    }
 }
