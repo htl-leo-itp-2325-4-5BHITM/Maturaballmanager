@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rechnung versenden</title>
+</head>
+<body>
+{#if data.contactPerson == null}
+    <h3>Sehr geehrte Damen und Herren,</h3>
+{#else}
+    {#if data.contactPerson.sex == 'F'}
+        <h3>Sehr geehrte Frau {data.contactPerson.lastName},</h3>
+        {#else}
+        <h3>Sehr geehrter Herr {data.contactPerson.lastName},</h3>
+    {/if}
+{/if}
+
+<p>anbei erhalten Sie die Rechnung für Ihr Sponsoring des Maturaballs der HTL Leonding. Die Rechnung ist im Anhang zu
+    finden.</p>
+
+<p>Wir bedanken uns herzlich für Ihre Unterstützung und freuen uns auf eine erfolgreiche Zusammenarbeit.</p>
+
+<p style="text-align: center;"><strong>Für weitere Informationen oder bei Fragen stehen wir Ihnen gerne zur
+        Verfügung.</strong></p>
+
+<div style="background-color: #f2f2f2; text-align: center; padding: 20px;">
+    <a href="https://maturaball.htl-leonding.ac.at/">
+        <img src="https://www.htl-leonding.at/wp-content/uploads/2022/10/htllogo_2022_black_v2-600x136.png"
+             alt="Maturaball HTL Leonding" style="max-height: 50px;">
+    </a>
+    <p style="font-size: 12px; color: #666666;">© 2024 Maturaballkomitee der HTBLA Leonding - Alle Rechte
+        vorbehalten</p>
+    <p style="font-size: 12px; color: #666666;">Limesstraße 12-14a, 4060 Leonding</p>
+    <p style="font-size: 12px; color: #666666;">E-Mail-Adresse: <a href="mailto:maturaballkomitee@htl-leonding.ac.at"
+                                                                   style="color: #1a0dab; text-decoration: none;">maturaballkomitee@htl-leonding.ac.at</a>
+    </p>
+</div>
+</body>
+</html>

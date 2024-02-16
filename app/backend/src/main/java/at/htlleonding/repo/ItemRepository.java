@@ -27,15 +27,14 @@ public class ItemRepository {
     }
 
     public boolean add(ItemDTO item, long invoiceId) {
-       // if(Arrays.stream(item.getClass().getRecordComponents()).allMatch(Objects::nonNull)) {
-            if(this.getItemTemplateOverview().stream().anyMatch(i -> i.equals(item.name()))) throw new IllegalArgumentException("Item already exists!");
-            if(item.price() >= 0) {
+        if (Arrays.stream(item.getClass().getRecordComponents()).allMatch(Objects::nonNull)) {
+            if (item.price() >= 0) {
                 em.persist(new BookedItem(item.name(), item.price(), em.find(Invoice.class, invoiceId)));
                 return true;
             }
             throw new IllegalArgumentException("Price is less than 0!");
-    //    }
-//        throw new IllegalArgumentException("DTO is not valid!");
+        }
+        throw new IllegalArgumentException("DTO is not valid!");
     }
 
     protected List<BookedItem> getItemsByInvoice(Long invoiceId) {

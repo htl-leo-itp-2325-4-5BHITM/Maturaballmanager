@@ -11,6 +11,10 @@ VALUES (4, 'HTL', 'https://facebook.com', 'office@facebook.com');
 insert into company(id, name, website, officeMail)
 VALUES (5, 'Hures', 'https://facebook.com', 'office@facebook.com');
 
+insert into contactperson( id, firstname, lastname, mail, sex, position, company_id)
+    values
+    (1, 'Mark', 'Zuckerberg', 'zuckerberg@facebook.com', 'M', 'CEO', 1);
+
 INSERT INTO invoice (id, company_id, bookingDate)
 VALUES (1, 1, '2024-01-01');
 INSERT INTO invoice (id, company_id, bookingDate)

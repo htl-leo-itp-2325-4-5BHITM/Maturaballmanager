@@ -3,7 +3,7 @@ package at.htlleonding.entities;
 import jakarta.persistence.*;
 
 @Entity
-@SequenceGenerator(name = "contactPersonSeq", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "contactPersonSeq", initialValue = 50, allocationSize = 1)
 public class ContactPerson {
 
     @Id
@@ -16,6 +16,8 @@ public class ContactPerson {
 
     private String mail;
 
+    private char sex;
+
     private String position;
 
     @ManyToOne
@@ -25,12 +27,13 @@ public class ContactPerson {
 
     }
 
-    public ContactPerson(String firstName, String lastName, String mail, String position) {
+    public ContactPerson(String firstName, String lastName, String mail, String position, char sex) {
         this();
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setMail(mail);
         this.setPosition(position);
+        this.setSex(sex);
     }
 
     public void setId(Long id) {
@@ -47,6 +50,15 @@ public class ContactPerson {
 
     public ContactPerson setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
+    }
+
+    public char getSex() {
+        return sex;
+    }
+
+    public ContactPerson setSex(char sex) {
+        this.sex = sex;
         return this;
     }
 

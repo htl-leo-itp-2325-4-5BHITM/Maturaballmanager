@@ -5,23 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="545987de-ffbe-4828-b71d-3c39ed4b7b89" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/InvoiceResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/AddressDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CompanyDetailDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CompanyOverviewDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateCompanyDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateContactPersonDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/CreateInvoiceDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/InvoiceOverviewDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/items/ItemDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/items/ItemTemplateDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/InvoiceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/ItemRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/CompanyResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/CompanyResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/InvoiceDetailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/MailService/invoiceMail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/ContactPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/ContactPerson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/CompanyOverviewDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/ContactPersonPreviewDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateCompanyDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateCompanyDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateContactPersonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/ContactPersonDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/CreateInvoiceDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/invoice/CreateInvoiceDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/InvoiceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/InvoiceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/ItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/ItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/MailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/import.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/import.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/MailService/billMail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/build-analytics-event.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/build-analytics-event.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/build-metrics.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/build-metrics.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/import.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/import.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/MailService/billMail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,11 +109,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="at.htlleonding.model.dto.invoice" />
       <recent name="at.htlleonding.model.dto.company" />
       <recent name="at.htlleonding.model.dto" />
       <recent name="at.htlleonding.repo" />
       <recent name="at.htlleonding.entities" />
-      <recent name="at.htlleonding.model.generators.enums" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -247,7 +250,7 @@
       <workItem from="1708027685279" duration="5589000" />
       <workItem from="1708033996630" duration="56000" />
       <workItem from="1708034063476" duration="2201000" />
-      <workItem from="1708066293463" duration="961000" />
+      <workItem from="1708066293463" duration="3701000" />
     </task>
     <servers />
   </component>

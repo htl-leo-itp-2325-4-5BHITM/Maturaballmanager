@@ -1,5 +1,7 @@
 package at.htlleonding.services;
 
+import at.htlleonding.entities.Invoice;
+import at.htlleonding.model.dto.invoice.InvoiceDetailDTO;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.CheckedTemplate;
@@ -15,12 +17,12 @@ public class MailService {
 
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance billMail(String data);
+        public static native TemplateInstance invoiceMail(InvoiceDetailDTO data);
     }
 
-    public boolean sendActivationMail(String recipient, String dto) {
-        var text = Templates.billMail(dto).render();
-        mailer.send(Mail.withHtml(recipient, "HTL Leonding - Ihre Sponsoringrechnung", text));
+    public boolean sendInvoice(InvoiceDetailDTO dto) {
+        var text = Templates.invoiceMail(dto).render();
+        mailer.send(Mail.withHtml(dto.contactPerson().mail() == null ? dto.officeMail() : dto.contactPerson().mail(), "HTL Leonding - Ihre Sponsoringrechnung", text).addHeader("charset", "utf-8"));
         return true;
     }
 }
