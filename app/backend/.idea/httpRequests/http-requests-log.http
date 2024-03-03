@@ -1,0 +1,370 @@
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T194309.200.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193839.500.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193836.500.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193622.500.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193542.500.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193528.500.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193454.500.html
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T193430.500.html
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T191624.200.txt
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 24
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "content": "Tommy"
+}
+
+<> 2024-03-03T191555.200.png
+
+###
+
+POST http://localhost:9999/tickets/qr
+Content-Type: application/json
+Content-Length: 2
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+""
+
+<> 2024-03-03T191547.404.html
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 21
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "info": "Tommy"
+}
+
+<> 2024-03-03T191324.200.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 21
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "info": "Tommy"
+}
+
+<> 2024-03-03T184433.200.png
+
+###
+
+POST http://localhost:9999/tickets/qr
+Content-Type: application/json
+Content-Length: 2
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+""
+
+<> 2024-03-03T184431.404.html
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181601.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181359.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181342.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181341-1.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181341.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181340.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181339.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181338.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181325.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181324.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181320.200.txt
+
+###
+
+GET http://localhost:9999/api/keyexchange
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-03-03T181314.200.txt
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 21
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "info": "Tommy"
+}
+
+<> 2024-03-03T180456.200.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 29
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "info": "Tommy Neumann"
+}
+
+<> 2024-03-03T180316.200.png
+
+###
+
+POST http://localhost:9999/api/tickets/qr
+Content-Type: application/json
+Content-Length: 57
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "issuer": "HTL Leonding",
+  "info": "Tommy Neumann"
+}
+
+<> 2024-03-03T175916.200.png
+
+###
+
+POST http://localhost:9999/tickets/qr
+Content-Type: application/json
+Content-Length: 32
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "issuer": "",
+  "info": ""
+}
+
+<> 2024-03-03T175903.404.html
+
+###
+

@@ -5,10 +5,93 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="545987de-ffbe-4828-b71d-3c39ed4b7b89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T175903.404.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T175916.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T180316.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T180456.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181314.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181320.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181324.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181325.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181338.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181339.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181340.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181341-1.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181341.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181342.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181359.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T181601.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T184431.404.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T184433.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T191324.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T191547.404.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T191555.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T191624.200.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193430.500.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193454.500.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193528.500.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193542.500.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193622.500.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193836.500.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T193839.500.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/2024-03-03T194309.200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/http-client.cookies" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/TicketResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Customer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Ticket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/UpdateCompanyDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/tickets/TicketQRCodeDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/services/TicketQRService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/private.key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/public.key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/private.key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/public.key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/ios" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7b01c967-b13b-4af2-88ba-1281ef8eda53.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/CompanyResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/boundary/CompanyResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/entities/Company.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/AddressDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/AddressDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateCompanyDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/model/dto/company/CreateCompanyDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/at/htlleonding/repo/CompanyRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/build-analytics-event.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/build-analytics-event.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/build-metrics.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/build-metrics.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/company-overview-item/company-overview-item.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/company-overview-item/company-overview-item.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/company-overview-item/company-overview-item.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/company-overview-item/company-overview-item.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/company-overview-item/company-overview-item.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/company-overview-item/company-overview-item.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/company-overview-item/company-overview-item.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/company-overview-item/company-overview-item.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/inv-add-edit/inv-add-edit.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/inv-add-edit/inv-add-edit.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/inv-add-edit/inv-add-edit.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/inv-add-edit/inv-add-edit.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/inv-add-edit/inv-add-edit.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/inv-add-edit/inv-add-edit.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/inv-add-edit/inv-add-edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/inv-add-edit/inv-add-edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/services/company.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/services/company.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/services/invoice.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/services/invoice.service.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/sponsoren/sponsoren.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/sponsoren/sponsoren.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/sponsoren/sponsoren.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/sponsoren/sponsoren.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/sponsoren/sponsoren.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/sponsoren/sponsoren.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/sponsoren/sponsoren.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/app/sponsoren/sponsoren.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/assets/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/assets/.gitkeep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/model/CompanyOverviewDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/model/CompanyOverviewDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/src/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/web/tsconfig.spec.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +104,8 @@
         <option value="Enum" />
         <option value="HTTP Request" />
         <option value="HTML File" />
-        <option value="Class" />
         <option value="Record" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -66,6 +149,9 @@
     &quot;HTTP Request.generated-requests | #10.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.generated-requests | #11.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.generated-requests | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #26.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #27.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #28.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.generated-requests | #3.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.generated-requests | #9.executor&quot;: &quot;Run&quot;,
     &quot;Maven.backend [clean].executor&quot;: &quot;Run&quot;,
@@ -99,6 +185,9 @@
       <recent name="at.htlleonding.repo" />
       <recent name="at.htlleonding.entities" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
@@ -106,19 +195,19 @@
     </option>
   </component>
   <component name="RunManager" selected="Quarkus.backend">
-    <configuration name="company-test | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/company-test.http" requestIdentifier="#1" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="company-test | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/company-test.http" index="2" requestIdentifier="#2" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="company-test | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/company-test.http" index="3" requestIdentifier="#3" runType="Run single request">
-      <method v="2" />
-    </configuration>
     <configuration name="company-test | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/company-test.http" index="4" requestIdentifier="#4" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="company-test | #5" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/company-test.http" index="5" requestIdentifier="#5" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #26" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="26" requestIdentifier="#26" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #27" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="27" requestIdentifier="#27" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #28" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="28" requestIdentifier="#28" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="backend" type="QuarkusRunConfigurationType" factoryName="Quarkus" nameIsGenerated="true">
@@ -197,11 +286,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.generated-requests | #26" />
+        <item itemvalue="HTTP Request.generated-requests | #28" />
+        <item itemvalue="HTTP Request.generated-requests | #27" />
         <item itemvalue="HTTP Request.company-test | #5" />
         <item itemvalue="HTTP Request.company-test | #4" />
-        <item itemvalue="HTTP Request.company-test | #3" />
-        <item itemvalue="HTTP Request.company-test | #2" />
-        <item itemvalue="HTTP Request.company-test | #1" />
       </list>
     </recent_temporary>
   </component>
@@ -235,7 +324,11 @@
       <workItem from="1708033996630" duration="56000" />
       <workItem from="1708034063476" duration="2201000" />
       <workItem from="1708066293463" duration="3701000" />
-      <workItem from="1708070227968" duration="1442000" />
+      <workItem from="1708070227968" duration="5803000" />
+      <workItem from="1708424691335" duration="22000" />
+      <workItem from="1708940105503" duration="3629000" />
+      <workItem from="1709482943995" duration="5784000" />
+      <workItem from="1709502742653" duration="300000" />
     </task>
     <servers />
   </component>

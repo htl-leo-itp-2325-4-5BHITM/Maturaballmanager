@@ -44,6 +44,7 @@ public class Company {
 
     public Company(String name, String website, String officeMail, Address address, Set<ContactPerson> contactPersons) {
         this(name, website);
+        this.setOfficeMail(officeMail);
         this.setAddress(address);
         this.setContactPersons(contactPersons);
     }

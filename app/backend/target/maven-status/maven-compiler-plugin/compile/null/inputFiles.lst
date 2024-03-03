@@ -1,16 +1,21 @@
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/boundary/TicketResource.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/invoice/CreateInvoiceDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/Customer.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/item/Item.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/boundary/InvoiceResource.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/services/PatternStorage.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/services/PDFService.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/tickets/TicketQRCodeDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/company/ContactPersonDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/AddressDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/repo/CompanyRepository.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/invoice/InvoiceDetailDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/company/UpdateCompanyDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/repo/ItemRepository.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/ContactPerson.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/company/CompanyOverviewDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/invoice/InvoiceOverviewDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/services/TicketQRService.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/item/BookedItem.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/services/MailService.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/Invoice.java
@@ -23,3 +28,4 @@
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/invoice/items/ItemDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/model/dto/invoice/items/ItemTemplateDTO.java
 /Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/item/ItemTemplate.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/backend/src/main/java/at/htlleonding/entities/Ticket.java
