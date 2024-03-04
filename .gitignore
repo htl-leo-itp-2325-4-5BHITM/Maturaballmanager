@@ -1,3 +1,47 @@
+# Maven
+app/backend/target/
+app/backend/pom.xml.tag
+app/backend/pom.xml.releaseBackup
+app/backend/pom.xml.versionsBackup
+app/backend/release.properties
+app/backend/.flattened-pom.xml
+
+# Eclipse
+app/backend/.project
+app/backend/.classpath
+app/backend/.settings/
+app/backend/bin/
+
+# IntelliJ
+app/backend/.idea
+app/backend/*.ipr
+app/backend/*.iws
+
+# NetBeans
+app/backend/nb-configuration.xml
+
+# Visual Studio Code
+app/backend/.vscode
+app/backend/.factorypath
+
+# OSX
+app/backend/.DS_Store
+
+# Vim
+app/backend/*.swp
+app/backend/*.swo
+
+# patch
+app/backend/*.orig
+app/backend/*.rej
+
+# Local environment
+app/backend/.env
+
+# Plugin directory
+app/backend/.quarkus/cli/plugins/
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/java,node,webstorm,intellij,phpstorm,phpstorm+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,node,webstorm,intellij,phpstorm,phpstorm+all,visualstudiocode
 
