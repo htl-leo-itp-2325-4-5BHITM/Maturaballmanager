@@ -19,6 +19,8 @@ public class Company {
 
     private String officeMail;
 
+    private String officePhone;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
@@ -83,6 +85,15 @@ public class Company {
 
     public Company setOfficeMail(String officeMail) {
         this.officeMail = officeMail;
+        return this;
+    }
+
+    public String getOfficePhone() {
+        return officePhone;
+    }
+
+    public Company setOfficePhone(String officePhone) {
+        this.officePhone = officePhone;
         return this;
     }
 

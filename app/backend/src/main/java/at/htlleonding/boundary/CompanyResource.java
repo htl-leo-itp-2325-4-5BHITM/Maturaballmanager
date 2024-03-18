@@ -17,10 +17,17 @@ public class CompanyResource {
     CompanyRepository companyRepository;
 
     @GET
-    @Path("/getAll")
+    @Path("/overview")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCompanies() {
-        return Response.ok(companyRepository.getCompanies()).build();
+        return Response.ok(companyRepository.getCompanyOverview()).build();
+    }
+
+    @GET
+    @Path("/detail/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCompanyDetail(@PathParam("id") Long id) {
+        return Response.ok(companyRepository.getCompanyDetail(id)).build();
     }
 
     @POST

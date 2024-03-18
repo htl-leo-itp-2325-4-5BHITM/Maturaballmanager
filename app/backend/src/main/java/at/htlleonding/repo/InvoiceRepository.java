@@ -27,7 +27,7 @@ public class InvoiceRepository {
     MailService mailService;
 
     public List<Long> getByCompany(Long companyId) {
-        return em.createQuery("SELECT new at.htlleonding.model.dto.invoice.InvoiceOverviewDTO(i.id, i.company.name, i.bookingDate) FROM Invoice i WHERE i.company.id = :companyId ORDER BY i.bookingDate DESC", Long.class).setParameter("companyId", companyId).getResultList();
+        return em.createQuery("SELECT new at.htlleonding.model.dto.invoice.InvoiceOverviewDTO(i.id, i.bookingDate) FROM Invoice i WHERE i.company.id = :companyId ORDER BY i.bookingDate DESC", Long.class).setParameter("companyId", companyId).getResultList();
     }
 
     public void delete(Long invoiceId) {
@@ -49,7 +49,7 @@ public class InvoiceRepository {
         InvoiceDetailDTO invoiceDTO = new InvoiceDetailDTO(invoice.getId(),
                 invoice.getCompany().getName(),
                 invoice.getCompany().getOfficeMail(),
-                contactPerson == null ? null : new ContactPersonDTO(contactPerson.getFirstName(), contactPerson.getLastName(), contactPerson.getMail(), contactPerson.getPosition(), contactPerson.getSex()),
+                contactPerson == null ? null : new ContactPersonDTO(contactPerson.getId(),contactPerson.getFirstName(), contactPerson.getLastName(), contactPerson.getMail(), contactPerson.getPosition(), contactPerson.getSex()),
                 invoice.getBookingDate(),
                 dto.items());
         mailService.sendInvoice(invoiceDTO);
