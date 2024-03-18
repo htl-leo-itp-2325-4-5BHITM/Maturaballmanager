@@ -1,37 +1,47 @@
-import { Component, Input } from '@angular/core';
-import { PartnerCompanyService } from "../../../services/partnercompany/partner-company.service";
-import { PartnerCompanyDetailDTO } from "../../../model/partnerCompany/PartnerCompanyDetailDTO";
-import { PartnerCompanyOverviewDTO } from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
-import {NgIf} from "@angular/common";
+// Import statements...
+import { Component, Input, OnInit } from '@angular/core';
+import {PartnerCompanyService} from "../../../services/partnercompany/partner-company.service";
+import {PartnerCompanyDetailDTO} from "../../../model/partnerCompany/PartnerCompanyDetailDTO";
+import {PartnerCompanyOverviewDTO} from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-sponsorship-table-item',
-  templateUrl: './sponsorship-table-item.component.html',
-  styleUrls: ['./sponsorship-table-item.component.scss'],
-  imports: [
-    NgIf
-  ],
-  standalone: true
+    selector: 'app-sponsorship-table-item',
+    templateUrl: './sponsorship-table-item.component.html',
+    styleUrls: ['./sponsorship-table-item.component.scss'],
+    imports: [
+        NgIf,
+        NgForOf,
+        CurrencyPipe,
+        DatePipe
+    ],
+    standalone: true
 })
-export class SponsorshipTableItemComponent {
-  // @ts-ignore
-  @Input() company: PartnerCompanyOverviewDTO;
-  detailsVisible: boolean = false;
-  companyDetails?: PartnerCompanyDetailDTO;
+export class SponsorshipTableItemComponent implements OnInit {
+    @Input() company: PartnerCompanyOverviewDTO = {} as PartnerCompanyOverviewDTO;
+    details: PartnerCompanyDetailDTO = {} as PartnerCompanyDetailDTO
+    isExpanded: boolean = false;
 
-  constructor(private service: PartnerCompanyService) {}
+    constructor(private partnerCompanyService: PartnerCompanyService) {}
 
-  toggleDetails() {
-    if (!this.detailsVisible) {
-      this.service.getCompanyDetails(this.company.id).then(details => {
-        this.companyDetails = details;
-        this.detailsVisible = true;
-      }).catch(error => {
-        console.error("Fehler beim Abrufen der Unternehmensdetails", error);
-      });
-    } else {
-      this.detailsVisible = false;
+    ngOnInit(): void {}
+
+    toggleDetails(event?: MouseEvent): void {
+        if (event) {
+            event.stopPropagation();
+        }
+
+        if (!this.isExpanded && this.details.id === undefined) {
+            this.partnerCompanyService.getCompanyDetails(this.company.id).then((data) => {
+                this.details = data;
+                this.isExpanded = true;
+            });
+        } else {
+            this.isExpanded = !this.isExpanded;
+        }
     }
-  }
 
+    addInvoice() {
+
+    }
 }

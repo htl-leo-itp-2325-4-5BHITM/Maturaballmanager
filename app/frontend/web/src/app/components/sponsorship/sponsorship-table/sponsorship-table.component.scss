@@ -1,3 +1,5 @@
+@import '../../../../styles';
+
 .table-container {
   display: block;
   width: 100%;
@@ -8,13 +10,12 @@
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background-color: #007bff;
+  background-color: $primary-color;
   color: white;
-}
-.table-header .header-item {
-  flex: 1;
-  text-align: left;
-  font-weight: bold;
-}
 
-/*# sourceMappingURL=sponsorship-table.component.css.map */
+  .header-item {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+  }
+}

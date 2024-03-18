@@ -1,9 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
-root {
-  --standard-font: "Poppins", sans-serif;
-  font-family: var(--standard-font);
-}
+// Farbpalette
+$primary-color: #007bff; // Blau
+$secondary-color: #6c757d; // Grau
+$detail-background-color: #f8f9fa; // Sehr helles Grau
+$border-color: #dee2e6; // Helles Grau
 
-body {
-  margin: 0;
+// Typografie
+$base-font-size: 1rem; // 16px
+$font-family: 'Segoe UI', 'Roboto', 'Oxygen',
+'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+sans-serif;
+
+// Mixin für Buttons
+@mixin button-style($bg-color: $primary-color) {
+  padding: 0.375rem 0.75rem;
+  font-size: $base-font-size;
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: $bg-color;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover {
+    background-color: darken($bg-color, 10%);
+  }
 }

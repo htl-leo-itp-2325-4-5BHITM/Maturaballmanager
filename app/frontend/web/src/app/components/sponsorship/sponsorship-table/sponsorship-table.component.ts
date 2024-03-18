@@ -1,32 +1,23 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
-import {SponsorshipTableItemComponent} from "../sponsorship-table-item/sponsorship-table-item.component";
-import {PartnerCompanyService} from "../../../services/partnercompany/partner-company.service";
+import { Component, OnInit } from '@angular/core';
 import {PartnerCompanyOverviewDTO} from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
-
+import {PartnerCompanyService} from "../../../services/partnercompany/partner-company.service";
+import {SponsorshipTableItemComponent} from "../sponsorship-table-item/sponsorship-table-item.component";
+import {NgForOf} from "@angular/common";
 @Component({
   selector: 'app-sponsorship-table',
-  standalone: true,
-  imports: [
-    NgForOf,
-    SponsorshipTableItemComponent
-  ],
-  providers: [PartnerCompanyService],
   templateUrl: './sponsorship-table.component.html',
-  styleUrl: './sponsorship-table.component.css'
+  standalone: true,
+  imports: [SponsorshipTableItemComponent, NgForOf],
+  styleUrls: ['./sponsorship-table.component.scss']
 })
 export class SponsorshipTableComponent implements OnInit {
-  protected companies: PartnerCompanyOverviewDTO[];
-  @Inject(PartnerCompanyService) private service: PartnerCompanyService
+  companies: PartnerCompanyOverviewDTO[] = [];
 
-  constructor(service: PartnerCompanyService) {
-    this.companies = [];
-    this.service = service;
-  }
+  constructor(private partnerCompanyService: PartnerCompanyService) {}
 
-  ngOnInit() {
-    this.service.getPartnerCompanyOverview().then((data: PartnerCompanyOverviewDTO[]) => {
-      this.companies = data;
+  ngOnInit(): void {
+    this.partnerCompanyService.getPartnerCompanyOverview().then(companies => {
+        this.companies = companies;
     });
   }
 }

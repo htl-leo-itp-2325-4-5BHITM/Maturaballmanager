@@ -1,3 +1,12 @@
-<div id="partnercompanies" *ngFor="let company of this.companies">
-  <app-sponsorship-table-item [company]="company"></app-sponsorship-table-item>
+<div class="table-container">
+    <div class="table-header">
+        <div class="header-item">Unternehmensname</div>
+        <div class="header-item">Büro-Mail</div>
+        <div class="header-item">Kontaktperson</div>
+        <div class="header-item">Einnahmen</div>
+        <div class="header-item">Aktionen</div>
+    </div>
+    <div class="table-body">
+        <app-sponsorship-table-item *ngFor="let company of companies" [company]="company"></app-sponsorship-table-item>
+    </div>
 </div>

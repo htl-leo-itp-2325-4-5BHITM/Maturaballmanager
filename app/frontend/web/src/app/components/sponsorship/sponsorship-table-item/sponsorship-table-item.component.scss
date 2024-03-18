@@ -1,41 +1,36 @@
-.sponsor-item {
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-}
+@import '../../../../styles';
 
-.sponsor-overview {
+.table-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: #fff;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid $border-color;
+  &:hover {
+    background-color: $detail-background-color;
+  }
+
+  .row-item {
+    flex: 1;
+    text-align: left;
+  }
 }
 
-.sponsor-overview h4 {
-  margin: 0;
-  color: #000;
+.details-button {
+  @include button-style($secondary-color);
 }
 
-.sponsor-overview p {
-  margin: 0;
-  color: #666;
+.details-container {
+  display: none;
+  padding: 1rem;
+  background-color: $detail-background-color;
+  border-top: none;
+
+  &.expanded {
+    display: block; // oder flex, je nach Inhalt
+  }
 }
 
-.sponsor-details {
-  padding: 10px;
-  background-color: #f9f9f9;
-}
-
-.toggle-icon {
-  font-size: 24px;
-}
-/* sponsorship-table-item.component.scss */
-.sponsor-details {
-  transition: max-height 0.5s ease;
-  overflow: hidden;
-  max-height: 0;
-}
-
-.details-visible .sponsor-details {
-  max-height: 1000px; /* Ein hinreichend großer Wert */
+.add-invoice-button {
+  @include button-style();
+  margin-top: 1rem; // Abstand zum oberen Inhalt
 }
