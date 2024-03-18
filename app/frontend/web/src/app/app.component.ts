@@ -1,43 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {InvAddEditComponent} from "./inv-add-edit/inv-add-edit.component";
-import {CompanyService} from "./services/company.service";
-import {HttpClient} from '@angular/common/http';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, SortDirection} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MatTableDataSource} from "@angular/material/table";
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import {DashboardAreaComponent} from "./components/general/dashboard-area/dashboard-area.component";
+import {HeaderComponentComponent} from "./components/general/header-component/header-component.component";
+import {SponsorshipTableComponent} from "./components/sponsorship/sponsorship-table/sponsorship-table.component";
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, DashboardAreaComponent, HeaderComponentComponent, SponsorshipTableComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private _dialog: MatDialog, private _companyService: CompanyService) {
-  }
-
-  ngOnInit() {
-    this.getCompanies();
-  }
-
-  openAddEditInvoiceForm() {
-    this._dialog.open(InvAddEditComponent)
-  }
-
-  getCompanies() {
-    this._companyService.getCompanyList().subscribe({
-      next: (res) => {
-        console.log(res)
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    })
-  }
+export class AppComponent {
+  title = 'newMBMfrontend';
+  apiURL = 'http://localhost:8080';
 }

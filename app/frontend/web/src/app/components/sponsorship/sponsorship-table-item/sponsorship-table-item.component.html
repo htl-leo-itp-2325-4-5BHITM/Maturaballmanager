@@ -1,0 +1,10 @@
+<div class="sponsor-item" (click)="toggleDetails()">
+  <div class="sponsor-overview">
+    <h4>{{ company.companyName }}</h4>
+    <p>{{ company.officeMail }}</p>
+    <span class="toggle-icon">{{ detailsVisible ? '▲' : '▼' }}</span>
+  </div>
+  <div class="sponsor-details" *ngIf="detailsVisible">
+    <p>Umsatz: {{ companyDetails?.revenue }} €</p>
+  </div>
+</div>

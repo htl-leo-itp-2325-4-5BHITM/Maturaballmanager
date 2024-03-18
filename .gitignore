@@ -41,6 +41,10 @@ app/backend/.env
 # Plugin directory
 app/backend/.quarkus/cli/plugins/
 
+app/frontend/web/.idea/
+app/frontend/web/.DS_Store
+app/frontend/.idea/
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,node,webstorm,intellij,phpstorm,phpstorm+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,node,webstorm,intellij,phpstorm,phpstorm+all,visualstudiocode

@@ -1,0 +1,41 @@
+.sponsor-item {
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.sponsor-overview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.sponsor-overview h4 {
+  margin: 0;
+  color: #000;
+}
+
+.sponsor-overview p {
+  margin: 0;
+  color: #666;
+}
+
+.sponsor-details {
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.toggle-icon {
+  font-size: 24px;
+}
+/* sponsorship-table-item.component.scss */
+.sponsor-details {
+  transition: max-height 0.5s ease;
+  overflow: hidden;
+  max-height: 0;
+}
+
+.details-visible .sponsor-details {
+  max-height: 1000px; /* Ein hinreichend großer Wert */
+}
