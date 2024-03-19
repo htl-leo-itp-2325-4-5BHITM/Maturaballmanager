@@ -1,3 +1,4 @@
+
 import {Injectable} from '@angular/core';
 import {PartnerCompanyOverviewDTO} from "../../model/partnerCompany/PartnerCompanyOverviewDTO";
 import {apiUrl} from "../../app.config";

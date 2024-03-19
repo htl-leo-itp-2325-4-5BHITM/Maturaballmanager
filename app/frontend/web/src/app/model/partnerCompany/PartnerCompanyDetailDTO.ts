@@ -7,7 +7,7 @@ export interface PartnerCompanyDetailDTO {
   companyName: string,
   officeMail: string,
   address: AddressDTO,
-  contactPersons: ContactPersonDTO[],
+  contactPerson: ContactPersonDTO,
   invoices: InvoiceOverviewDTO[]
   revenue: number
 }

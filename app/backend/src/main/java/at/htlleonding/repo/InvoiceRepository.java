@@ -49,9 +49,14 @@ public class InvoiceRepository {
         InvoiceDetailDTO invoiceDTO = new InvoiceDetailDTO(invoice.getId(),
                 invoice.getCompany().getName(),
                 invoice.getCompany().getOfficeMail(),
-                contactPerson == null ? null : new ContactPersonDTO(contactPerson.getId(),contactPerson.getFirstName(), contactPerson.getLastName(), contactPerson.getMail(), contactPerson.getPosition(), contactPerson.getSex()),
+                contactPerson == null ? null : new ContactPersonDTO(contactPerson.getId(), contactPerson.getFirstName(), contactPerson.getLastName(), contactPerson.getMail(), contactPerson.getPosition(), contactPerson.getSex()),
                 invoice.getBookingDate(),
                 dto.items());
-        mailService.sendInvoice(invoiceDTO);
+    }
+
+    public void sendInvoice(InvoiceDetailDTO dto) {
+        Invoice invoice = em.find(Invoice.class, dto.id());
+        if(invoice==null) throw new IllegalArgumentException("Invoice does not exist!");
+        mailService.sendInvoice(dto);
     }
 }

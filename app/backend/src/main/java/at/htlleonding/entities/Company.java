@@ -24,8 +24,8 @@ public class Company {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
-    private Set<ContactPerson> contactPersons;
+    @OneToOne(cascade = CascadeType.ALL)
+    private ContactPerson contactPerson;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private Set<Invoice> invoices;
@@ -44,11 +44,11 @@ public class Company {
         this.setWebsite(website);
     }
 
-    public Company(String name, String website, String officeMail, Address address, Set<ContactPerson> contactPersons) {
+    public Company(String name, String website, String officeMail, Address address, ContactPerson contactPerson) {
         this(name, website);
         this.setOfficeMail(officeMail);
         this.setAddress(address);
-        this.setContactPersons(contactPersons);
+        this.setContactPerson(contactPerson);
     }
 
     //<editor-fold desc="Getter & Setter">
@@ -106,12 +106,12 @@ public class Company {
         return this;
     }
 
-    public Set<ContactPerson> getContactPersons() {
-        return contactPersons;
+    public ContactPerson getContactPerson() {
+        return contactPerson;
     }
 
-    public Company setContactPersons(Set<ContactPerson> contactPersons) {
-        this.contactPersons = contactPersons;
+    public Company setContactPerson(ContactPerson contactPerson) {
+        this.contactPerson = contactPerson;
         return this;
     }
 

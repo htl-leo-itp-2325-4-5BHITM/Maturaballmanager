@@ -20,9 +20,6 @@ public class ContactPerson {
 
     private String position;
 
-    @ManyToOne
-    private Company company;
-
     public ContactPerson() {
 
     }
@@ -86,15 +83,6 @@ public class ContactPerson {
 
     public ContactPerson setMail(String mail) {
         this.mail = mail;
-        return this;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public ContactPerson setCompany(Company company) {
-        this.company = company;
         return this;
     }
 }

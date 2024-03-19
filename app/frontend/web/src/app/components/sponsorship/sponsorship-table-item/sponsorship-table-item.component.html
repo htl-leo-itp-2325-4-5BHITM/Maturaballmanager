@@ -3,12 +3,13 @@
     <div class="row-item">{{ company.officeMail }}</div>
     <div class="row-item">{{ company.contactPersonName }}</div>
     <div class="row-item">{{ company.revenue | currency }}</div>
+    <div class="row-item">Aufklappen</div>
 </div>
 
 <div *ngIf="isExpanded" class="details-container" [class.expanded]="isExpanded">
     <div><strong>Kontaktpersonen:</strong></div>
-    <div *ngFor="let person of details.contactPersons">
-        <p>{{ person.firstName }} {{ person.lastName }} ({{ person.position }})</p>
+    <div *ngIf="details.contactPerson">
+        <p>{{ details.contactPerson.firstName }} {{ details.contactPerson.lastName }} ({{ details.contactPerson.position }})</p>
     </div>
     <div><strong>Rechnungen:</strong></div>
     <div *ngFor="let invoice of details.invoices">
