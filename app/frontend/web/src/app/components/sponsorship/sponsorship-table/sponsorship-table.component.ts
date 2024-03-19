@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {PartnerCompanyOverviewDTO} from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
 import {PartnerCompanyService} from "../../../services/partnercompany/partner-company.service";
 import {SponsorshipTableItemComponent} from "../sponsorship-table-item/sponsorship-table-item.component";

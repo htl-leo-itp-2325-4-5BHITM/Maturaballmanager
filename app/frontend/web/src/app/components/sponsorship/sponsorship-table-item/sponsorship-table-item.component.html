@@ -16,4 +16,14 @@
         <p>Rechnung #{{ invoice.id }} vom {{ invoice.invoiceDate | date:'mediumDate' }}</p>
     </div>
     <button class="add-invoice-button" (click)="addInvoice()">Rechnung hinzufügen</button>
+
+    <button (click)="openModal(modalTemplate)">Open modal</button>
 </div>
+
+
+
+<ng-template #modalTemplate>
+    <div>This is our custom modal content</div>
+</ng-template>
+
+

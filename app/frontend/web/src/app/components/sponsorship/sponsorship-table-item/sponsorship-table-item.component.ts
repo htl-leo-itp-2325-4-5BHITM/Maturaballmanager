@@ -1,9 +1,10 @@
 // Import statements...
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {PartnerCompanyService} from "../../../services/partnercompany/partner-company.service";
 import {PartnerCompanyDetailDTO} from "../../../model/partnerCompany/PartnerCompanyDetailDTO";
 import {PartnerCompanyOverviewDTO} from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {ModalService} from "../../../services/modal.service";
 
 @Component({
     selector: 'app-sponsorship-table-item',
@@ -22,7 +23,16 @@ export class SponsorshipTableItemComponent implements OnInit {
     details: PartnerCompanyDetailDTO = {} as PartnerCompanyDetailDTO
     isExpanded: boolean = false;
 
-    constructor(private partnerCompanyService: PartnerCompanyService) {}
+    constructor(private partnerCompanyService: PartnerCompanyService, private modalService: ModalService) {}
+
+    // opens the modal
+    openModal(modalTemplate: TemplateRef<any>) {
+        this.modalService
+            .open(modalTemplate, { size: 'lg', title: 'Foo' })
+            .subscribe((action) => {
+                console.log('modalAction', action);
+            });
+    }
 
     ngOnInit(): void {}
 
@@ -44,4 +54,5 @@ export class SponsorshipTableItemComponent implements OnInit {
     addInvoice() {
 
     }
+
 }
