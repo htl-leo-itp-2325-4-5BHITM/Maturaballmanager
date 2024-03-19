@@ -15,15 +15,29 @@
     <div *ngFor="let invoice of details.invoices">
         <p>Rechnung #{{ invoice.id }} vom {{ invoice.invoiceDate | date:'mediumDate' }}</p>
     </div>
-    <button class="add-invoice-button" (click)="addInvoice()">Rechnung hinzufügen</button>
 
-    <button (click)="openModal(modalTemplate)">Open modal</button>
+    <button class="add-invoice-button" (click)="openModal(modalTemplate)">Rechnung hinzufügen</button>
 </div>
 
 
 
 <ng-template #modalTemplate>
-    <div>This is our custom modal content</div>
+    <p>Name des Ansprechpartners:</p>
+    <input type="text" id="inputfeld" disabled>
+    <br>
+    <p>Leistungen:</p>
+    <input type="checkbox" id="checkbox1" name="checkbox" value="item1"> <label for="checkbox1">Item 1</label><br>
+    <input type="checkbox" id="checkbox2" name="checkbox" value="item2"> <label for="checkbox2">Item 2</label><br>
+    <input type="checkbox" id="checkbox3" name="checkbox" value="item3"> <label for="checkbox3">Item 3</label><br>
+
+    <p>Zusätzliche Leistungen:</p>
+    <input type="text" id="eingabefeld" name="eingabefeld" placeholder="Bezeichnung">
+    <input type="number" id="eingabefeld" name="eingabefeld" placeholder="Preis">
+
+    <p>Datum:</p>
+    <input type="date" id="datepicker" name="datepicker">
+
+
 </ng-template>
 
 

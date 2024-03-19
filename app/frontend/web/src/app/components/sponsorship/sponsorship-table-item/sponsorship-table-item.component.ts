@@ -28,7 +28,7 @@ export class SponsorshipTableItemComponent implements OnInit {
     // opens the modal
     openModal(modalTemplate: TemplateRef<any>) {
         this.modalService
-            .open(modalTemplate, { size: 'lg', title: 'Foo' })
+            .open(modalTemplate, { size: 'lg', title: 'Rechnung hinzufügen' })
             .subscribe((action) => {
                 console.log('modalAction', action);
             });
