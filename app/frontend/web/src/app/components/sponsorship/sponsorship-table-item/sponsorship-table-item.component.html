@@ -26,9 +26,13 @@
     <input type="text" id="inputfeld" disabled>
     <br>
     <p>Leistungen:</p>
-    <input type="checkbox" id="checkbox1" name="checkbox" value="item1"> <label for="checkbox1">Item 1</label><br>
-    <input type="checkbox" id="checkbox2" name="checkbox" value="item2"> <label for="checkbox2">Item 2</label><br>
-    <input type="checkbox" id="checkbox3" name="checkbox" value="item3"> <label for="checkbox3">Item 3</label><br>
+    <select style="width: 100%" multiple [(ngModel)]="selectedItems">
+        <!--<option *ngFor="let item of allItems" [value]="item"]>{{ item }}</option>-->
+        <option>test1</option>
+        <option>test2</option>
+        <option>test3</option>
+        <option>test4</option>
+    </select>
 
     <p>Zusätzliche Leistungen:</p>
     <input type="text" id="eingabefeld" name="eingabefeld" placeholder="Bezeichnung">

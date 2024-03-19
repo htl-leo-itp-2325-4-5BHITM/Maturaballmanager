@@ -5,6 +5,7 @@ import {PartnerCompanyDetailDTO} from "../../../model/partnerCompany/PartnerComp
 import {PartnerCompanyOverviewDTO} from "../../../model/partnerCompany/PartnerCompanyOverviewDTO";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ModalService} from "../../../services/modal.service";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @Component({
     selector: 'app-sponsorship-table-item',
@@ -14,7 +15,9 @@ import {ModalService} from "../../../services/modal.service";
         NgIf,
         NgForOf,
         CurrencyPipe,
-        DatePipe
+        DatePipe,
+        ReactiveFormsModule,
+        FormsModule
     ],
     standalone: true
 })
@@ -22,6 +25,10 @@ export class SponsorshipTableItemComponent implements OnInit {
     @Input() company: PartnerCompanyOverviewDTO = {} as PartnerCompanyOverviewDTO;
     details: PartnerCompanyDetailDTO = {} as PartnerCompanyDetailDTO
     isExpanded: boolean = false;
+
+    selectedItems: string[] = [];
+    allItems: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']; // Example items
+
 
     constructor(private partnerCompanyService: PartnerCompanyService, private modalService: ModalService) {}
 
