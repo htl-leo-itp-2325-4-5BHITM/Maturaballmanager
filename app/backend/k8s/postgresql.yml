@@ -1,3 +1,4 @@
+# THIS FILE IS CURRENTLY NOT USED!
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,9 +6,9 @@ metadata:
 
 data:
   setup.sql: |
-    DROP database if exists mbm;
-    DROP user if exists mbm;
-    CREATE USER mbm WITH
+    DROP database if exists maturaballmanager;
+    DROP user if exists maturaballmanager;
+    CREATE USER maturaballmanager WITH
         LOGIN
         NOSUPERUSER
         NOCREATEDB
@@ -17,9 +18,9 @@ data:
         CONNECTION LIMIT -1
         PASSWORD 'mbm';
     
-    CREATE DATABASE mbm
+    CREATE DATABASE maturaballmanager
         WITH
-        OWNER = mbm
+        OWNER = maturaballmanager
         ENCODING = 'UTF8'
         CONNECTION LIMIT = -1;
   allow-all.sh: |
@@ -48,8 +49,8 @@ metadata:
 
 type: kubernetes.io/basic-auth
 stringData:
-  username: mbm
-  password: mbm
+  username: maturaballmanager
+  password: maturaballmanager
 ---
 apiVersion: apps/v1
 kind: Deployment
