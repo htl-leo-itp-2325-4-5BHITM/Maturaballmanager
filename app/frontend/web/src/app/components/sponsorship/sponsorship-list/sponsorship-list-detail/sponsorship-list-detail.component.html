@@ -1,0 +1,23 @@
+<div>
+    <p>Website: <a href="{{ company.website }}" target="_blank">{{ company.website }}</a></p>
+    <p>Adresse: {{ company.address.street }}, {{ company.address.zipCode }} {{ company.address.town }}, {{ company.address.country }}</p>
+    <p>Büro-Email: <a href="mailto:{{ company.officeMail }}">{{ company.officeMail }}</a></p>
+    <p>Büro-Telefon: {{ company.officePhone }}</p>
+
+    <h4>Kontaktpersonen</h4>
+    <ul>
+        <li *ngFor="let contact of company.contactPersons">
+            {{ contact.firstName }} {{ contact.lastName }} - {{ contact.position }} - <a href="mailto:{{ contact.mail }}">{{ contact.mail }}</a> - {{ contact.phoneNumber }}
+            <mat-icon (click)="editContact(contact)">edit</mat-icon>
+            <mat-icon (click)="confirmDelete(contact, 'Kontaktperson')">close</mat-icon>
+        </li>
+    </ul>
+
+    <h4>Rechnungen</h4>
+    <ul>
+        <li *ngFor="let invoice of company.invoices">
+            <a href="javascript:void(0)" (click)="downloadInvoice(invoice.number)">Rechnung #{{ invoice.number }} - {{ invoice.date }}</a>
+            <mat-icon (click)="confirmDelete(invoice, 'Rechnung')">close</mat-icon>
+        </li>
+    </ul>
+</div>

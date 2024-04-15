@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Rechnung überprüfen</h1>
+<div mat-dialog-content>
+    <div *ngIf="data">
+        <p><strong>Kontaktperson:</strong> {{ data.selectedContact ? data.selectedContact.name : 'Keine' }}</p>
+        <p><strong>Items:</strong></p>
+        <ul>
+            <li *ngFor="let item of data.selectedItems">
+                {{ item.name }} - {{ item.price | currency:'EUR' }}
+            </li>
+        </ul>
+
+        <mat-checkbox [(ngModel)]="confirmationChecked">Ich bestätige, dass alle Angaben korrekt sind.</mat-checkbox>
+
+        <mat-checkbox [(ngModel)]="sendByEmail">Rechnung per Email senden</mat-checkbox>
+        <mat-form-field *ngIf="sendByEmail" appearance="fill">
+            <mat-label>Email-Adresse</mat-label>
+            <input matInput [(ngModel)]="emailAddress" required>
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="goBack()">Zurück</button>
+    <button mat-button (click)="finalizeInvoice()" [disabled]="!confirmationChecked || (sendByEmail && !emailAddress)">Bestätigen & Senden</button>
+</div>

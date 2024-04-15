@@ -1,0 +1,26 @@
+<mat-accordion multi="true">
+    <mat-expansion-panel *ngFor="let company of companies">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ company.companyName }}
+            </mat-panel-title>
+            <mat-panel-description>
+                Gesamtumsatz: {{ company.revenue | currency:'EUR' }}
+            </mat-panel-description>
+            <mat-panel-description class="status-tag" (click)="openStatusDialog(company, $event)">
+                {{ company.status }}
+            </mat-panel-description>
+
+            <div>
+                <button mat-icon-button (click)="openContactModal(company, $event)">
+                    <mat-icon>person_add</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openCreateInvoiceDialog(company, $event)">
+                    <mat-icon>receipt</mat-icon>
+                </button>
+            </div>
+        </mat-expansion-panel-header>
+
+        <app-sponsorship-list-detail [id]="company.id"></app-sponsorship-list-detail>
+    </mat-expansion-panel>
+</mat-accordion>
