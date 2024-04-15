@@ -30,38 +30,12 @@ public class CompanyResource {
         return Response.ok(companyRepository.getCompanyDetail(id)).build();
     }
 
-    @POST
-    @Transactional
-    @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCompany(CreateCompanyDTO dto) {
-        try {
-            companyRepository.add(dto);
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-        return Response.ok().build();
-    }
-
     @DELETE
     @Transactional
     @Path("/delete/{id}")
     public Response deleteCompany(@PathParam("id") Long id) {
         try {
             companyRepository.delete(id);
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-        return Response.ok().build();
-    }
-
-    @POST
-    @Transactional
-    @Path("/update/{companyId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCompany(UpdateCompanyDTO dto, @PathParam("companyId") Long companyId) {
-        try {
-            companyRepository.updateCompany(dto, companyId);
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
@@ -80,16 +54,4 @@ public class CompanyResource {
         }
         return Response.ok().build();
     }*/
-
-    @DELETE
-    @Transactional
-    @Path("/contactPerson/update/{contactPersonID}")
-    public Response updateContactPerson(ContactPersonDTO dto, @PathParam("contactPersonID") Long contactPersonID) {
-        try {
-            companyRepository.updateContactPerson(dto, contactPersonID);
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-        return Response.ok().build();
-    }
 }

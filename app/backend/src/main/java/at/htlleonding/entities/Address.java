@@ -9,12 +9,9 @@ import jakarta.persistence.SequenceGenerator;
 @SequenceGenerator(name = "addressSeq", initialValue = 1, allocationSize = 1)
 public class Address {
     private String street;
-    private String houseNumber;
-    private String floor;
-
-    private String door;
     private String zipCode;
     private String town;
+    private String country;
 
     @Id
     @GeneratedValue(generator = "addressSeq")
@@ -24,18 +21,12 @@ public class Address {
 
     }
 
-    public Address(String street, String houseNumber, String zipCode, String town) {
+    public Address(String street, String zipCode, String town, String country) {
         this();
         this.setStreet(street);
-        this.setHouseNumber(houseNumber);
         this.setZipCode(zipCode);
         this.setTown(town);
-    }
-
-    public Address(String street, String houseNumber, String floor, String door, String zipCode, String town) {
-        this(street, houseNumber, zipCode, town);
-        this.setFloor(floor);
-        this.setDoor(door);
+        this.setCountry(country);
     }
 
     //<editor-fold desc="Getter & Setter">
@@ -45,33 +36,6 @@ public class Address {
 
     public Address setStreet(String street) {
         this.street = street;
-        return this;
-    }
-
-    public String getHouseNumber() {
-        return houseNumber;
-    }
-
-    public Address setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
-        return this;
-    }
-
-    public String getFloor() {
-        return floor;
-    }
-
-    public Address setFloor(String floor) {
-        this.floor = floor;
-        return this;
-    }
-
-    public String getDoor() {
-        return door;
-    }
-
-    public Address setDoor(String door) {
-        this.door = door;
         return this;
     }
 
@@ -99,6 +63,14 @@ public class Address {
 
     public Long getId() {
         return id;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
     }
     //</editor-fold>
 }

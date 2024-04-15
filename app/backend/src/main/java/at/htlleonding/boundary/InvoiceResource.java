@@ -25,14 +25,6 @@ public class InvoiceResource {
         }
     }
 
-    @POST
-    @Transactional
-    @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addInvoice(CreateInvoiceDTO dto) {
-        invoiceRepository.add(dto);
-        return Response.ok().build();
-    }
 
     @DELETE
     @Transactional

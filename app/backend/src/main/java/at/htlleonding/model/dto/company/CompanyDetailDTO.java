@@ -3,13 +3,11 @@ package at.htlleonding.model.dto.company;
 import at.htlleonding.model.dto.AddressDTO;
 import at.htlleonding.model.dto.invoice.InvoiceOverviewDTO;
 
-public record CompanyDetailDTO(long id, String companyName,
-                               String officeMail, String officePhone,
-                               AddressDTO address, ContactPersonDTO contactPerson,
-                               InvoiceOverviewDTO[] invoices, double revenue) {
+import java.util.List;
 
-    public CompanyDetailDTO(long id, String companyName,
-                            String officeMail, String officePhone, double revenue) {
-        this(id, companyName, officeMail, officePhone, null, null, new InvoiceOverviewDTO[0], revenue);
+public record CompanyDetailDTO(long id, String website, String officeMail, String officePhone, AddressDTO address, List<ContactPersonDTO> contactPersons, List<InvoiceOverviewDTO> invoices) {
+
+    public CompanyDetailDTO(long id, String website, String officeMail, String officePhone, Object o, Object o1, Object o2) {
+        this(id, website, officeMail, officePhone, null, null, null);
     }
 }

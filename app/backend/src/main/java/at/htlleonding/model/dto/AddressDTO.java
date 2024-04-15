@@ -2,8 +2,8 @@ package at.htlleonding.model.dto;
 
 import at.htlleonding.entities.Address;
 
-public record AddressDTO(String street, String streetNumber, String city, String zipCode, String country) {
+public record AddressDTO(String street, String zipCode, String town, String country) {
     public Address toEntity() {
-        return new Address(street, streetNumber, city, zipCode);
+        return new Address(street, zipCode, town, country);
     }
 }
