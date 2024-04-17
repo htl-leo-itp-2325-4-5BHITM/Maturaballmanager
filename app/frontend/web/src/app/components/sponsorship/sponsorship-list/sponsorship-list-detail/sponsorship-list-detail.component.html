@@ -16,7 +16,7 @@
     <h4>Rechnungen</h4>
     <ul>
         <li *ngFor="let invoice of company.invoices">
-            <a href="javascript:void(0)" (click)="downloadInvoice(invoice.number)">Rechnung #{{ invoice.number }} - {{ invoice.date }}</a>
+            <a href="javascript:void(0)" (click)="downloadInvoice(invoice.id)">Rechnung #{{ invoice.id }} - {{ invoice.bookingDate }} - {{invoice.revenue}}</a>
             <mat-icon (click)="confirmDelete(invoice, 'Rechnung')">close</mat-icon>
         </li>
     </ul>

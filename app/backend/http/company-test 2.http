@@ -10,15 +10,10 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:9999/api/companies/deleteCompany
+GET http://localhost:9999/api/companies/overview
 Content-Type: application/json
 
-{
-  "name": "Facebook",
-  "website": "",
-  "contactPerson": {},
-  "address": {}
-}
+
 
 ###
 GET http://localhost:9999/api/companies/

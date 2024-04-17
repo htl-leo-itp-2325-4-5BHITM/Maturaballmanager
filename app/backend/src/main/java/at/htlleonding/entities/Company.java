@@ -28,7 +28,7 @@ public class Company {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<ContactPerson> contactPersons;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)

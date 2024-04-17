@@ -5,7 +5,6 @@ import {CompanyDetailDTO} from "../../../../model/dto/CompanyDetailDTO";
 import {ContactPerson} from "../../../../model/ContactPerson";
 import {MatIcon} from "@angular/material/icon";
 import {CurrencyPipe, NgForOf} from "@angular/common";
-import {ActivatedRoute, Route} from "@angular/router";
 import {CompanyService} from "../../../../services/company.service";
 
 @Component({
@@ -53,7 +52,7 @@ export class SponsorshipListDetailComponent implements OnInit {
     });
   }
 
-  downloadInvoice(invoiceNumber: string): void {
+  downloadInvoice(invoiceNumber: number): void {
     console.log(`Downloading invoice #${invoiceNumber}`);
   }
 

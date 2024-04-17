@@ -5,16 +5,16 @@ VALUES (1, 'Facebook', 'https://facebook.com', 'office@facebook.com', '066', 'AC
        (4, 'HTL', 'https://facebook.com', 'office@facebook.com', '325', 'INACTIVE'),
        (5, 'Nicht Facebook', 'https://facebook.com', 'office@facebook.com', '325', 'PROGRESS');
 
-insert into contactperson( id, firstname, lastname, mail, sex, position)
+insert into contactperson( id, company_id, firstname, lastname, mail, sex, position)
     values
-    (1, 'Mark', 'Zuckerberg', 'zuckerberg@facebook.com', 'M', 'CEO');
+    (1, 1, 'Mark', 'Zuckerberg', 'zuckerberg@facebook.com', 'M', 'CEO');
 
-INSERT INTO invoice (id, company_id, bookingDate)
-VALUES (1, 1, '2024-01-01'),
-       (2, 2, '2024-01-02'),
-       (3, 3, '2024-01-03'),
-       (4, 4, '2024-01-04'),
-       (5, 5, '2024-01-05');
+INSERT INTO invoice (id, company_id, bookingDate, duedate, status)
+VALUES (1, 1, '2024-01-01', null, 'PAID'),
+       (2, 2, '2024-01-02', null, 'PAID'),
+       (3, 3, '2024-01-03', null, 'PAID'),
+       (4, 4, '2024-01-04', null, 'PAID'),
+       (5, 5, '2024-01-05', null, 'PAID');
 
 INSERT INTO itemtemplate (id, name, price)
 VALUES (1, 'Eintrittskarten, klein', 250),

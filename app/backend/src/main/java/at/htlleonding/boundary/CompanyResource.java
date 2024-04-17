@@ -4,6 +4,8 @@ import at.htlleonding.model.dto.company.ContactPersonDTO;
 import at.htlleonding.model.dto.company.CreateCompanyDTO;
 import at.htlleonding.model.dto.company.UpdateCompanyDTO;
 import at.htlleonding.repo.CompanyRepository;
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,6 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/companies")
+@Authenticated
 public class CompanyResource {
 
     @Inject

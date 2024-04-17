@@ -1,4 +1,11 @@
 export interface InvoiceOverview {
-    number: string;
-    date: string;  
+    id: number
+    bookingDate: Date
+    dueDate: Date
+    revenue: number
+    status: InvoiceStatus
+}
+
+export enum InvoiceStatus {
+    PAID, UNPAID, PENDING
 }

@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Rechnung versenden</title>
 </head>
 <body>
-{#if data.contactPerson == null}
+{ #if data.contactPerson == null}
     <h3>Sehr geehrte Damen und Herren,</h3>
-{#else}
-    {#if data.contactPerson.sex == 'F'}
-        <h3>Sehr geehrte Frau {data.contactPerson.lastName},</h3>
-        {#else}
-        <h3>Sehr geehrter Herr {data.contactPerson.lastName},</h3>
-    {/if}
-{/if}
+{ #else}
+    { #if data.contactPerson.sex == 'F'}
+        <h3>Sehr geehrte Frau { data.contactPerson.lastName},</h3>
+        { #else}
+        <h3>Sehr geehrter Herr { data.contactPerson.lastName},</h3>
+    { /if}
+{ /if}
 
 <p>anbei erhalten Sie die Rechnung für Ihr Sponsoring des Maturaballs der HTL Leonding. Die Rechnung ist im Anhang zu
     finden.</p>

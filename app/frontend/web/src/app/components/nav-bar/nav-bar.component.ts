@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatAnchor, MatIconButton} from "@angular/material/button";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {NgOptimizedImage} from "@angular/common";
 import {MatToolbar} from "@angular/material/toolbar";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-nav-bar',
@@ -24,4 +25,13 @@ import {MatToolbar} from "@angular/material/toolbar";
 export class NavBarComponent {
   userName = 'Max Mustermann';
   userProfileImageUrl = 'user-profile-svgrepo-com.svg';
+
+  constructor(private authService: AuthService, private router: Router) {
+
+  }
+
+  logOut() {
+      this.authService.logout();
+      this.router.navigate(['/login']);
+  }
 }
