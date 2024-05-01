@@ -2,15 +2,23 @@
 <div mat-dialog-content>
     <mat-form-field appearance="fill">
         <mat-label>Firmenname</mat-label>
-        <input matInput [(ngModel)]="company.name">
+        <input matInput [(ngModel)]="company.companyName">
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>Website</mat-label>
         <input matInput [(ngModel)]="company.website">
     </mat-form-field>
     <mat-form-field appearance="fill">
-        <mat-label>Adresse</mat-label>
-        <input matInput [(ngModel)]="company.address">
+        <mat-label>Straße</mat-label>
+        <input matInput [(ngModel)]="company.address.street">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Stadt</mat-label>
+        <input matInput [(ngModel)]="company.address.town">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>PLZ</mat-label>
+        <input matInput [(ngModel)]="company.address.zipCode">
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>

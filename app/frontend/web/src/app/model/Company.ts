@@ -6,6 +6,4 @@ export interface Company {
     address: Address;
     officeMail: string;
     officePhone: string;
-
-
 }

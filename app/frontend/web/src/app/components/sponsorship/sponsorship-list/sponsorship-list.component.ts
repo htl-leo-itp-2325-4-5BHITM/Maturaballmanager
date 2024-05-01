@@ -115,18 +115,26 @@ export class SponsorshipListComponent implements OnInit {
 
     openCompanyEditModal(companyOverviewDTO: CompanyOverviewDTO, $event: MouseEvent): void {
         $event.stopPropagation()
-        const dialogRef = this.dialog.open(CompanyEditDialogComponent, {
-            width: '350px',
-            data: companyOverviewDTO,
+
+        this.service.getCompanyDetail(companyOverviewDTO.id).subscribe({
+            next: (company: CompanyDetailDTO) => {
+                const dialogRef = this.dialog.open(CompanyEditDialogComponent, {
+                    width: '350px',
+                    data: company,
+                });
+
+                dialogRef.afterClosed().subscribe(result => {
+                    if (result) {
+                        console.log('Company added:', result);
+                        this.snackbar.open('Company successfully added!', 'Close', {
+                            duration: 3000
+                        });
+                    }
+                });
+            },
+            error: (error) => console.error('Failed to load company details', error)
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                console.log('Company added:', result);
-                this.snackbar.open('Company successfully added!', 'Close', {
-                    duration: 3000
-                });
-            }
-        });
+
     }
 }

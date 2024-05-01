@@ -4,6 +4,7 @@ import {InvoiceOverview} from "./InvoiceOverviewDTO";
 
 export interface CompanyDetailDTO {
     id: number;
+    companyName: string;
     website: string;
     officeMail: string;
     officePhone: string;

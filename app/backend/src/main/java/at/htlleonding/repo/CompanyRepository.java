@@ -25,7 +25,7 @@ public class CompanyRepository {
     }
 
     public CompanyDetailDTO getCompanyDetail(Long id) {
-        CompanyDetailDTO company = em.createQuery("SELECT new at.htlleonding.model.dto.company.CompanyDetailDTO(c.id, c.website, c.officeMail, c.officePhone, null, null, null) FROM Company c WHERE c.id = :id", CompanyDetailDTO.class).setParameter("id", id).getSingleResult();
+        CompanyDetailDTO company = em.createQuery("SELECT new at.htlleonding.model.dto.company.CompanyDetailDTO(c.id, c.name, c.website, c.officeMail, c.officePhone, null, null, null) FROM Company c WHERE c.id = :id", CompanyDetailDTO.class).setParameter("id", id).getSingleResult();
 
         AddressDTO address = new AddressDTO("Keine Adresse festgelegt", "", "", "");
         try {
@@ -47,7 +47,7 @@ public class CompanyRepository {
         } catch (NoResultException e) {
             new ArrayList<>();
         }
-        return new CompanyDetailDTO(company.id(), company.website(), company.officeMail(), company.officePhone(), address, contactPersons, invoices);
+        return new CompanyDetailDTO(company.id(), company.companyName(), company.website(), company.officeMail(), company.officePhone(), address, contactPersons, invoices);
     }
 
     public void delete(Long companyId) {
