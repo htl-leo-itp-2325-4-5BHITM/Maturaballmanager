@@ -27,6 +27,8 @@ import {
 } from "../../dialogs/sponsorship-status-dialog/sponsorship-status-dialog.component";
 import {CompanyDetailDTO} from "../../../model/dto/CompanyDetailDTO";
 import {CompanyEditDialogComponent} from "../../dialogs/company-edit-dialog/company-edit-dialog.component";
+import {Company} from "../../../model/Company";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-sponsorship-list',
@@ -52,7 +54,7 @@ export class SponsorshipListComponent implements OnInit {
     companies: CompanyOverviewDTO[] = []
     private service: CompanyService
 
-    constructor(public dialog: MatDialog, service: CompanyService) {
+    constructor(public dialog: MatDialog, service: CompanyService, private snackbar: MatSnackBar) {
         this.service = service;
     }
 
@@ -114,12 +116,16 @@ export class SponsorshipListComponent implements OnInit {
     openCompanyEditModal(companyOverviewDTO: CompanyOverviewDTO, $event: MouseEvent): void {
         $event.stopPropagation()
         const dialogRef = this.dialog.open(CompanyEditDialogComponent, {
-            width: '350px'
+            width: '350px',
+            data: companyOverviewDTO,
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 console.log('Company added:', result);
+                this.snackbar.open('Company successfully added!', 'Close', {
+                    duration: 3000
+                });
             }
         });
     }
