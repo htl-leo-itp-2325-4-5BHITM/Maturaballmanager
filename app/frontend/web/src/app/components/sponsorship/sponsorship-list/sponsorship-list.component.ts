@@ -25,6 +25,8 @@ import {CompanyOverviewDTO} from "../../../model/dto/CompanyOverviewDTO";
 import {
     SponsorshipStatusDialogComponent
 } from "../../dialogs/sponsorship-status-dialog/sponsorship-status-dialog.component";
+import {CompanyDetailDTO} from "../../../model/dto/CompanyDetailDTO";
+import {CompanyEditDialogComponent} from "../../dialogs/company-edit-dialog/company-edit-dialog.component";
 
 @Component({
     selector: 'app-sponsorship-list',
@@ -105,6 +107,19 @@ export class SponsorshipListComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 console.log('Contact added:', result);
+            }
+        });
+    }
+
+    openCompanyEditModal(companyOverviewDTO: CompanyOverviewDTO, $event: MouseEvent): void {
+        $event.stopPropagation()
+        const dialogRef = this.dialog.open(CompanyEditDialogComponent, {
+            width: '350px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                console.log('Company added:', result);
             }
         });
     }

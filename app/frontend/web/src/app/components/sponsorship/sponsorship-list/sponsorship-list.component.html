@@ -12,6 +12,9 @@
             </mat-panel-description>
 
             <div>
+                <button mat-icon-button (click)="openCompanyEditModal(company, $event)" >
+                    <mat-icon>edit</mat-icon>
+                </button>
                 <button mat-icon-button (click)="openContactModal(company, $event)">
                     <mat-icon>person_add</mat-icon>
                 </button>

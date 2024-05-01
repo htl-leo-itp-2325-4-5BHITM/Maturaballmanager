@@ -3,16 +3,16 @@
         <form>
             <mat-form-field appearance="fill">
                 <mat-label>Benutzername</mat-label>
-                <input [(ngModel)]="username" name="username" matInput placeholder="Benutzername">
+                <input matInput [(ngModel)]="username" name="username" placeholder="Benutzername" class="input-full-width">
             </mat-form-field>
 
             <mat-form-field appearance="fill">
                 <mat-label>Passwort</mat-label>
-                <input [(ngModel)]="password" name="password" matInput type="password" placeholder="Passwort">
+                <input matInput [(ngModel)]="password" name="password" type="password" placeholder="Passwort" class="input-full-width">
             </mat-form-field>
 
-            <mat-spinner *ngIf="isLoading"></mat-spinner>
             <button mat-raised-button color="primary" class="login-button" (click)="login()">Login</button>
+            <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
             <a href="mailto:t.himmelbauer@htl-leonding.ac.at" class="forgot-password">Passwort vergessen? Wenden Sie sich an den Administrator.</a>
         </form>
     </div>

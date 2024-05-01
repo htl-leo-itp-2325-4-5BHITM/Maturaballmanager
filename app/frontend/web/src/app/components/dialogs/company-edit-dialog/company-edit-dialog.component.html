@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Firma bearbeiten:</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Firmenname</mat-label>
+        <input matInput [(ngModel)]="company.name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Website</mat-label>
+        <input matInput [(ngModel)]="company.website">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Adresse</mat-label>
+        <input matInput [(ngModel)]="company.address">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="company.officeMail">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Telefon</mat-label>
+        <input matInput [(ngModel)]="company.officePhone">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-button [mat-dialog-close]="company" cdkFocusInitial>Speichern</button>
+</div>
