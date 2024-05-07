@@ -1,0 +1,8 @@
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/model/Customer.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/model/Ticket.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/model/dto/CustomerInformationDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/model/dto/TicketInformationDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/model/dto/TicketUsedDTO.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/repository/TicketRepository.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/resources/TicketResource.java
+/Users/nomnom/Desktop/Schule/4BHITM/ITP/Projekt/Maturaballmanager/app/frontend/swift/backend/src/main/java/at/tommyneumaier/services/QrService.java
