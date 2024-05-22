@@ -4,7 +4,7 @@ import {ConfirmDialogComponent} from "../../../dialogs/confirm-dialog/confirm-di
 import {CompanyDetailDTO} from "../../../../model/dto/CompanyDetailDTO";
 import {ContactPerson} from "../../../../model/ContactPerson";
 import {MatIcon} from "@angular/material/icon";
-import {CurrencyPipe, NgForOf} from "@angular/common";
+import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {CompanyService} from "../../../../services/company.service";
 import {Company} from "../../../../model/Company";
 
@@ -15,7 +15,8 @@ import {Company} from "../../../../model/Company";
     imports: [
         MatIcon,
         CurrencyPipe,
-        NgForOf
+        NgForOf,
+        NgIf
     ],
     styleUrls: ['./sponsorship-list-detail.component.scss']
 })

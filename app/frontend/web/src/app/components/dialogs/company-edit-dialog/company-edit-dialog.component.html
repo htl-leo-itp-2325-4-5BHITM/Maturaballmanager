@@ -1,35 +1,122 @@
 <h1 mat-dialog-title>Firma bearbeiten:</h1>
-<div mat-dialog-content>
-    <mat-form-field appearance="fill">
-        <mat-label>Firmenname</mat-label>
-        <input matInput [(ngModel)]="company.companyName">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Website</mat-label>
-        <input matInput [(ngModel)]="company.website">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Straße</mat-label>
-        <input matInput [(ngModel)]="company.address.street">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Stadt</mat-label>
-        <input matInput [(ngModel)]="company.address.town">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>PLZ</mat-label>
-        <input matInput [(ngModel)]="company.address.zipCode">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" [(ngModel)]="company.officeMail">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Telefon</mat-label>
-        <input matInput [(ngModel)]="company.officePhone">
-    </mat-form-field>
-</div>
+<mat-vertical-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Allgemeine Informationen</ng-template>
+            <mat-form-field appearance="fill">
+                <mat-label>Firmenname</mat-label>
+                <input matInput formControlName="companyName" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Website</mat-label>
+                <input matInput formControlName="website">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="officeMail">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Telefon</mat-label>
+                <input matInput formControlName="officePhone">
+            </mat-form-field>
+            <mat-checkbox formControlName="includeAddress">Adresse eingeben?</mat-checkbox>
+            <mat-checkbox formControlName="includeContactPersons">Kontaktpersonen hinzufügen?</mat-checkbox>
+            <div class="step-buttons">
+                <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Weiter</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step *ngIf="firstFormGroup.get('includeAddress')?.value" [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Adresse</ng-template>
+            <mat-form-field appearance="fill">
+                <mat-label>Straße</mat-label>
+                <input matInput formControlName="street" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Stadt</mat-label>
+                <input matInput formControlName="town" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>PLZ</mat-label>
+                <input matInput formControlName="zipCode" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Land</mat-label>
+                <input matInput formControlName="country" required>
+            </mat-form-field>
+            <div class="step-buttons">
+                <button mat-button matStepperPrevious>Zurück</button>
+                <button mat-button matStepperNext [disabled]="!secondFormGroup.valid">Weiter</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step *ngIf="firstFormGroup.get('includeContactPersons')?.value" [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
+            <ng-template matStepLabel>Kontaktpersonen</ng-template>
+            <div formArrayName="contactPersons" class="contact-persons-container">
+                <div *ngFor="let contact of contactPersons.controls; let i = index" [formGroupName]="i" class="contact-person">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Vorname</mat-label>
+                        <input matInput formControlName="firstName" required>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Nachname</mat-label>
+                        <input matInput formControlName="lastName" required>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Position</mat-label>
+                        <input matInput formControlName="position">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="mail" required>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Telefonnummer</mat-label>
+                        <input matInput formControlName="phoneNumber">
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" (click)="removeContactPerson(i)">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <button mat-button (click)="addContactPerson()">Kontaktperson hinzufügen</button>
+            <div class="step-buttons">
+                <button mat-button matStepperPrevious>Zurück</button>
+                <button mat-button matStepperNext [disabled]="!thirdFormGroup.valid">Weiter</button>
+            </div>
+        </form>
+    </mat-step>
+
+
+    <mat-step>
+        <ng-template matStepLabel>Übersicht</ng-template>
+        <div class="overview">
+            <p><strong>Firmenname:</strong> {{ firstFormGroup.get('companyName')?.value }}</p>
+            <p><strong>Website:</strong> {{ firstFormGroup.get('website')?.value }}</p>
+            <p><strong>Email:</strong> {{ firstFormGroup.get('officeMail')?.value }}</p>
+            <p><strong>Telefon:</strong> {{ firstFormGroup.get('officePhone')?.value }}</p>
+            <div *ngIf="firstFormGroup.get('includeAddress')?.value">
+                <p><strong>Straße:</strong> {{ secondFormGroup.get('street')?.value }}</p>
+                <p><strong>Stadt:</strong> {{ secondFormGroup.get('town')?.value }}</p>
+                <p><strong>PLZ:</strong> {{ secondFormGroup.get('zipCode')?.value }}</p>
+                <p><strong>Land:</strong> {{ secondFormGroup.get('country')?.value }}</p>
+            </div>
+            <div *ngIf="firstFormGroup.get('includeContactPersons')?.value">
+                <div *ngFor="let contact of contactPersons.controls">
+                    <p><strong>Kontaktperson:</strong> {{ contact.get('firstName')?.value }} {{ contact.get('lastName')?.value }} - {{ contact.get('position')?.value }} - {{ contact.get('mail')?.value }} - {{ contact.get('phoneNumber')?.value }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="step-buttons">
+            <button mat-button matStepperPrevious>Zurück</button>
+            <button mat-button (click)="onSave()">Speichern</button>
+        </div>
+    </mat-step>
+</mat-vertical-stepper>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button [mat-dialog-close]="company" cdkFocusInitial>Speichern</button>
 </div>

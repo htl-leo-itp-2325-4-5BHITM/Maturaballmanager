@@ -1,13 +1,20 @@
 <div>
-    <p>Website: <a href="{{ company.website }}" target="_blank">{{ company.website }}</a></p>
-    <p>Adresse: {{ company.address.street }}, {{ company.address.zipCode }} {{ company.address.town }}, {{ company.address.country }}</p>
-    <p>Büro-Email: <a href="mailto:{{ company.officeMail }}">{{ company.officeMail }}</a></p>
+    <p>Website: <a [href]="company.website" target="_blank">{{ company.website }}</a></p>
+    <p>Adresse:
+        <ng-container *ngIf="company.address?.street && company.address?.zipCode && company.address?.town && company.address?.country; else noAddress">
+            {{ company.address.street }}, {{ company.address.zipCode }} {{ company.address.town }}, {{ company.address.country }}
+        </ng-container>
+        <ng-template #noAddress>
+            Keine Adresse festgelegt
+        </ng-template>
+    </p>
+    <p>Büro-Email: <a [href]="'mailto:' + company.officeMail">{{ company.officeMail }}</a></p>
     <p>Büro-Telefon: {{ company.officePhone }}</p>
 
     <h4>Kontaktpersonen</h4>
     <ul>
         <li *ngFor="let contact of company.contactPersons">
-            {{ contact.firstName }} {{ contact.lastName }} - {{ contact.position }} - <a href="mailto:{{ contact.mail }}">{{ contact.mail }}</a> - {{ contact.phoneNumber }}
+            {{ contact.firstName }} {{ contact.lastName }} - {{ contact.position }} - <a [href]="'mailto:' + contact.mail">{{ contact.mail }}</a> - {{ contact.phoneNumber }}
             <mat-icon (click)="editContact(contact)">edit</mat-icon>
             <mat-icon (click)="confirmDelete(contact, 'Kontaktperson')">close</mat-icon>
         </li>

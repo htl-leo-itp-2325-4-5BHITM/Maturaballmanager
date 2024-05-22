@@ -1,27 +1,37 @@
-<h1 mat-dialog-title>Kontaktperson hinzufügen</h1>
+<h1 mat-dialog-title>{{ contactPersonForm.get('id')?.value ? 'Kontaktperson bearbeiten' : 'Kontaktperson hinzufügen' }}</h1>
 <div mat-dialog-content>
-    <mat-form-field appearance="fill">
-        <mat-label>Vorname</mat-label>
-        <input matInput [(ngModel)]="contactPerson.firstName">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Nachname</mat-label>
-        <input matInput [(ngModel)]="contactPerson.lastName">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Position</mat-label>
-        <input matInput [(ngModel)]="contactPerson.position">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" [(ngModel)]="contactPerson.mail">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Telefon</mat-label>
-        <input matInput [(ngModel)]="contactPerson.phoneNumber">
-    </mat-form-field>
+    <form [formGroup]="contactPersonForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Vorname</mat-label>
+            <input matInput formControlName="firstName">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nachname</mat-label>
+            <input matInput formControlName="lastName">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Position</mat-label>
+            <input matInput formControlName="position">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="mail">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Telefon</mat-label>
+            <input matInput formControlName="phoneNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Geschlecht</mat-label>
+            <mat-select formControlName="sex">
+                <mat-option *ngFor="let sex of sexes" [value]="sex.value">
+                    {{ sex.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button [mat-dialog-close]="contactPerson" cdkFocusInitial>Speichern</button>
+    <button mat-button (click)="onSave()" cdkFocusInitial>Speichern</button>
 </div>

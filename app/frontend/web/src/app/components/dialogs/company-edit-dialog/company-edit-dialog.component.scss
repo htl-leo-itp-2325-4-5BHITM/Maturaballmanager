@@ -1,0 +1,38 @@
+mat-vertical-stepper {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.contact-persons-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.contact-person {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.full-width {
+  flex: 1 1 45%;  // Breitere Eingabefelder
+  min-width: 200px;
+}
+
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+mat-dialog-actions {
+  justify-content: flex-end;
+}
+
+.overview {
+  padding: 10px;
+}

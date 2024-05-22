@@ -19,7 +19,7 @@
                 <mat-card-content class="dashboard-card-content">
                     <div class="progress-bar-center">
                         <p class="progress-bar-text">{{earnedmoney}}/10000€</p>
-                        <mat-progress-bar class="progress-bar" mode="determinate" value="{{calcMoneyPercentage()}}"></mat-progress-bar>
+                        <mat-progress-bar class="progress-bar" mode="determinate" [value]="calcMoneyPercentage()"></mat-progress-bar>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -46,7 +46,7 @@
             </mat-card>
         </mat-grid-tile>
 
-        <!--Rechnungen-->
+        <!--Sponsoren-->
         <mat-grid-tile [colspan]="boxes[2].cols" [rowspan]="boxes[2].rows">
             <mat-card class="dashboard-card">
                 <mat-card-header>
@@ -72,8 +72,10 @@
                                 <mat-panel-description>
                                     Gesamtumsatz: {{ company.revenue | currency:'EUR' }}
                                 </mat-panel-description>
-                                <mat-panel-description class="status-tag" (click)="openStatusDialog(company, $event)">
-                                    {{ company.status }}
+                                <mat-panel-description class="status-tag">
+                                    <span (click)="openStatusDialog(company, $event)">
+                                        {{ company.status }}
+                                    </span>
                                 </mat-panel-description>
 
                                 <div>
@@ -95,7 +97,5 @@
                 </mat-card-content>
             </mat-card>
         </mat-grid-tile>
-
-
     </mat-grid-list>
 </div>

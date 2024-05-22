@@ -35,3 +35,12 @@
 .progress-bar {
   width: 80%;
 }
+
+.status-tag span {
+  cursor: pointer;
+  color: blue;
+}
+
+.status-tag span:hover {
+  text-decoration: underline; /* Optional: to indicate it's clickable on hover */
+}
