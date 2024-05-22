@@ -19,3 +19,19 @@
 .dashboard-card-content {
   text-align: center;
 }
+
+.progress-bar-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.progress-bar-text {
+  font-size: 2rem;
+}
+
+.progress-bar {
+  width: 80%;
+}

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
-import { SponsorshipComponent } from "./components/sponsorship/sponsorship.component";
+import { SponsorshipComponent } from "./components/sponsorship-old/sponsorship.component";
 import { LoginComponent } from "./components/login/login.component";
 import { AuthGuard } from "./guards/auth.guard";
 import { SponsorshipListComponent } from "./sponsoren/sponsoren.component"; // Corrected import

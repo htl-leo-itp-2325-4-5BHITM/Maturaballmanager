@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
-import {NavBarComponent} from "./components/nav-bar/nav-bar.component";
+import {NavBarComponent} from "./components/nav-bar-old/nav-bar.component";
 import {AuthService} from "./services/auth.service";
 import {NavigationComponent} from "./navigation/navigation.component";
 
