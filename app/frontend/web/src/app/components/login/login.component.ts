@@ -39,8 +39,7 @@ export class LoginComponent {
     // In deiner LoginComponent
     login(): void {
         this.authService.login(this.username, this.password).subscribe(success => {
-            console.log('Logged in successfully');
-            this.router.navigate(['/dashboard']);
+            console.log('Logged in successfully');this.router.navigate(['/dashboard']);
         }, error => {
             console.error('Login failed', error);
         });

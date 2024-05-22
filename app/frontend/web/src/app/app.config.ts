@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
       provide:HTTP_INTERCEPTORS,
       useClass:AuthInterceptor,
       multi:true
-    }, provideOAuthClient()]
+    }, provideOAuthClient(), provideAnimationsAsync()]
 };
 
 export const apiUrl: string = "http://localhost:9999/api"

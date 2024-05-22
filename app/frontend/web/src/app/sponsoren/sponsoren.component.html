@@ -1,0 +1,98 @@
+<div class="grid-container">
+    <h1 class="mat-h1">Sponsoren</h1>
+    <mat-grid-list cols="2" rowHeight="350px">
+        <!--Status-->
+        <mat-grid-tile [colspan]="boxes[0].cols" [rowspan]="boxes[0].rows">
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        {{boxes[0].title}}
+                        <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                            <button mat-menu-item>Expand</button>
+                            <button mat-menu-item>Remove</button>
+                        </mat-menu>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+        <!--Prozentanteil-->
+        <mat-grid-tile [colspan]="boxes[1].cols" [rowspan]="boxes[1].rows">
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        {{boxes[1].title}}
+                        <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                            <button mat-menu-item>Expand</button>
+                            <button mat-menu-item>Remove</button>
+                        </mat-menu>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div>Card Content Here</div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+        <!--Rechnungen-->
+        <mat-grid-tile [colspan]="boxes[2].cols" [rowspan]="boxes[2].rows">
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        {{boxes[2].title}}
+                        <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                            <button mat-menu-item>Expand</button>
+                            <button mat-menu-item>Remove</button>
+                        </mat-menu>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <!-- Load Services -->
+                    <mat-accordion multi="true">
+                        <mat-expansion-panel *ngFor="let company of companies">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{ company.companyName }}
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Gesamtumsatz: {{ company.revenue | currency:'EUR' }}
+                                </mat-panel-description>
+                                <mat-panel-description class="status-tag" (click)="openStatusDialog(company, $event)">
+                                    {{ company.status }}
+                                </mat-panel-description>
+
+                                <div>
+                                    <button mat-icon-button (click)="openCompanyEditModal(company, $event)" >
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="openContactModal(company, $event)">
+                                        <mat-icon>person_add</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="openCreateInvoiceDialog(company, $event)">
+                                        <mat-icon>receipt</mat-icon>
+                                    </button>
+                                </div>
+                            </mat-expansion-panel-header>
+
+                            <app-sponsorship-list-detail [id]="company.id"></app-sponsorship-list-detail>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+
+    </mat-grid-list>
+</div>
