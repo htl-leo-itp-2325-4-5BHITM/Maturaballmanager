@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		829F82EB2C0FB59300C43612 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 829F82EA2C0FB59300C43612 /* public_key.pem */; };
+		829F82ED2C0FC06600C43612 /* SOSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829F82EC2C0FC06600C43612 /* SOSView.swift */; };
+		829F82EF2C0FCAB400C43612 /* SOSCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829F82EE2C0FCAB400C43612 /* SOSCounter.swift */; };
 		82E7FC552C0DA443008A0B3D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7FC542C0DA443008A0B3D /* ContentView.swift */; };
 		82E7FC572C0DA444008A0B3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82E7FC562C0DA444008A0B3D /* Assets.xcassets */; };
 		82E7FC5A2C0DA444008A0B3D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82E7FC592C0DA444008A0B3D /* Preview Assets.xcassets */; };
@@ -20,12 +23,14 @@
 		82E8F0722C0E9B6400921329 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F0712C0E9B6400921329 /* ScannerView.swift */; };
 		82E8F0742C0E9B7400921329 /* TicketInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F0732C0E9B7400921329 /* TicketInfoView.swift */; };
 		82E8F0762C0E9E8800921329 /* PublicKeyLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */; };
-		82E8F0792C0E9EBD00921329 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 82E8F0782C0E9EBD00921329 /* public_key.pem */; };
 		82E8F07B2C0E9ECF00921329 /* SignatureVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */; };
 		82E8F07E2C0EA06A00921329 /* WarningSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		829F82EA2C0FB59300C43612 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public_key.pem; sourceTree = "<group>"; };
+		829F82EC2C0FC06600C43612 /* SOSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSView.swift; sourceTree = "<group>"; };
+		829F82EE2C0FCAB400C43612 /* SOSCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSCounter.swift; sourceTree = "<group>"; };
 		82E7FC4F2C0DA443008A0B3D /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82E7FC542C0DA443008A0B3D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		82E7FC562C0DA444008A0B3D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -40,7 +45,6 @@
 		82E8F0712C0E9B6400921329 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		82E8F0732C0E9B7400921329 /* TicketInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketInfoView.swift; sourceTree = "<group>"; };
 		82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyLoader.swift; sourceTree = "<group>"; };
-		82E8F0782C0E9EBD00921329 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = public_key.pem; path = "../../../../temp-swift-backend/src/main/resources/public_key.pem"; sourceTree = "<group>"; };
 		82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureVerifier.swift; sourceTree = "<group>"; };
 		82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningSymbol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +115,7 @@
 				82E8F06A2C0E961600921329 /* ApiService.swift */,
 				82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */,
 				82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */,
+				829F82EE2C0FCAB400C43612 /* SOSCounter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -123,6 +128,7 @@
 				82E8F06F2C0E96E000921329 /* QrCodeScannerView.swift */,
 				82E8F0712C0E9B6400921329 /* ScannerView.swift */,
 				82E8F0732C0E9B7400921329 /* TicketInfoView.swift */,
+				829F82EC2C0FC06600C43612 /* SOSView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -130,7 +136,7 @@
 		82E8F0772C0E9EA100921329 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				82E8F0782C0E9EBD00921329 /* public_key.pem */,
+				829F82EA2C0FB59300C43612 /* public_key.pem */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -202,7 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				82E7FC5A2C0DA444008A0B3D /* Preview Assets.xcassets in Resources */,
-				82E8F0792C0E9EBD00921329 /* public_key.pem in Resources */,
+				829F82EB2C0FB59300C43612 /* public_key.pem in Resources */,
 				82E7FC572C0DA444008A0B3D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,7 +232,9 @@
 				82E8F06B2C0E961600921329 /* ApiService.swift in Sources */,
 				82E7FC5F2C0DA444008A0B3D /* ios.xcdatamodeld in Sources */,
 				82E8F07B2C0E9ECF00921329 /* SignatureVerifier.swift in Sources */,
+				829F82ED2C0FC06600C43612 /* SOSView.swift in Sources */,
 				82E8F0722C0E9B6400921329 /* ScannerView.swift in Sources */,
+				829F82EF2C0FCAB400C43612 /* SOSCounter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

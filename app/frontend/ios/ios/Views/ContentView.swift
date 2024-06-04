@@ -1,27 +1,44 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var sosCounter = SOSCounter()
+
     var body: some View {
         NavigationView {
             TabView {
-                ScannerView()
+                ScannerView(sosCounter: sosCounter)
                     .tabItem {
                         Image(systemName: "qrcode.viewfinder")
                         Text("Scanner")
                     }
                 
-                Text("Other Tab")
+                SOSView(sosCounter: sosCounter)
                     .tabItem {
-                        Image(systemName: "square.grid.2x2")
-                        Text("Other")
+                        ZStack {
+                            Image(systemName: "exclamationmark.triangle")
+                            Text("SOS")
+                            if sosCounter.count > 0 {
+                                Badge(count: sosCounter.count)
+                                    .offset(x: 20, y: -10)
+                            }
+                        }
                     }
             }
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct Badge: View {
+    let count: Int
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .foregroundColor(.red)
+            Text("\(count)")
+                .foregroundColor(.white)
+                .font(.caption)
+        }
+        .frame(width: 20, height: 20)
     }
 }

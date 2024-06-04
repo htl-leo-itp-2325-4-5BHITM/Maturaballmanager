@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,5 +60,13 @@ public class TicketResource {
             LOGGER.log(Level.SEVERE, "Error redeeming ticket: {0}", e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error redeeming ticket").build();
         }
+    }
+
+    @POST
+    @Path("/redeem/all")
+    @Consumes("application/json")
+    public Response redeemAllTickets(List<Long> ticketIds) {
+        ticketService.redeem(ticketIds);
+        return Response.ok().build();
     }
 }

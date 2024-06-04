@@ -10,6 +10,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,6 +65,14 @@ public class TicketService {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error redeeming ticket: {0}", e.getMessage());
             throw e;
+        }
+    }
+
+    public void redeem(List<Long> ticketIds) {
+        try {
+            ticketIds.forEach((id) -> ticketRepository.redeem(id));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error redeeming tickets: {0}", e.getMessage());
         }
     }
 }

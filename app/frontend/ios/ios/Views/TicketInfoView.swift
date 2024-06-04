@@ -1,13 +1,12 @@
 import SwiftUI
 
 struct TicketInfoView: View {
-    let ticketDTO: TicketDTO?
+    var ticketDTO: TicketDTO?
     @Binding var dataInvalid: Bool
     @State private var verificationResult: Bool?
-    @State private var isRedeemed: Bool?
-    @State private var showRedeemButton = false
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack(spacing: 20) {
@@ -15,7 +14,7 @@ struct TicketInfoView: View {
                 WarningSymbol()
                 Spacer()
             } else if let ticketDTO = ticketDTO {
-                if let isRedeemed = isRedeemed, isRedeemed {
+                if ticketDTO.isRedeemed == true {
                     WarningSymbol()
                     Text("Dieses Ticket von \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName) wurde bereits entwertet.")
                         .foregroundColor(.orange)
@@ -93,20 +92,22 @@ struct TicketInfoView: View {
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
                         .padding(.horizontal)
                         
-                        if showRedeemButton {
-                            Button(action: {
-                                redeemTicket(ticketDTO: ticketDTO)
-                            }) {
-                                Text("Entwerten")
-                                    .font(.title2)
-                                    .padding()
-                                    .background(Color.red)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
-                            }
-                            .alert(isPresented: $showAlert) {
-                                Alert(title: Text("Ticket Status"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                            }
+                        Button(action: {
+                            redeemTicket(ticketDTO: ticketDTO)
+                        }) {
+                            Text("Entwerten")
+                                .font(.title2)
+                                .padding()
+                                .background(Color.red)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .alert(isPresented: $showAlert) {
+                            Alert(title: Text("Ticket Status"), message: Text(alertMessage), dismissButton: .default(Text("OK"), action: {
+                                if alertMessage == "Das Ticket wurde erfolgreich entwertet." {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            }))
                         }
                         
                         Spacer()
@@ -124,7 +125,6 @@ struct TicketInfoView: View {
         .onAppear {
             if let ticketDTO = ticketDTO {
                 verifySignature()
-                checkRedeemedStatus(ticketId: ticketDTO.id)
             }
         }
     }
@@ -150,26 +150,8 @@ struct TicketInfoView: View {
                 case .success:
                     self.alertMessage = "Das Ticket wurde erfolgreich entwertet."
                     self.showAlert = true
-                    self.showRedeemButton = false
                 case .failure:
                     self.alertMessage = "Das Entwerten des Tickets ist fehlgeschlagen."
-                    self.showAlert = true
-                }
-            }
-        }
-    }
-    
-    private func checkRedeemedStatus(ticketId: Int) {
-        ApiService.shared.checkRedeemedStatus(ticketId: ticketId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let isRedeemed):
-                    self.isRedeemed = isRedeemed
-                    if !isRedeemed {
-                        self.showRedeemButton = true
-                    }
-                case .failure:
-                    self.alertMessage = "Fehler beim Abrufen des Einlöse-Status."
                     self.showAlert = true
                 }
             }
@@ -179,6 +161,6 @@ struct TicketInfoView: View {
 
 struct TicketInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        TicketInfoView(ticketDTO: TicketDTO(id: 1, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "example_signature"), dataInvalid: .constant(false))
+        TicketInfoView(ticketDTO: TicketDTO(id: 1, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "example_signature", isRedeemed: false), dataInvalid: .constant(false))
     }
 }
