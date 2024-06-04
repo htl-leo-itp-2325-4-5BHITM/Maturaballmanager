@@ -4,6 +4,7 @@ struct TicketInfoView: View {
     let ticketDTO: TicketDTO?
     @Binding var dataInvalid: Bool
     @State private var verificationResult: Bool?
+    @State private var isRedeemed: Bool?
     @State private var showRedeemButton = false
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -14,7 +15,7 @@ struct TicketInfoView: View {
                 WarningSymbol()
                 Spacer()
             } else if let ticketDTO = ticketDTO {
-                if ticketDTO.redeemed {
+                if let isRedeemed = isRedeemed, isRedeemed {
                     WarningSymbol()
                     Text("Dieses Ticket von \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName) wurde bereits entwertet.")
                         .foregroundColor(.orange)
@@ -71,14 +72,6 @@ struct TicketInfoView: View {
                                     .font(.subheadline)
                             }
                             
-                            HStack {
-                                Text("Redeemed:")
-                                    .font(.headline)
-                                Spacer()
-                                Text("\(ticketDTO.redeemed ? "Yes" : "No")")
-                                    .font(.subheadline)
-                            }
-                            
                             Text("Signature:")
                                 .font(.headline)
                             
@@ -131,9 +124,7 @@ struct TicketInfoView: View {
         .onAppear {
             if let ticketDTO = ticketDTO {
                 verifySignature()
-                if !ticketDTO.redeemed {
-                    showRedeemButton = true
-                }
+                checkRedeemedStatus(ticketId: ticketDTO.id)
             }
         }
     }
@@ -167,10 +158,27 @@ struct TicketInfoView: View {
             }
         }
     }
+    
+    private func checkRedeemedStatus(ticketId: Int) {
+        ApiService.shared.checkRedeemedStatus(ticketId: ticketId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let isRedeemed):
+                    self.isRedeemed = isRedeemed
+                    if !isRedeemed {
+                        self.showRedeemButton = true
+                    }
+                case .failure:
+                    self.alertMessage = "Fehler beim Abrufen des Einlöse-Status."
+                    self.showAlert = true
+                }
+            }
+        }
+    }
 }
 
 struct TicketInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        TicketInfoView(ticketDTO: TicketDTO(id: 1, redeemed: false, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "example_signature"), dataInvalid: .constant(false))
+        TicketInfoView(ticketDTO: TicketDTO(id: 1, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "example_signature"), dataInvalid: .constant(false))
     }
 }

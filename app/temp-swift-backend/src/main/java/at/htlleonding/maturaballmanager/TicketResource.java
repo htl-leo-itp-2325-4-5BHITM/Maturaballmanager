@@ -1,6 +1,9 @@
 package at.htlleonding.maturaballmanager;
 
+import at.htlleonding.maturaballmanager.contracts.repo.ITicketRepository;
+import at.htlleonding.maturaballmanager.entity.Ticket;
 import at.htlleonding.maturaballmanager.model.TicketDTO;
+import at.htlleonding.maturaballmanager.repository.TicketRepository;
 import at.htlleonding.maturaballmanager.services.TicketService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -18,6 +21,9 @@ public class TicketResource {
     @Inject
     TicketService ticketService;
 
+    @Inject
+    ITicketRepository ticketRepository;
+
     @POST
     @Path("/create-qr")
     public Response createTicketQRCode(Long id) {
@@ -28,6 +34,17 @@ public class TicketResource {
             LOGGER.log(Level.SEVERE, "Error creating QR code: {0}", e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error creating QR code").build();
         }
+    }
+
+    @GET
+    @Path("/status/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkRedeemedStatus(@PathParam("id") Long id) {
+        Ticket ticket = ticketRepository.findById(id);
+        if (ticket == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(ticket.isRedeemed()).build();
     }
 
     @Transactional

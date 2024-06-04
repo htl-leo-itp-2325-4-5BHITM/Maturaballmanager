@@ -44,7 +44,7 @@ public class TicketService {
                 LOGGER.severe("Failed to sign data");
                 throw new RuntimeException("Failed to sign data");
             }
-            TicketDTO ticketDTO = new TicketDTO(ticket.getId(), ticket.isRedeemed(), userDTO, digitalSignature);
+            TicketDTO ticketDTO = new TicketDTO(ticket.getId(), userDTO, digitalSignature);
 
 
             ObjectMapper objectMapper = new ObjectMapper();
