@@ -32,7 +32,6 @@ class ApiService {
     
     func checkRedeemedStatus(ticketId: Int, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/tickets/status/\(ticketId)") else {
-            print("Invalid URL")
             completion(.failure(ApiError.invalidURL))
             return
         }
@@ -60,7 +59,6 @@ class ApiService {
 
     func redeemAllTickets(ticketIds: [Int], completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/tickets/redeem/all") else {
-            print("Invalid URL")
             completion(.failure(ApiError.invalidURL))
             return
         }

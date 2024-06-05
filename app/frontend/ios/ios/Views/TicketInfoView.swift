@@ -56,10 +56,10 @@ struct TicketInfoView: View {
                             }
                             
                             HStack {
-                                Text("Sex:")
+                                Text("Geschlecht:")
                                     .font(.headline)
                                 Spacer()
-                                Text("\(ticketDTO.user.sex)")
+                                Text("\(ticketDTO.user.sex == "male" ? "männlich" : "weiblich")")
                                     .font(.subheadline)
                             }
                             
@@ -67,11 +67,11 @@ struct TicketInfoView: View {
                                 Text("VIP Status:")
                                     .font(.headline)
                                 Spacer()
-                                Text("\(ticketDTO.user.vipStatus ? "Yes" : "No")")
+                                Text("\(ticketDTO.user.vipStatus ? "Ja" : "Nein")")
                                     .font(.subheadline)
                             }
                             
-                            Text("Signature:")
+                            Text("Signatur:")
                                 .font(.headline)
                             
                             ScrollView {
@@ -83,7 +83,7 @@ struct TicketInfoView: View {
                             .frame(height: 100)
                             
                             if let verificationResult = verificationResult {
-                                Text(verificationResult ? "Signature Verified" : "Signature Invalid")
+                                Text(verificationResult ? "Signatur verifiziert" : "Signatur ungültig")
                                     .font(.headline)
                                     .foregroundColor(verificationResult ? .green : .red)
                             }
@@ -103,7 +103,7 @@ struct TicketInfoView: View {
                                 .cornerRadius(10)
                         }
                         .alert(isPresented: $showAlert) {
-                            Alert(title: Text("Ticket Status"), message: Text(alertMessage), dismissButton: .default(Text("OK"), action: {
+                            Alert(title: Text("Ticketstatus"), message: Text(alertMessage), dismissButton: .default(Text("OK"), action: {
                                 if alertMessage == "Das Ticket wurde erfolgreich entwertet." {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -114,13 +114,13 @@ struct TicketInfoView: View {
                     }
                 }
             } else {
-                Text("No Ticket Data")
+                Text("Keine Ticketinformationen")
                     .font(.title)
                     .padding(.top, 20)
             }
         }
         .padding()
-        .navigationBarTitle("Ticket Details", displayMode: .inline)
+        .navigationBarTitle("Ticketdetails", displayMode: .inline)
         .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
         .onAppear {
             if let ticketDTO = ticketDTO {

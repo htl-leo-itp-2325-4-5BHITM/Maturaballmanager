@@ -7,7 +7,7 @@ struct ScannerView: View {
     @State private var errorMessage: String?
     @State private var navigationLinkActive = false
     @State private var dataInvalid = false
-    @State private var isScanningActive = true // Variable zum Steuern des Scannens
+    @State private var isScanningActive = true 
     @State private var noInternet = false
     @ObservedObject var sosCounter: SOSCounter
 
@@ -23,16 +23,15 @@ struct ScannerView: View {
 
             NavigationLink(destination: TicketInfoView(ticketDTO: ticketDTO, dataInvalid: $dataInvalid)
                             .onAppear {
-                                self.isScanningActive = false // Scannen stoppen, wenn die TicketInfoView angezeigt wird
-                            }
+                                self.isScanningActive = false                             }
                             .onDisappear {
-                                self.isScanningActive = true // Scannen wieder aktivieren, wenn die TicketInfoView verlassen wird
+                                self.isScanningActive = true
                             }, isActive: $navigationLinkActive) {
                 EmptyView()
             }
         }
         .alert(isPresented: .constant(errorMessage != nil || noInternet), content: {
-            Alert(title: Text("Error"), message: Text(errorMessage ?? "No Internet Connection"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Fehlermeldung"), message: Text(errorMessage ?? "Keine Internetverbindung - SOS"), dismissButton: .default(Text("OK")))
         })
     }
 
@@ -52,16 +51,15 @@ struct ScannerView: View {
                     DispatchQueue.main.async {
                         switch result {
                         case .success(let isRedeemed):
-                            ticketDTO.isRedeemed = isRedeemed // Setze den Einlöse-Status im TicketDTO
+                            ticketDTO.isRedeemed = isRedeemed
                             self.ticketDTO = ticketDTO
                             self.errorMessage = nil
                             self.dataInvalid = false
                             self.navigationLinkActive = true
                         case .failure:
-                            // Internetverbindung fehlgeschlagen, Ticket lokal speichern
                             self.saveTicketLocally(ticketDTO: ticketDTO)
                             self.noInternet = true
-                            self.sosCounter.loadSOSCount() // Aktualisiere die SOS Ticketanzahl
+                            self.sosCounter.loadSOSCount()
                         }
                     }
                 }

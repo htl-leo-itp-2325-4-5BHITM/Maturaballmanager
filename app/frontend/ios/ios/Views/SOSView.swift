@@ -11,9 +11,9 @@ struct SOSView: View {
                     ForEach(storedTickets, id: \.id) { ticket in
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("Ticket ID: \(ticket.id)")
+                                Text("T.-Nr.: \(ticket.id)")
                                 Text("Name: \(ticket.user.sex == "male" ? "Hr." : "Fr.") \(ticket.user.firstName) \(ticket.user.lastName)")
-                                Text("VIP Status: \(ticket.user.vipStatus ? "Yes" : "No")")
+                                Text("VIP Status: \(ticket.user.vipStatus ? "Ja" : "Nein")")
                             }
                             Spacer()
                             if ticket.user.vipStatus {
@@ -47,8 +47,8 @@ struct SOSView: View {
     private func loadStoredTickets() {
         if let storedData = UserDefaults.standard.array(forKey: "storedTickets") as? [Data] {
             let decodedTickets = storedData.compactMap { try? JSONDecoder().decode(TicketDTO.self, from: $0) }
-            self.storedTickets = Array(Set(decodedTickets)) // Eliminiert Duplikate
-            self.sosCounter.count = self.storedTickets.count // Aktualisiert die SOS Ticketanzahl
+            self.storedTickets = Array(Set(decodedTickets))
+            self.sosCounter.count = self.storedTickets.count
         }
     }
 
@@ -61,11 +61,10 @@ struct SOSView: View {
                         self.storedTickets.remove(at: index)
                         let encodedTickets = self.storedTickets.compactMap { try? JSONEncoder().encode($0) }
                         UserDefaults.standard.set(encodedTickets, forKey: "storedTickets")
-                        self.sosCounter.count = self.storedTickets.count // Aktualisiert die SOS Ticketanzahl
+                        self.sosCounter.count = self.storedTickets.count
                     }
                 case .failure:
-                    // Fehlermeldung anzeigen
-                    print("Fehler beim Entwerten des Tickets.")
+                    print("")
                 }
             }
         }
@@ -79,10 +78,9 @@ struct SOSView: View {
                 case .success:
                     self.storedTickets.removeAll()
                     UserDefaults.standard.removeObject(forKey: "storedTickets")
-                    self.sosCounter.count = 0 // Aktualisiert die SOS Ticketanzahl
+                    self.sosCounter.count = 0
                 case .failure:
-                    // Fehlermeldung anzeigen
-                    print("Fehler beim Entwerten der Tickets.")
+                    print("")
                 }
             }
         }
