@@ -1,0 +1,21 @@
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (1, 'Max', 'Mustermann', 'male', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (2, 'Erika', 'Musterfrau', 'female', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (3, 'Hans', 'Schmidt', 'male', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (4, 'Anna', 'Schneider', 'female', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (5, 'Peter', 'Müller', 'male', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (6, 'Laura', 'Bauer', 'female', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (7, 'Klaus', 'Fischer', 'male', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (8, 'Petra', 'Weber', 'female', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (9, 'Uwe', 'Hoffmann', 'male', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (10, 'Gabi', 'Zimmermann', 'female', false);
+
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (1, false, '2024-06-04 10:00:00', false, 1);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (2, true, '2024-06-04 11:00:00', false, 2);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (3, true, '2024-06-04 12:00:00', true, 3);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (4, false, '2024-06-04 13:00:00', true, 4);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (5, true, '2024-06-04 14:00:00', false, 5);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (6, false, '2024-06-04 15:00:00', true, 6);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (7, true, '2024-06-04 16:00:00', false, 7);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (8, false, '2024-06-04 17:00:00', true, 8);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (9, true, '2024-06-04 18:00:00', false, 9);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (10, false, '2024-06-04 19:00:00', true, 10);
