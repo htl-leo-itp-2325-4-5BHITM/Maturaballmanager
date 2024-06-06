@@ -1,0 +1,39 @@
+<div class="container">
+    <h1>Budget Übersicht</h1>
+    <mat-card>
+        <mat-card-title>Status</mat-card-title>
+        <mat-card-content>
+            <p>{{ getCurrentBudget() }}/{{ goal }}€</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Prozentanteil</mat-card-title>
+        <mat-card-content>
+            <p>{{ (getCurrentBudget() / goal) * 100 | number: '1.0-2' }}%</p>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Einnahmen</mat-card-title>
+        <mat-card-content>
+            <p>{{ income }}€</p>
+            <button mat-raised-button color="primary" (click)="openDialog('income')">Hinzufügen</button>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Gewinn</mat-card-title>
+        <mat-card-content>
+            <p>{{ expenses }}€</p>
+            <button mat-raised-button color="primary" (click)="openDialog('expense')">Hinzufügen</button>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Gewinn</mat-card-title>
+        <mat-card-content>
+            <p>{{ getProfit() }}€</p>
+        </mat-card-content>
+    </mat-card>
+</div>
