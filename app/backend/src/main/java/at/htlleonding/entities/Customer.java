@@ -25,15 +25,11 @@ public class Customer {
     @GeneratedValue(generator = "customer_id_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private Set<Ticket> tickets;
-
     public Customer() {
     }
 
-    public Customer(boolean isVip, String sex, String firstName, String lastName, Set<Ticket> tickets) {
+    public Customer(boolean isVip, String sex, String firstName, String lastName) {
         this();
-        this.setTickets(tickets);
         this.setSex(sex);
         this.setVip(isVip);
         this.setFirstName(firstName);
@@ -81,15 +77,6 @@ public class Customer {
 
     public Customer setLastName(String lastName) {
         this.lastName = lastName;
-        return this;
-    }
-
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public Customer setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
         return this;
     }
 }
