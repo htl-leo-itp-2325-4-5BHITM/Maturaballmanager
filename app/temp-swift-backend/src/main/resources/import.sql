@@ -19,3 +19,35 @@ INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (7, true
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (8, false, '2024-06-04 17:00:00', true, 8);
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (9, true, '2024-06-04 18:00:00', false, 9);
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (10, false, '2024-06-04 19:00:00', true, 10);
+
+INSERT INTO FAQItem (id, priority, question, answer) VALUES
+    (1, 6,
+     'Was ist die Maturaballmanager-App?',
+     'Die Maturaballmanager-App ist eine mobile Anwendung zur Unterstützung vom Entwerten der Maturaballtickets.');
+
+INSERT INTO FAQItem (id, priority, question, answer) VALUES
+    (2, 5,
+     'Wie verwende ich den QR-Scanner?',
+     'Gehen Sie zum Menü und wählen Sie das Icon "QR-Scanner". Richten Sie die Kamera Ihres Gerätes auf den QR-Code des Tickets, bis der Code automatisch gescannt wird.');
+
+INSERT INTO FAQItem(id, priority, question, answer) VALUES
+    (3, 4,
+     'Was passiert, nachdem ich ein Ticket gescannt habe?',
+     'Nach dem Scannen des QR-Codes wird die Gültigkeit des Tickets überprüft. Wenn das Ticket gültig ist, wird eine Bestätigung angezeigt. Andernfalls erhalten Sie eine Fehlermeldung.');
+
+INSERT INTO FAQItem(id, priority, question, answer) VALUES
+    (4, 3,
+     'Welche Art von QR-Codes kann der Scanner lesen?',
+     'Der Scanner kann die QR-Codes lesen, die speziell für die Eintrittskarten des Maturaballs der HTL Leonding generiert wurden.');
+
+INSERT INTO FAQItem(id, priority, question, answer) VALUES
+    (5, 2,
+     'Was mache ich, wenn der QR-Scanner nicht funktioniert?',
+     'Stellen Sie sicher, dass die Kamera Ihres Geräts nicht blockiert ist und dass ausreichend Licht vorhanden ist. Überprüfen Sie, ob Sie der App die Berechtigung zur Nutzung der Kamera erteilt haben. Starten Sie die App neu und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.');
+
+INSERT INTO FAQItem(id, priority, question, answer) VALUES
+                                                        (6, 1,
+                                                        'Kann ich gescannte Tickets erneut verwenden?',
+                                                        'Nein, einmal gescannte Tickets werden als verwendet markiert und können nicht erneut für den Einlass genutzt werden.');
+
+

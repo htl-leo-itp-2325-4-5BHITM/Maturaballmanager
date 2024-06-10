@@ -4,7 +4,6 @@ struct ProfileView: View {
     @ObservedObject var sosCounter: SOSCounter
     var body: some View {
         VStack(spacing: 20) {
-            // Profil Titel
             Text("Profil")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -12,7 +11,6 @@ struct ProfileView: View {
             
             Spacer()
             
-            // Name und Rolle Details
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     Text("Name:")
@@ -38,9 +36,7 @@ struct ProfileView: View {
             
             Spacer()
             
-            // Logout Button
             Button(action: {
-                // Handle logout action
             }) {
                 Text("Logout")
                     .foregroundColor(.white)
