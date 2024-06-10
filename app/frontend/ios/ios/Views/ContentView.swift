@@ -9,6 +9,9 @@ struct ContentView: View {
                 ScannerView(sosCounter: sosCounter)
                     .tabItem {
                         Image(systemName: "qrcode.viewfinder")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.gray)
                         Text("Scanner")
                     }
                 
@@ -23,7 +26,19 @@ struct ContentView: View {
                             }
                         }
                     }
-            }
+                
+                ProfileView(sosCounter: sosCounter)
+                    .tabItem {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.gray)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                        Text("Profil")
+                    }
+                
+            }.padding(.bottom, 20)
         }
     }
 }

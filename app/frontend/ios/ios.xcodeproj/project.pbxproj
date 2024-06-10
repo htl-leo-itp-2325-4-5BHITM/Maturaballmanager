@@ -25,6 +25,7 @@
 		82E8F0762C0E9E8800921329 /* PublicKeyLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */; };
 		82E8F07B2C0E9ECF00921329 /* SignatureVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */; };
 		82E8F07E2C0EA06A00921329 /* WarningSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */; };
+		D3ABA0A42C1780E800877B37 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABA0A32C1780E800877B37 /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyLoader.swift; sourceTree = "<group>"; };
 		82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureVerifier.swift; sourceTree = "<group>"; };
 		82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningSymbol.swift; sourceTree = "<group>"; };
+		D3ABA0A32C1780E800877B37 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 				82E8F0712C0E9B6400921329 /* ScannerView.swift */,
 				82E8F0732C0E9B7400921329 /* TicketInfoView.swift */,
 				829F82EC2C0FC06600C43612 /* SOSView.swift */,
+				D3ABA0A32C1780E800877B37 /* ProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				82E7FC5C2C0DA444008A0B3D /* Persistence.swift in Sources */,
 				82E8F0742C0E9B7400921329 /* TicketInfoView.swift in Sources */,
 				82E7FC662C0DA474008A0B3D /* App.swift in Sources */,
+				D3ABA0A42C1780E800877B37 /* ProfileView.swift in Sources */,
 				82E7FC552C0DA443008A0B3D /* ContentView.swift in Sources */,
 				82E8F06B2C0E961600921329 /* ApiService.swift in Sources */,
 				82E7FC5F2C0DA444008A0B3D /* ios.xcdatamodeld in Sources */,
@@ -370,9 +374,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ios/Preview Content\"";
-				DEVELOPMENT_TEAM = Y5FZKPXZ5V;
+				DEVELOPMENT_TEAM = 7L5579AQFH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "For Scanner functionality";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -383,7 +388,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = at.htlleonding.maturaballmanager.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = at.htlleonding.maturaballmanager.iostuana;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -399,9 +404,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ios/Preview Content\"";
-				DEVELOPMENT_TEAM = Y5FZKPXZ5V;
+				DEVELOPMENT_TEAM = 7L5579AQFH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "For Scanner functionality";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -412,7 +418,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = at.htlleonding.maturaballmanager.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = at.htlleonding.maturaballmanager.iostuana;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
