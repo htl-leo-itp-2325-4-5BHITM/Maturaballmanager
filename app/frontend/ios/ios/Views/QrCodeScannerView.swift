@@ -4,6 +4,7 @@ import AVFoundation
 struct QRCodeScannerView: UIViewControllerRepresentable {
     class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: QRCodeScannerView
+        var captureSession: AVCaptureSession?
 
         init(parent: QRCodeScannerView) {
             self.parent = parent
@@ -29,37 +30,38 @@ struct QRCodeScannerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         let viewController = UIViewController()
         let captureSession = AVCaptureSession()
+        context.coordinator.captureSession = captureSession
 
         DispatchQueue.global(qos: .userInitiated).async {
-            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
-            let videoInput: AVCaptureDeviceInput
-
-            do {
-                videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-            } catch {
+            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+                print("No video capture device available")
                 return
             }
 
-            captureSession.beginConfiguration()
+            let videoInput: AVCaptureDeviceInput
+            do {
+                videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+            } catch {
+                print("Error creating video input: \(error)")
+                return
+            }
 
-            if (captureSession.canAddInput(videoInput)) {
+            if captureSession.canAddInput(videoInput) {
                 captureSession.addInput(videoInput)
             } else {
+                print("Cannot add video input to capture session")
                 return
             }
 
             let metadataOutput = AVCaptureMetadataOutput()
-
-            if (captureSession.canAddOutput(metadataOutput)) {
+            if captureSession.canAddOutput(metadataOutput) {
                 captureSession.addOutput(metadataOutput)
-
                 metadataOutput.setMetadataObjectsDelegate(context.coordinator, queue: DispatchQueue.main)
                 metadataOutput.metadataObjectTypes = [.qr]
             } else {
+                print("Cannot add metadata output to capture session")
                 return
             }
-
-            captureSession.commitConfiguration()
 
             DispatchQueue.main.async {
                 let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -71,8 +73,6 @@ struct QRCodeScannerView: UIViewControllerRepresentable {
             if self.isScanning {
                 captureSession.startRunning()
             }
-
-            context.coordinator.captureSession = captureSession
         }
 
         return viewController
@@ -82,26 +82,13 @@ struct QRCodeScannerView: UIViewControllerRepresentable {
         if let session = context.coordinator.captureSession {
             if isScanning {
                 if !session.isRunning {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        session.startRunning()
-                    }
+                    session.startRunning()
                 }
             } else {
                 if session.isRunning {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        session.stopRunning()
-                    }
+                    session.stopRunning()
                 }
             }
         }
     }
-}
-
-extension QRCodeScannerView.Coordinator {
-    var captureSession: AVCaptureSession? {
-        get { objc_getAssociatedObject(self, &QRCodeScannerView.Coordinator.captureSessionKey) as? AVCaptureSession }
-        set { objc_setAssociatedObject(self, &QRCodeScannerView.Coordinator.captureSessionKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
-    }
-
-    private static var captureSessionKey: UInt8 = 0
 }

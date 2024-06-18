@@ -1,20 +1,61 @@
 import SwiftUI
 
+class TicketInfoViewModel: ObservableObject {
+    @Published var ticketDTO: TicketDTO?
+    @Published var dataInvalid = false
+    @Published var isRedeemed = false
+    @Published var verificationResult: Bool?
+
+    init(ticketDTO: TicketDTO?) {
+        self.ticketDTO = ticketDTO
+        self.isRedeemed = ticketDTO?.isRedeemed ?? false
+        self.verifySignature()
+    }
+
+    private func verifySignature() {
+        guard let ticketDTO = ticketDTO else { return }
+
+        let publicKey = PublicKeyLoader.loadPublicKey()
+        let signedData = "Issuer: HTL Leonding"
+        let signature = ticketDTO.digitalSignature
+
+        if let publicKey = publicKey {
+            verificationResult = SignatureVerifier.verifySignature(signedData: signedData, signature: signature, publicKey: publicKey)
+        } else {
+            verificationResult = false
+        }
+    }
+
+    func redeemTicket(completion: @escaping (Bool) -> Void) {
+        guard let ticketDTO = ticketDTO else { return }
+
+        ApiService.shared.redeemTicket(ticketId: ticketDTO.id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self.isRedeemed = true
+                    self.ticketDTO?.isRedeemed = true
+                    completion(true)
+                case .failure:
+                    completion(false)
+                }
+            }
+        }
+    }
+}
+
 struct TicketInfoView: View {
-    var ticketDTO: TicketDTO?
-    @Binding var dataInvalid: Bool
-    @State private var verificationResult: Bool?
-    @State private var showAlert = false
-    @State private var alertMessage = ""
+    @ObservedObject var viewModel: TicketInfoViewModel
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var snackbarManager: SnackbarManager
 
     var body: some View {
         VStack(spacing: 20) {
-            if dataInvalid {
+            if viewModel.dataInvalid {
                 WarningSymbol()
                 Spacer()
-            } else if let ticketDTO = ticketDTO {
-                if ticketDTO.isRedeemed == true {
+            } else if let ticketDTO = viewModel.ticketDTO {
+                if viewModel.isRedeemed {
                     WarningSymbol()
                     Text("Dieses Ticket von \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName) wurde bereits entwertet.")
                         .foregroundColor(.orange)
@@ -54,7 +95,7 @@ struct TicketInfoView: View {
                                     .font(.subheadline)
                                     .fontWeight(.semibold)
                             }
-                            
+
                             HStack {
                                 Text("Geschlecht:")
                                     .font(.headline)
@@ -62,7 +103,7 @@ struct TicketInfoView: View {
                                 Text("\(ticketDTO.user.sex == "male" ? "männlich" : "weiblich")")
                                     .font(.subheadline)
                             }
-                            
+
                             HStack {
                                 Text("VIP Status:")
                                     .font(.headline)
@@ -70,10 +111,10 @@ struct TicketInfoView: View {
                                 Text("\(ticketDTO.user.vipStatus ? "Ja" : "Nein")")
                                     .font(.subheadline)
                             }
-                            
+
                             Text("Signatur:")
                                 .font(.headline)
-                            
+
                             ScrollView {
                                 Text(ticketDTO.digitalSignature)
                                     .font(.footnote)
@@ -81,8 +122,8 @@ struct TicketInfoView: View {
                                     .padding(.top, 5)
                             }
                             .frame(height: 100)
-                            
-                            if let verificationResult = verificationResult {
+
+                            if let verificationResult = viewModel.verificationResult {
                                 Text(verificationResult ? "Signatur verifiziert" : "Signatur ungültig")
                                     .font(.headline)
                                     .foregroundColor(verificationResult ? .green : .red)
@@ -91,9 +132,16 @@ struct TicketInfoView: View {
                         .padding(.horizontal, 20)
                         .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
                         .padding(.horizontal)
-                        
+
                         Button(action: {
-                            redeemTicket(ticketDTO: ticketDTO)
+                            viewModel.redeemTicket { success in
+                                if success {
+                                    snackbarManager.show(message: "Das Ticket wurde erfolgreich entwertet.")
+                                    presentationMode.wrappedValue.dismiss()
+                                } else {
+                                    snackbarManager.show(message: "Das Entwerten des Tickets ist fehlgeschlagen.")
+                                }
+                            }
                         }) {
                             Text("Entwerten")
                                 .font(.title2)
@@ -102,14 +150,6 @@ struct TicketInfoView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
-                        .alert(isPresented: $showAlert) {
-                            Alert(title: Text("Ticketstatus"), message: Text(alertMessage), dismissButton: .default(Text("OK"), action: {
-                                if alertMessage == "Das Ticket wurde erfolgreich entwertet." {
-                                    self.presentationMode.wrappedValue.dismiss()
-                                }
-                            }))
-                        }
-                        
                         Spacer()
                     }
                 }
@@ -122,39 +162,5 @@ struct TicketInfoView: View {
         .padding()
         .navigationBarTitle("Ticketdetails", displayMode: .inline)
         .background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
-        .onAppear {
-            if let ticketDTO = ticketDTO {
-                verifySignature()
-            }
-        }
-    }
-    
-    private func verifySignature() {
-        guard let ticketDTO = ticketDTO else { return }
-        
-        let publicKey = PublicKeyLoader.loadPublicKey()
-        let signedData = "Issuer: HTL Leonding"
-        let signature = ticketDTO.digitalSignature
-        
-        if let publicKey = publicKey {
-            verificationResult = SignatureVerifier.verifySignature(signedData: signedData, signature: signature, publicKey: publicKey)
-        } else {
-            verificationResult = false
-        }
-    }
-    
-    private func redeemTicket(ticketDTO: TicketDTO) {
-        ApiService.shared.redeemTicket(ticketId: ticketDTO.id) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    self.alertMessage = "Das Ticket wurde erfolgreich entwertet."
-                    self.showAlert = true
-                case .failure:
-                    self.alertMessage = "Das Entwerten des Tickets ist fehlgeschlagen."
-                    self.showAlert = true
-                }
-            }
-        }
     }
 }

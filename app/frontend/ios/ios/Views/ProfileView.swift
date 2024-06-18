@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @ObservedObject var authService = AuthService.shared
+    @EnvironmentObject var authService: AuthService
     
     var body: some View {
         VStack(spacing: 20) {
@@ -55,3 +55,4 @@ struct ProfileView: View {
         print("User logged out")
     }
 }
+

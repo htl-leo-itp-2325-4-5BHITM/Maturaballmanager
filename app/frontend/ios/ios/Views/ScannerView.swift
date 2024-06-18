@@ -7,27 +7,39 @@ struct ScannerView: View {
     @State private var errorMessage: String?
     @State private var navigationLinkActive = false
     @State private var dataInvalid = false
-    @State private var isScanningActive = true 
+    @State private var isScanningActive = true
     @State private var noInternet = false
     @ObservedObject var sosCounter: SOSCounter
+    @EnvironmentObject var snackbarManager: SnackbarManager
 
     var body: some View {
         ZStack {
-            QRCodeScannerView(didFindCode: { code in
-                self.scannedCode = code
-                self.processScannedCode(code)
-            }, isScanning: $isScanningActive)
-            .edgesIgnoringSafeArea(.all)
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
+            VStack {
+                QRCodeScannerView(didFindCode: { code in
+                    self.scannedCode = code
+                    self.processScannedCode(code)
+                }, isScanning: $isScanningActive)
+                .edgesIgnoringSafeArea(.top)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
 
-            NavigationLink(destination: TicketInfoView(ticketDTO: ticketDTO, dataInvalid: $dataInvalid)
-                            .onAppear {
-                                self.isScanningActive = false                             }
-                            .onDisappear {
-                                self.isScanningActive = true
-                            }, isActive: $navigationLinkActive) {
-                EmptyView()
+                NavigationLink(destination: TicketInfoView(viewModel: TicketInfoViewModel(ticketDTO: ticketDTO))
+                                .onAppear {
+                                    self.isScanningActive = false
+                                }
+                                .onDisappear {
+                                    self.isScanningActive = true
+                                }, isActive: $navigationLinkActive) {
+                    EmptyView()
+                }
+            }
+
+            VStack {
+                Spacer()
+
+                SnackbarView()
+                    .environmentObject(snackbarManager)
             }
         }
         .alert(isPresented: .constant(errorMessage != nil || noInternet), content: {

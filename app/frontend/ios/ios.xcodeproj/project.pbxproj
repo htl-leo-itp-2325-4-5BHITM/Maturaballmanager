@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		820587092C2231880030D0AF /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820587082C2231880030D0AF /* MainView.swift */; };
+		8205870C2C2244C60030D0AF /* SnackbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8205870B2C2244C60030D0AF /* SnackbarView.swift */; };
+		8205870F2C2245F90030D0AF /* SnackbarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8205870E2C2245F90030D0AF /* SnackbarManager.swift */; };
+		820587112C2251B40030D0AF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820587102C2251B40030D0AF /* NetworkMonitor.swift */; };
 		821D46592C17996C006D8864 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D46582C17996C006D8864 /* LoginView.swift */; };
 		821D465B2C17998E006D8864 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D465A2C17998E006D8864 /* AuthService.swift */; };
 		829F82EB2C0FB59300C43612 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 829F82EA2C0FB59300C43612 /* public_key.pem */; };
@@ -34,6 +37,9 @@
 
 /* Begin PBXFileReference section */
 		820587082C2231880030D0AF /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		8205870B2C2244C60030D0AF /* SnackbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarView.swift; sourceTree = "<group>"; };
+		8205870E2C2245F90030D0AF /* SnackbarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarManager.swift; sourceTree = "<group>"; };
+		820587102C2251B40030D0AF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		821D46582C17996C006D8864 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		821D465A2C17998E006D8864 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		829F82EA2C0FB59300C43612 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public_key.pem; sourceTree = "<group>"; };
@@ -80,6 +86,23 @@
 				BB3447290A2EDB1BCB459406 /* Pods-ios.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		8205870A2C2244B70030D0AF /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				8205870D2C2245F10030D0AF /* Manager */,
+				8205870B2C2244C60030D0AF /* SnackbarView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		8205870D2C2245F10030D0AF /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				8205870E2C2245F90030D0AF /* SnackbarManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		82E7FC462C0DA443008A0B3D = {
@@ -137,10 +160,11 @@
 			isa = PBXGroup;
 			children = (
 				82E8F06A2C0E961600921329 /* ApiService.swift */,
+				821D465A2C17998E006D8864 /* AuthService.swift */,
 				82E8F0752C0E9E8800921329 /* PublicKeyLoader.swift */,
 				82E8F07A2C0E9ECF00921329 /* SignatureVerifier.swift */,
 				829F82EE2C0FCAB400C43612 /* SOSCounter.swift */,
-				821D465A2C17998E006D8864 /* AuthService.swift */,
+				820587102C2251B40030D0AF /* NetworkMonitor.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -148,6 +172,7 @@
 		82E8F06C2C0E964500921329 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8205870A2C2244B70030D0AF /* Components */,
 				82E8F07C2C0EA02200921329 /* Warnings */,
 				82E7FC542C0DA443008A0B3D /* ContentView.swift */,
 				82E8F06F2C0E96E000921329 /* QrCodeScannerView.swift */,
@@ -301,14 +326,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				82E8F0702C0E96E000921329 /* QrCodeScannerView.swift in Sources */,
+				8205870C2C2244C60030D0AF /* SnackbarView.swift in Sources */,
 				82E8F0682C0E95F900921329 /* UserDTO.swift in Sources */,
 				82E8F0662C0E95EC00921329 /* TicketDTO.swift in Sources */,
+				8205870F2C2245F90030D0AF /* SnackbarManager.swift in Sources */,
 				821D465B2C17998E006D8864 /* AuthService.swift in Sources */,
 				82E8F0762C0E9E8800921329 /* PublicKeyLoader.swift in Sources */,
 				820587092C2231880030D0AF /* MainView.swift in Sources */,
 				82E8F07E2C0EA06A00921329 /* WarningSymbol.swift in Sources */,
 				82E7FC5C2C0DA444008A0B3D /* Persistence.swift in Sources */,
 				82E8F0742C0E9B7400921329 /* TicketInfoView.swift in Sources */,
+				820587112C2251B40030D0AF /* NetworkMonitor.swift in Sources */,
 				82E7FC662C0DA474008A0B3D /* App.swift in Sources */,
 				D3ABA0A42C1780E800877B37 /* ProfileView.swift in Sources */,
 				82E7FC552C0DA443008A0B3D /* ContentView.swift in Sources */,

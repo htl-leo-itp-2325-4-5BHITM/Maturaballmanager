@@ -6,10 +6,12 @@ class AuthService: ObservableObject {
     @Published var token: String?
     @Published var userInfo: [String: Any] = [:]
     
+    private let baseUrl = "https://auth.htl-leonding.ac.at/realms/2425-5bhitm/protocol/openid-connect"
+    
     private init() {}
     
     func fetchToken(username: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let url = URL(string: "https://auth.htl-leonding.ac.at/realms/2425-5bhitm/protocol/openid-connect/token")!
+        let url = URL(string: "\(baseUrl)/token")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         
@@ -33,7 +35,7 @@ class AuthService: ObservableObject {
             }
             
             guard let data = data else {
-                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data"])
+                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data received from server"])
                 print("No data received")
                 completion(.failure(error))
                 return
@@ -49,7 +51,15 @@ class AuthService: ObservableObject {
                             switch result {
                             case .success(let userInfo):
                                 print("User info: \(userInfo)")
-                                completion(.success(accessToken))
+                                if self.hasRequiredRole(userInfo: userInfo) {
+                                    completion(.success(accessToken))
+                                } else {
+                                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "You do not have the required permissions to log in"])
+                                    print("User does not have required role")
+                                    self.token = nil
+                                    self.userInfo = [:]
+                                    completion(.failure(error))
+                                }
                             case .failure(let error):
                                 print("Failed to fetch user info: \(error.localizedDescription)")
                                 completion(.failure(error))
@@ -57,13 +67,14 @@ class AuthService: ObservableObject {
                         }
                     }
                 } else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from server"])
                     print("Invalid response: \(String(describing: String(data: data, encoding: .utf8)))")
                     completion(.failure(error))
                 }
             } catch {
                 print("Error parsing token response: \(error.localizedDescription)")
-                completion(.failure(error))
+                let parseError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error parsing server response"])
+                completion(.failure(parseError))
             }
         }
         
@@ -78,7 +89,7 @@ class AuthService: ObservableObject {
             return
         }
         
-        let url = URL(string: "https://auth.htl-leonding.ac.at/realms/2425-5bhitm/protocol/openid-connect/userinfo")!
+        let url = URL(string: "\(baseUrl)/userinfo")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -91,13 +102,12 @@ class AuthService: ObservableObject {
             }
             
             guard let data = data else {
-                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data"])
+                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data received from server"])
                 print("No data received")
                 completion(.failure(error))
                 return
             }
             
-            // Ausgabe der Rohdaten zur Fehlersuche
             if let rawString = String(data: data, encoding: .utf8) {
                 print("Raw user info data: \(rawString)")
             } else {
@@ -112,17 +122,26 @@ class AuthService: ObservableObject {
                     }
                     completion(.success(json))
                 } else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from server"])
                     print("Invalid response: \(String(describing: String(data: data, encoding: .utf8)))")
                     completion(.failure(error))
                 }
             } catch {
                 print("Error parsing user info response: \(error.localizedDescription)")
-                completion(.failure(error))
+                let parseError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error parsing user info from server"])
+                completion(.failure(parseError))
             }
         }
         
         task.resume()
+    }
+    
+    private func hasRequiredRole(userInfo: [String: Any]) -> Bool {
+        guard let realmAccess = userInfo["realm_access"] as? [String: Any],
+              let roles = realmAccess["roles"] as? [String] else {
+            return false
+        }
+        return roles.contains("Komiteemitglied") || roles.contains("Maturaballleiter")
     }
 }
 

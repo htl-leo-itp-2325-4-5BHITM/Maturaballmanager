@@ -9,13 +9,14 @@ struct MainView: View {
                         Image(systemName: "qrcode.viewfinder")
                         Text("Scanner")
                     }
-                
-                SOSView(sosCounter: SOSCounter())
+
+                SOSView()
                     .tabItem {
                         Image(systemName: "exclamationmark.triangle")
                         Text("SOS")
                     }
-                
+                    .badge(Int(UserDefaults.standard.array(forKey: "storedTickets")!.count))
+
                 ProfileView()
                     .tabItem {
                         Image(systemName: "person.fill")
@@ -23,5 +24,12 @@ struct MainView: View {
                     }
             }
         }
+    }
+    
+    private func getSOSCount() -> Int {
+        if let count = UserDefaults.standard.array(forKey: "storedTickets")?.count {
+            return count
+        }
+        return 0
     }
 }

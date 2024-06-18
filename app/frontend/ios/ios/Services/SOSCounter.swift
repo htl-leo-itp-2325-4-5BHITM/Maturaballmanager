@@ -1,6 +1,8 @@
 import SwiftUI
 
 class SOSCounter: ObservableObject {
+    static let shared = SOSCounter()
+    
     @Published var count: Int = 0
     
     func loadSOSCount() {
