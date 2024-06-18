@@ -15,9 +15,3 @@ struct WarningSymbol: View {
         }
     }
 }
-
-struct WarningSymbol_Previews: PreviewProvider {
-    static var previews: some View {
-        WarningSymbol()
-    }
-}

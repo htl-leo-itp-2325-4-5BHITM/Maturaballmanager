@@ -158,9 +158,3 @@ struct TicketInfoView: View {
         }
     }
 }
-
-struct TicketInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        TicketInfoView(ticketDTO: TicketDTO(id: 1, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "example_signature", isRedeemed: false), dataInvalid: .constant(false))
-    }
-}

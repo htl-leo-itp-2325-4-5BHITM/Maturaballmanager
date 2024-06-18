@@ -6,7 +6,7 @@ class SOSCounter: ObservableObject {
     func loadSOSCount() {
         if let storedData = UserDefaults.standard.array(forKey: "storedTickets") as? [Data] {
             let decodedTickets = storedData.compactMap { try? JSONDecoder().decode(TicketDTO.self, from: $0) }
-            count = Array(Set(decodedTickets)).count // Zählt die eindeutigen Tickets
+            count = Array(Set(decodedTickets)).count
         }
     }
 }

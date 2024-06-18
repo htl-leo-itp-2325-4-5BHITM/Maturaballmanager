@@ -1,59 +1,27 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var sosCounter = SOSCounter()
-
     var body: some View {
         NavigationView {
             TabView {
-                ScannerView(sosCounter: sosCounter)
+                ScannerView(sosCounter: SOSCounter())
                     .tabItem {
                         Image(systemName: "qrcode.viewfinder")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.gray)
                         Text("Scanner")
                     }
                 
-                SOSView(sosCounter: sosCounter)
+                SOSView(sosCounter: SOSCounter())
                     .tabItem {
-                        ZStack {
-                            Image(systemName: "exclamationmark.triangle")
-                            Text("SOS")
-                            if sosCounter.count > 0 {
-                                Badge(count: sosCounter.count)
-                                    .offset(x: 20, y: -10)
-                            }
-                        }
+                        Image(systemName: "exclamationmark.triangle")
+                        Text("SOS")
                     }
                 
-                ProfileView(sosCounter: sosCounter)
+                ProfileView()
                     .tabItem {
                         Image(systemName: "person.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.gray)
-                            .background(Color.white)
-                            .clipShape(Circle())
-                        Text("Profil")
+                        Text("Profile")
                     }
-                
-            }.padding(.bottom, 20)
+            }
         }
-    }
-}
-
-struct Badge: View {
-    let count: Int
-
-    var body: some View {
-        ZStack {
-            Circle()
-                .foregroundColor(.red)
-            Text("\(count)")
-                .foregroundColor(.white)
-                .font(.caption)
-        }
-        .frame(width: 20, height: 20)
     }
 }

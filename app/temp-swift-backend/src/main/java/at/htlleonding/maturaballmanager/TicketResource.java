@@ -5,6 +5,7 @@ import at.htlleonding.maturaballmanager.entity.Ticket;
 import at.htlleonding.maturaballmanager.model.TicketDTO;
 import at.htlleonding.maturaballmanager.repository.TicketRepository;
 import at.htlleonding.maturaballmanager.services.TicketService;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
