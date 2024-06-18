@@ -4,7 +4,7 @@ class ApiService {
     static let shared = ApiService()
     private init() {}
     
-    private let baseURL = "https://mbm.tommyneumaier.at/quarkus/api"
+    private let baseURL = "https://e794-193-170-158-243.ngrok-free.app/api/"
 
     func redeemTicket(ticketId: Int, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/tickets/redeem/\(ticketId)") else {

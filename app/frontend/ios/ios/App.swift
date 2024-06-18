@@ -6,13 +6,8 @@ struct iosApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if authService.isAuthenticated {
-                ContentView()
-                    .environmentObject(authService)
-            } else {
-                LoginView()
-                    .environmentObject(authService)
-            }
+            ContentView()
+                .environmentObject(authService)
         }
     }
 }

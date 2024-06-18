@@ -1,69 +1,59 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var authService: AuthService
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var errorMessage: String?
 
+    @EnvironmentObject var authService: AuthService
+
     var body: some View {
-        NavigationView {
-            VStack {
-                TextField("Username", text: $username)
+        VStack {
+            TextField("Username", text: $username)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(10)
+
+            SecureField("Password", text: $password)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(10)
+
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
                     .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-                
-                SecureField("Password", text: $password)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-                
-                Button(action: login) {
-                    Text("Login")
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(8)
-                }
-                
-                if let errorMessage = errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .padding()
-                }
-                
-                Spacer()
             }
-            .padding()
-            .navigationBarTitle("Login", displayMode: .inline)
+
+            Button(action: {
+                login(username: username, password: password)
+            }) {
+                Text("Login")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
         }
+        .padding()
         .onAppear {
-            if authService.isAuthenticated {
-                navigateToMainView()
-            }
+            print("LoginView appeared")
         }
     }
-    
-    private func login() {
-        authService.login(username: username, password: password) { result in
+
+    func login(username: String, password: String) {
+        authService.fetchToken(username: username, password: password) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    navigateToMainView()
+                    self.errorMessage = nil
+                    print("Login successful, token: \(String(describing: authService.token))")
+                    print("User info: \(authService.userInfo)")
                 case .failure(let error):
-                    errorMessage = error.localizedDescription
+                    self.errorMessage = error.localizedDescription
+                    print("Login failed: \(error.localizedDescription)")
                 }
             }
-        }
-    }
-    
-    private func navigateToMainView() {
-        if let window = UIApplication.shared.windows.first {
-            window.rootViewController = UIHostingController(rootView: ContentView().environmentObject(authService))
-            window.makeKeyAndVisible()
         }
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		820587092C2231880030D0AF /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820587082C2231880030D0AF /* MainView.swift */; };
 		821D46592C17996C006D8864 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D46582C17996C006D8864 /* LoginView.swift */; };
 		821D465B2C17998E006D8864 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D465A2C17998E006D8864 /* AuthService.swift */; };
 		829F82EB2C0FB59300C43612 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 829F82EA2C0FB59300C43612 /* public_key.pem */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		820587082C2231880030D0AF /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		821D46582C17996C006D8864 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		821D465A2C17998E006D8864 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		829F82EA2C0FB59300C43612 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public_key.pem; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				82E8F0732C0E9B7400921329 /* TicketInfoView.swift */,
 				829F82EC2C0FC06600C43612 /* SOSView.swift */,
 				D3ABA0A32C1780E800877B37 /* ProfileView.swift */,
+				820587082C2231880030D0AF /* MainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				82E8F0662C0E95EC00921329 /* TicketDTO.swift in Sources */,
 				821D465B2C17998E006D8864 /* AuthService.swift in Sources */,
 				82E8F0762C0E9E8800921329 /* PublicKeyLoader.swift in Sources */,
+				820587092C2231880030D0AF /* MainView.swift in Sources */,
 				82E8F07E2C0EA06A00921329 /* WarningSymbol.swift in Sources */,
 				82E7FC5C2C0DA444008A0B3D /* Persistence.swift in Sources */,
 				82E8F0742C0E9B7400921329 /* TicketInfoView.swift in Sources */,
