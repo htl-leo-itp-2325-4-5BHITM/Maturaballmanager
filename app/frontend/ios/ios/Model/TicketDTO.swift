@@ -1,6 +1,7 @@
 import Foundation
 
-struct TicketDTO: Codable, Hashable {
+struct TicketDTO: Codable, Hashable, Identifiable {
+    let uuid: UUID = UUID()
     let id: Int
     let user: UserDTO
     let digitalSignature: String
