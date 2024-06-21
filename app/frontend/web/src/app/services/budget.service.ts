@@ -1,32 +1,39 @@
 import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BudgetService {
-  private initialBudget: number = 0
-  private income: number = 0
-  private expenses: number = 0
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  setInitialBudget(amount: number) {
-    this.initialBudget = amount
+  getGoal(): Observable<number> {
+    return this.http.get<number>('http://localhost:9999/budget/goal');
   }
 
-  addIncome(amount: number) {
-    this.income += amount
+  setGoal(goal: number): Observable<void> {
+    return this.http.post<void>('http://localhost:9999/budget/goal', goal);
   }
 
-  addExpenses(amount: number) {
-    this.expenses += amount
+  getIncome(): Observable<number> {
+    return this.http.get<number>('http://localhost:9999/budget/income');
   }
 
-  getCurrentBudget(): number {
-    return this.initialBudget + this.income - this.expenses
+  addIncome(amount: number): Observable<void> {
+    return this.http.post<void>('http://localhost:9999/budget/income', amount);
   }
 
-  getProfit(): number {
-    return this.income - this.expenses
+  getExpenses(): Observable<number> {
+    return this.http.get<number>('http://localhost:9999/budget/expenses');
+  }
+
+  addExpense(amount: number): Observable<void> {
+    return this.http.post<void>('http://localhost:9999/budget/expenses', amount);
+  }
+
+  getProfit(): Observable<number> {
+    return this.http.get<number>('http://localhost:9999/budget/profit');
   }
 }

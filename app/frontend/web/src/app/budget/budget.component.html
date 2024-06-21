@@ -1,39 +1,59 @@
 <div class="container">
-    <h1>Budget Übersicht</h1>
-    <mat-card>
-        <mat-card-title>Status</mat-card-title>
-        <mat-card-content>
-            <p>{{ getCurrentBudget() }}/{{ goal }}€</p>
-        </mat-card-content>
-    </mat-card>
+    <h1>Budget</h1>
+    <div class="cards">
+        <mat-card class="card">
+            <h2>Ziel</h2>
+            <mat-progress-bar mode="determinate" [value]="goalProgress"></mat-progress-bar>
+            <div>{{goal}}€</div>
+            <div>Gewinn: {{profit}}€</div>
+        </mat-card>
 
-    <mat-card>
-        <mat-card-title>Prozentanteil</mat-card-title>
-        <mat-card-content>
-            <p>{{ (getCurrentBudget() / goal) * 100 | number: '1.0-2' }}%</p>
-        </mat-card-content>
-    </mat-card>
+        <mat-card class="card">
+            <h2>Gewinn</h2>
+            <div>{{profit}}€</div>
+        </mat-card>
 
-    <mat-card>
-        <mat-card-title>Einnahmen</mat-card-title>
-        <mat-card-content>
-            <p>{{ income }}€</p>
-            <button mat-raised-button color="primary" (click)="openDialog('income')">Hinzufügen</button>
-        </mat-card-content>
-    </mat-card>
+        <mat-card class="card">
+            <h2>Einnahmen</h2>
+            <table mat-table [dataSource]="incomeData" class="mat-elevation-z8">
+                <ng-container matColumnDef="company">
+                    <th mat-header-cell *matHeaderCellDef> Firma </th>
+                    <td mat-cell *matCellDef="let element"> {{element.company}} </td>
+                </ng-container>
 
-    <mat-card>
-        <mat-card-title>Gewinn</mat-card-title>
-        <mat-card-content>
-            <p>{{ expenses }}€</p>
-            <button mat-raised-button color="primary" (click)="openDialog('expense')">Hinzufügen</button>
-        </mat-card-content>
-    </mat-card>
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef> Betrag </th>
+                    <td mat-cell *matCellDef="let element"> {{element.amount}}€ </td>
+                </ng-container>
 
-    <mat-card>
-        <mat-card-title>Gewinn</mat-card-title>
-        <mat-card-content>
-            <p>{{ getProfit() }}€</p>
-        </mat-card-content>
-    </mat-card>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
+            </table>
+        </mat-card>
+
+        <mat-card class="card">
+            <h2>Ausgaben</h2>
+            <table mat-table [dataSource]="expenseData" class="mat-elevation-z8">
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef> Beschreibung </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef> Betrag </th>
+                    <td mat-cell *matCellDef="let element"> {{element.amount}}€ </td>
+                </ng-container>
+
+                <ng-container matColumnDef="upload">
+                    <th mat-header-cell *matHeaderCellDef> Rechnung </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-button (click)="uploadInvoice(element)">Hochladen</button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsExpenses"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumnsExpenses;"></tr>
+            </table>
+        </mat-card>
+    </div>
 </div>
