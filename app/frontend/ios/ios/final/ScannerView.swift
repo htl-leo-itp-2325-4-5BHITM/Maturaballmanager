@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct ScannerView: View {
-    @ObservedObject private var viewModel: ScannerViewModel = ScannerViewModel()
+    @StateObject private var viewModel: ScannerViewModel
     @EnvironmentObject var snackbarManager: SnackbarManager
+
+    init() {
+        _viewModel = StateObject(wrappedValue: ScannerViewModel())
+    }
 
     var body: some View {
         ZStack {

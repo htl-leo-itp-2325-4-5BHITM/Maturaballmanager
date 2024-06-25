@@ -5,6 +5,7 @@ class TicketInfoViewModel: ObservableObject {
     @Published var dataInvalid = false
     @Published var isRedeemed = false
     @Published var verificationResult: Bool?
+    @ObservedObject var ticketViewModel: TicketViewModel = TicketViewModel()
 
     init(ticketDTO: TicketDTO?) {
         self.ticketDTO = ticketDTO
@@ -35,6 +36,7 @@ class TicketInfoViewModel: ObservableObject {
                 case .success:
                     self.isRedeemed = true
                     self.ticketDTO?.isRedeemed = true
+                    self.ticketViewModel.saveRedeemedTicket(ticketDTO)
                     completion(true)
                 case .failure:
                     completion(false)

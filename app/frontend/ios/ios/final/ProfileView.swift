@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @ObservedObject var authService = AuthService.shared
-    
+
     var body: some View {
         VStack(spacing: 20) {
             Text("Profile")
