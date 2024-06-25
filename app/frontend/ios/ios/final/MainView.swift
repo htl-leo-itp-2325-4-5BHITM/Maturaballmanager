@@ -1,20 +1,23 @@
 import SwiftUI
 
 struct MainView: View {
+    @ObservedObject var sosViewModel = SOSViewModel()
+    
     var body: some View {
         NavigationView {
             TabView {
-                ScannerView(sosCounter: SOSCounter())
+                ScannerView()
                     .tabItem {
                         Image(systemName: "qrcode.viewfinder")
                         Text("Scanner")
                     }
                 
-                SOSView(sosCounter: SOSCounter())
+                SOSView()
                     .tabItem {
                         Image(systemName: "exclamationmark.triangle")
                         Text("SOS")
                     }
+                    .badge(sosViewModel.storedTickets.count)
                 
                 SettingsView()
                     .tabItem {

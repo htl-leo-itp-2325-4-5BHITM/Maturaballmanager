@@ -6,12 +6,12 @@ struct TicketDTO: Codable, Hashable, Identifiable {
     let user: UserDTO
     let digitalSignature: String
     var isRedeemed: Bool?
-    
-    static func == (lhs: TicketDTO, rhs: TicketDTO) -> Bool {
-            return lhs.id == rhs.id
-        }
 
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-        }
+    static func == (lhs: TicketDTO, rhs: TicketDTO) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }

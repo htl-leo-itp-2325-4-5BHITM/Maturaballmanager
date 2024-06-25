@@ -3,6 +3,7 @@ import Combine
 
 class TicketViewModel: ObservableObject {
     @Published var tickets: [TicketDTO] = []
+    var ticketInfo: TicketDTO?
     
     init() {
         loadStoredTickets()

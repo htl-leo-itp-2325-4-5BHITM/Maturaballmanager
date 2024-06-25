@@ -32,7 +32,6 @@ struct SettingsView: View {
                             Text("FAQ")
                         }
                     }
-                    
                 }
                 .listStyle(InsetGroupedListStyle())
             }

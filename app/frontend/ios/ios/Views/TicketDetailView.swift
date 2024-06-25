@@ -33,7 +33,7 @@ struct TicketDetailView: View {
                     Text("Gültig bis:")
                         .font(.headline)
                     Spacer()
-                    Text("09.03.2024 02:00 Uhr") // Hier müsste eigentlich das echte Datum kommen
+                    Text("Freitag, 05.03.2025 um 01:00 Uhr")
                         .font(.subheadline)
                 }
                 

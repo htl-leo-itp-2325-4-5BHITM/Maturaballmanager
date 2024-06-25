@@ -2,19 +2,21 @@ import Foundation
 
 class AuthService: ObservableObject {
     static let shared = AuthService()
-    
+    @Published var APP_CONFIG = AppConfig()
+
     @Published var token: String?
     @Published var userInfo: [String: Any] = [:]
-    
-    private let baseUrl = "https://auth.htl-leonding.ac.at/realms/2425-5bhitm/protocol/openid-connect"
-    
+
     private init() {}
-    
+
     func fetchToken(username: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let url = URL(string: "\(baseUrl)/token")!
+        guard let url = URL(string: "\(APP_CONFIG.AUTH_SERVER_URL)/token") else {
+            completion(.failure(ApiError.invalidURL))
+            return
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+
         let parameters = [
             "grant_type": "password",
             "client_id": "maturaballmanager",
@@ -23,119 +25,91 @@ class AuthService: ObservableObject {
             "password": password,
             "scope": "openid"
         ]
-        
+
         request.httpBody = parameters.percentEscaped().data(using: .utf8)
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error fetching token: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
-            
+
             guard let data = data else {
-                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data received from server"])
-                print("No data received")
-                completion(.failure(error))
+                completion(.failure(ApiError.noData))
                 return
             }
-            
+
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let accessToken = json["access_token"] as? String {
                     DispatchQueue.main.async {
                         self.token = accessToken
-                        print("Token received: \(accessToken)")
                         self.fetchUserInfo { result in
                             switch result {
                             case .success(let userInfo):
-                                print("User info: \(userInfo)")
                                 if self.hasRequiredRole(userInfo: userInfo) {
                                     completion(.success(accessToken))
                                 } else {
-                                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "You do not have the required permissions to log in"])
-                                    print("User does not have required role")
                                     self.token = nil
                                     self.userInfo = [:]
-                                    completion(.failure(error))
+                                    completion(.failure(ApiError.insufficientPermissions))
                                 }
                             case .failure(let error):
-                                print("Failed to fetch user info: \(error.localizedDescription)")
                                 completion(.failure(error))
                             }
                         }
                     }
                 } else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from server"])
-                    print("Invalid response: \(String(describing: String(data: data, encoding: .utf8)))")
-                    completion(.failure(error))
+                    completion(.failure(ApiError.invalidResponse))
                 }
             } catch {
-                print("Error parsing token response: \(error.localizedDescription)")
-                let parseError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error parsing server response"])
-                completion(.failure(parseError))
+                completion(.failure(ApiError.parsingError(error)))
             }
-        }
-        
-        task.resume()
+        }.resume()
     }
-    
+
     func fetchUserInfo(completion: @escaping (Result<[String: Any], Error>) -> Void) {
         guard let token = token else {
-            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No token available"])
-            print("No token available")
-            completion(.failure(error))
+            completion(.failure(ApiError.noToken))
             return
         }
-        
-        let url = URL(string: "\(baseUrl)/userinfo")!
+
+        guard let url = URL(string: "\(APP_CONFIG.AUTH_SERVER_URL)/userinfo") else {
+            completion(.failure(ApiError.invalidURL))
+            return
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Error fetching user info: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
-            
+
             guard let data = data else {
-                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data received from server"])
-                print("No data received")
-                completion(.failure(error))
+                completion(.failure(ApiError.noData))
                 return
             }
-            
-            if let rawString = String(data: data, encoding: .utf8) {
-                print("Raw user info data: \(rawString)")
-            } else {
-                print("Unable to convert user info data to string.")
-            }
-            
+
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     DispatchQueue.main.async {
                         self.userInfo = json
-                        print("User info received: \(json)")
                     }
                     completion(.success(json))
                 } else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from server"])
-                    print("Invalid response: \(String(describing: String(data: data, encoding: .utf8)))")
-                    completion(.failure(error))
+                    completion(.failure(ApiError.invalidResponse))
                 }
             } catch {
-                print("Error parsing user info response: \(error.localizedDescription)")
-                let parseError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error parsing user info from server"])
-                completion(.failure(parseError))
+                completion(.failure(ApiError.parsingError(error)))
             }
-        }
-        
-        task.resume()
+        }.resume()
     }
-    
+
     private func hasRequiredRole(userInfo: [String: Any]) -> Bool {
         guard let realmAccess = userInfo["realm_access"] as? [String: Any],
               let roles = realmAccess["roles"] as? [String] else {
@@ -145,6 +119,17 @@ class AuthService: ObservableObject {
     }
 }
 
+// Error Handling
+enum ApiError: Error {
+    case invalidURL
+    case noData
+    case invalidResponse
+    case parsingError(Error)
+    case noToken
+    case insufficientPermissions
+}
+
+// URL Encoding Extension
 extension Dictionary {
     func percentEscaped() -> String {
         return map { (key, value) in
