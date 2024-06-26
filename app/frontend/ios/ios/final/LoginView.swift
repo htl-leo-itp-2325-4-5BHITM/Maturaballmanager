@@ -1,5 +1,4 @@
 import SwiftUI
-
 struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
@@ -9,15 +8,21 @@ struct LoginView: View {
 
     var body: some View {
         VStack {
-            TextField("Username", text: $username)
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(10)
+            Spacer()
 
-            SecureField("Password", text: $password)
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(10)
+            Image("school_logo.png")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
+                .padding(.bottom, 20)
+            
+            Text("Maturaballmanager")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.bottom, 20)
+
+            CustomTextField(placeholder: "Schulbenutzername", text: $username)
+            CustomTextField(placeholder: "Passwort", text: $password, isSecure: true)
 
             if let errorMessage = errorMessage {
                 Text(errorMessage)
@@ -25,20 +30,13 @@ struct LoginView: View {
                     .padding()
             }
 
-            Button(action: {
+            CustomButton(title: "Anmelden", action: {
                 login(username: username, password: password)
-            }) {
-                Text("Login")
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
+            })
+            
+            Spacer()
         }
         .padding()
-        .onAppear {
-            print("LoginView appeared")
-        }
     }
 
     func login(username: String, password: String) {
@@ -47,11 +45,8 @@ struct LoginView: View {
                 switch result {
                 case .success:
                     self.errorMessage = nil
-                    print("Login successful, token: \(String(describing: authService.token))")
-                    print("User info: \(authService.userInfo)")
                 case .failure(let error):
-                    self.errorMessage = error.localizedDescription
-                    print("Login failed: \(error.localizedDescription)")
+                    self.errorMessage = "Kein Account zu den eingegeben Daten gefunden."
                 }
             }
         }

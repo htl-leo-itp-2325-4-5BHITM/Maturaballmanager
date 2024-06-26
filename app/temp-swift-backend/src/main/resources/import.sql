@@ -8,6 +8,9 @@ INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (7, 'Klaus', 
 INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (8, 'Petra', 'Weber', 'female', true);
 INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (9, 'Uwe', 'Hoffmann', 'male', false);
 INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (10, 'Gabi', 'Zimmermann', 'female', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (11, 'Lana', 'Sekerija', 'female', true);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (12, 'Yasin', 'Erkol', 'male', false);
+INSERT INTO Users (id, firstName, lastName, sex, vipStatus) VALUES (13, 'Tommy', 'Neumaier', 'male', false);
 
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (1, false, '2024-06-04 10:00:00', false, 1);
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (2, true, '2024-06-04 11:00:00', false, 2);
@@ -19,6 +22,9 @@ INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (7, true
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (8, false, '2024-06-04 17:00:00', true, 8);
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (9, true, '2024-06-04 18:00:00', false, 9);
 INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (10, false, '2024-06-04 19:00:00', true, 10);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (11, false, '2024-06-04 19:00:00', false, 11);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (12, false, '2024-06-04 19:00:00', true, 12);
+INSERT INTO Ticket (id, qrCreated, createdAt, redeemed, user_id) VALUES (13, false, '2024-06-04 19:00:00', false, 13);
 
 INSERT INTO FAQItem (id, priority, question, answer) VALUES
     (1, 6,

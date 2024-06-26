@@ -1,4 +1,19 @@
 import SwiftUI
+import Combine
+
+class SnackbarManager: ObservableObject {
+    @Published var isShowing = false
+    @Published var message = ""
+
+    func show(message: String) {
+        self.message = message
+        self.isShowing = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.isShowing = false
+        }
+    }
+}
 
 struct SnackbarView: View {
     @EnvironmentObject var snackbarManager: SnackbarManager
@@ -6,40 +21,18 @@ struct SnackbarView: View {
     var body: some View {
         VStack {
             Spacer()
-            
             if snackbarManager.isShowing {
-                VStack(spacing: 0) {
+                HStack {
                     Text(snackbarManager.message)
-                        .font(.subheadline)
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.green)
                         .cornerRadius(8)
-                        .onTapGesture {
-                            snackbarManager.hide()
-                        }
-
-                    ProgressBar(progress: snackbarManager.progress)
-                        .frame(height: 4)
-                        .background(Color.gray)
+                        .transition(.slide)
+                        .animation(.easeInOut)
                 }
-                .transition(.move(edge: .bottom))
-                .animation(.easeInOut(duration: 0.3), value: snackbarManager.isShowing)
+                .padding()
             }
-        }
-        .padding(.bottom, 20)
-        .padding(.horizontal, 20)
-    }
-}
-
-struct ProgressBar: View {
-    var progress: Double
-
-    var body: some View {
-        GeometryReader { geometry in
-            Rectangle()
-                .fill(Color.white)
-                .frame(width: geometry.size.width * CGFloat(self.progress))
         }
     }
 }

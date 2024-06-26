@@ -4,51 +4,49 @@ struct TicketDetailView: View {
     let ticket: TicketDTO
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Details")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top, 20)
-            
-            Spacer()
-            
-            VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    Text("Ticketnr:")
-                        .font(.headline)
-                    Spacer()
-                    Text(String(ticket.id))
-                        .font(.subheadline)
-                }
+        ScrollView {
+            VStack(spacing: 20) {
+                Image(systemName: "ticket.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.red)
+                    .padding(.top, 20)
                 
-                HStack {
-                    Text("Name:")
-                        .font(.headline)
-                    Spacer()
-                    Text(ticket.user.firstName + " " + ticket.user.lastName)
-                        .font(.subheadline)
+                VStack(alignment: .leading, spacing: 10) {
+                    DetailRow(label: "Ticket-Nr.:", value: "\(ticket.id)")
+                    DetailRow(label: "Name:", value: "\(ticket.user.sex == "male" ? "Hr." : "Fr.") \(ticket.user.firstName) \(ticket.user.lastName)")
+                    DetailRow(label: "Geschlecht:", value: "\(ticket.user.sex == "male" ? "männlich" : "weiblich")")
+                    DetailRow(label: "VIP Status:", value: "\(ticket.user.vipStatus ? "Ja" : "Nein")")
                 }
+                .padding(.horizontal, 20)
                 
-                HStack {
-                    Text("Gültig bis:")
-                        .font(.headline)
-                    Spacer()
-                    Text("Freitag, 05.03.2025 um 01:00 Uhr")
-                        .font(.subheadline)
-                }
-                
-                HStack {
-                    Text("Ticketart:")
-                        .font(.headline)
-                    Spacer()
-                    Text(ticket.isRedeemed ?? false ? "Entwertet" : "Nicht entwertet")
-                        .font(.subheadline)
-                }
+                Spacer()
             }
-            .padding(.horizontal, 20)
-            
-            Spacer()
         }
-        .navigationBarTitle("Details", displayMode: .inline)
+        .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+    }
+}
+
+struct DetailRow: View {
+    var label: String
+    var value: String
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.headline)
+            Spacer()
+            Text(value)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+        .padding(.vertical, 5)
+    }
+}
+
+struct TicketDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        TicketDetailView(ticket: TicketDTO(id: 12345, user: UserDTO(firstName: "John", lastName: "Doe", sex: "male", vipStatus: true), digitalSignature: "signature", isRedeemed: true))
     }
 }

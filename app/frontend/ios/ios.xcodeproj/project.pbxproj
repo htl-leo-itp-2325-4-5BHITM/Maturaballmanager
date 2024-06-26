@@ -8,13 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		8205870C2C2244C60030D0AF /* SnackbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8205870B2C2244C60030D0AF /* SnackbarView.swift */; };
-		8205870F2C2245F90030D0AF /* SnackbarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8205870E2C2245F90030D0AF /* SnackbarManager.swift */; };
 		820587112C2251B40030D0AF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820587102C2251B40030D0AF /* NetworkMonitor.swift */; };
 		821D465B2C17998E006D8864 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821D465A2C17998E006D8864 /* AuthService.swift */; };
 		8228A5E92C2AC1A700151FCF /* SOSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8228A5E82C2AC1A700151FCF /* SOSViewModel.swift */; };
 		8228A5EB2C2AC1B900151FCF /* ScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8228A5EA2C2AC1B900151FCF /* ScannerViewModel.swift */; };
 		8228A5ED2C2AC27600151FCF /* TicketInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8228A5EC2C2AC27600151FCF /* TicketInfoViewModel.swift */; };
 		8228A5EF2C2AC71500151FCF /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8228A5EE2C2AC71500151FCF /* AppConfig.swift */; };
+		823991812C2B701700C88919 /* profile_picture_placeholder.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 823991802C2B701700C88919 /* profile_picture_placeholder.jpeg */; };
+		823991832C2BCDF800C88919 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823991822C2BCDF800C88919 /* CustomTextField.swift */; };
+		823991852C2BCE0A00C88919 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823991842C2BCE0A00C88919 /* CustomButton.swift */; };
+		823991872C2BD9C800C88919 /* FAQRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823991862C2BD9C800C88919 /* FAQRow.swift */; };
+		823991892C2BD9F800C88919 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823991882C2BD9F800C88919 /* ProfileViewModel.swift */; };
+		8239918B2C2BE02900C88919 /* IdentifiableErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8239918A2C2BE02900C88919 /* IdentifiableErrorMessage.swift */; };
 		829F82EB2C0FB59300C43612 /* public_key.pem in Resources */ = {isa = PBXBuildFile; fileRef = 829F82EA2C0FB59300C43612 /* public_key.pem */; };
 		829F82EF2C0FCAB400C43612 /* SOSCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829F82EE2C0FCAB400C43612 /* SOSCounter.swift */; };
 		82CB3AE82C229F44002500F8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB3AD82C229F44002500F8 /* ContentView.swift */; };
@@ -48,13 +53,18 @@
 
 /* Begin PBXFileReference section */
 		8205870B2C2244C60030D0AF /* SnackbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarView.swift; sourceTree = "<group>"; };
-		8205870E2C2245F90030D0AF /* SnackbarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarManager.swift; sourceTree = "<group>"; };
 		820587102C2251B40030D0AF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		821D465A2C17998E006D8864 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		8228A5E82C2AC1A700151FCF /* SOSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSViewModel.swift; sourceTree = "<group>"; };
 		8228A5EA2C2AC1B900151FCF /* ScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewModel.swift; sourceTree = "<group>"; };
 		8228A5EC2C2AC27600151FCF /* TicketInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketInfoViewModel.swift; sourceTree = "<group>"; };
 		8228A5EE2C2AC71500151FCF /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		823991802C2B701700C88919 /* profile_picture_placeholder.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = profile_picture_placeholder.jpeg; sourceTree = "<group>"; };
+		823991822C2BCDF800C88919 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		823991842C2BCE0A00C88919 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		823991862C2BD9C800C88919 /* FAQRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQRow.swift; sourceTree = "<group>"; };
+		823991882C2BD9F800C88919 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		8239918A2C2BE02900C88919 /* IdentifiableErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableErrorMessage.swift; sourceTree = "<group>"; };
 		829F82EA2C0FB59300C43612 /* public_key.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public_key.pem; sourceTree = "<group>"; };
 		829F82EE2C0FCAB400C43612 /* SOSCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSCounter.swift; sourceTree = "<group>"; };
 		82CB3AD82C229F44002500F8 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = ../final/ContentView.swift; sourceTree = "<group>"; };
@@ -113,18 +123,13 @@
 		8205870A2C2244B70030D0AF /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				8205870D2C2245F10030D0AF /* Manager */,
+				82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */,
 				8205870B2C2244C60030D0AF /* SnackbarView.swift */,
+				823991822C2BCDF800C88919 /* CustomTextField.swift */,
+				823991842C2BCE0A00C88919 /* CustomButton.swift */,
+				823991862C2BD9C800C88919 /* FAQRow.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		8205870D2C2245F10030D0AF /* Manager */ = {
-			isa = PBXGroup;
-			children = (
-				8205870E2C2245F90030D0AF /* SnackbarManager.swift */,
-			);
-			path = Manager;
 			sourceTree = "<group>";
 		};
 		82CB3AF72C229FBC002500F8 /* VM */ = {
@@ -135,6 +140,7 @@
 				8228A5E82C2AC1A700151FCF /* SOSViewModel.swift */,
 				8228A5EA2C2AC1B900151FCF /* ScannerViewModel.swift */,
 				8228A5EC2C2AC27600151FCF /* TicketInfoViewModel.swift */,
+				823991882C2BD9F800C88919 /* ProfileViewModel.swift */,
 			);
 			path = VM;
 			sourceTree = "<group>";
@@ -189,6 +195,7 @@
 				82E8F0652C0E95EC00921329 /* TicketDTO.swift */,
 				82E8F0672C0E95F900921329 /* UserDTO.swift */,
 				82CB3AF82C22A00A002500F8 /* FAQ.swift */,
+				8239918A2C2BE02900C88919 /* IdentifiableErrorMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -222,7 +229,6 @@
 				82CB3AE42C229F44002500F8 /* TicketInfoView.swift */,
 				82CB3AE52C229F44002500F8 /* TicketListView.swift */,
 				8205870A2C2244B70030D0AF /* Components */,
-				82E8F07C2C0EA02200921329 /* Warnings */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -230,17 +236,10 @@
 		82E8F0772C0E9EA100921329 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				823991802C2B701700C88919 /* profile_picture_placeholder.jpeg */,
 				829F82EA2C0FB59300C43612 /* public_key.pem */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		82E8F07C2C0EA02200921329 /* Warnings */ = {
-			isa = PBXGroup;
-			children = (
-				82E8F07D2C0EA06A00921329 /* WarningSymbol.swift */,
-			);
-			path = Warnings;
 			sourceTree = "<group>";
 		};
 		FA9E5AB7D55AEE3643FA1B6F /* Frameworks */ = {
@@ -311,6 +310,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				823991812C2B701700C88919 /* profile_picture_placeholder.jpeg in Resources */,
 				82E7FC5A2C0DA444008A0B3D /* Preview Assets.xcassets in Resources */,
 				829F82EB2C0FB59300C43612 /* public_key.pem in Resources */,
 				82E7FC572C0DA444008A0B3D /* Assets.xcassets in Resources */,
@@ -367,15 +367,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				82CB3AE92C229F44002500F8 /* FAQView.swift in Sources */,
+				823991872C2BD9C800C88919 /* FAQRow.swift in Sources */,
 				8205870C2C2244C60030D0AF /* SnackbarView.swift in Sources */,
 				82CB3AED2C229F44002500F8 /* MainView.swift in Sources */,
 				82E8F0682C0E95F900921329 /* UserDTO.swift in Sources */,
+				823991852C2BCE0A00C88919 /* CustomButton.swift in Sources */,
 				82E8F0662C0E95EC00921329 /* TicketDTO.swift in Sources */,
 				82CB3AF22C229F44002500F8 /* SOSView.swift in Sources */,
 				82CB3AF32C229F44002500F8 /* TicketDetailView.swift in Sources */,
 				82CB3AEE2C229F44002500F8 /* ProfileView.swift in Sources */,
+				823991832C2BCDF800C88919 /* CustomTextField.swift in Sources */,
 				8228A5E92C2AC1A700151FCF /* SOSViewModel.swift in Sources */,
-				8205870F2C2245F90030D0AF /* SnackbarManager.swift in Sources */,
 				821D465B2C17998E006D8864 /* AuthService.swift in Sources */,
 				82CB3AEF2C229F44002500F8 /* QrCodeScannerView.swift in Sources */,
 				82CB3AF92C22A00A002500F8 /* FAQ.swift in Sources */,
@@ -394,6 +396,8 @@
 				82CB3AF62C229F44002500F8 /* TicketViewModel.swift in Sources */,
 				820587112C2251B40030D0AF /* NetworkMonitor.swift in Sources */,
 				82E7FC662C0DA474008A0B3D /* App.swift in Sources */,
+				8239918B2C2BE02900C88919 /* IdentifiableErrorMessage.swift in Sources */,
+				823991892C2BD9F800C88919 /* ProfileViewModel.swift in Sources */,
 				82CB3AE82C229F44002500F8 /* ContentView.swift in Sources */,
 				82E8F06B2C0E961600921329 /* ApiService.swift in Sources */,
 				82E7FC5F2C0DA444008A0B3D /* ios.xcdatamodeld in Sources */,

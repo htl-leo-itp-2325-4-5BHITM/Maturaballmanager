@@ -8,86 +8,36 @@ struct TicketInfoView: View {
     var body: some View {
         VStack(spacing: 20) {
             if viewModel.dataInvalid {
-                WarningSymbol()
+                WarningSymbol(color: .red, message: "Ungültiger QR-Code. Bitte kontaktiere einen Verantwortlichen.")
                 Spacer()
             } else if let ticketDTO = viewModel.ticketDTO {
-                if viewModel.isRedeemed {
-                    WarningSymbol()
-                    Text("Dieses Ticket von \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName) wurde bereits entwertet.")
-                        .foregroundColor(.orange)
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                    Spacer()
-                } else {
-                    VStack {
-                        if ticketDTO.user.vipStatus {
-                            Image(systemName: "crown.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .foregroundColor(.yellow)
-                                .padding(.top, 20)
-                        } else {
-                            Image(systemName: "checkmark.circle.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .foregroundColor(.green)
-                                .padding(.top, 20)
-                        }
+                VStack(spacing: 20) {
+                    if viewModel.isRedeemed {
+                        WarningSymbol(color: .yellow, message: "Dieses Ticket von \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName) wurde bereits entwertet.")
+                    } else {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.green)
+                            .padding(.top, 20)
 
-                        Text("Ticket ID: \(ticketDTO.id)")
+                        Text("Ticket-Nr.: \(ticketDTO.id)")
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.top, 10)
 
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack {
-                                Text("Name:")
-                                    .font(.headline)
-                                Spacer()
-                                Text("\(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName)")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                            }
+                        Text("Name: \(ticketDTO.user.sex == "male" ? "Hr." : "Fr.") \(ticketDTO.user.firstName) \(ticketDTO.user.lastName)")
+                            .font(.headline)
+                            .padding(.top, 5)
 
-                            HStack {
-                                Text("Geschlecht:")
-                                    .font(.headline)
-                                Spacer()
-                                Text("\(ticketDTO.user.sex == "male" ? "männlich" : "weiblich")")
-                                    .font(.subheadline)
-                            }
+                        Text("Geschlecht: \(ticketDTO.user.sex == "male" ? "männlich" : "weiblich")")
+                            .font(.headline)
+                            .padding(.top, 5)
 
-                            HStack {
-                                Text("VIP Status:")
-                                    .font(.headline)
-                                Spacer()
-                                Text("\(ticketDTO.user.vipStatus ? "Ja" : "Nein")")
-                                    .font(.subheadline)
-                            }
-
-                            Text("Signatur:")
-                                .font(.headline)
-
-                            ScrollView {
-                                Text(ticketDTO.digitalSignature)
-                                    .font(.footnote)
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 5)
-                            }
-                            .frame(height: 100)
-
-                            if let verificationResult = viewModel.verificationResult {
-                                Text(verificationResult ? "Signatur verifiziert" : "Signatur ungültig")
-                                    .font(.headline)
-                                    .foregroundColor(verificationResult ? .green : .red)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
-                        .padding(.horizontal)
+                        Text("VIP Status: \(ticketDTO.user.vipStatus ? "Ja" : "Nein")")
+                            .font(.headline)
+                            .padding(.top, 5)
 
                         Button(action: {
                             viewModel.redeemTicket { success in
@@ -102,10 +52,14 @@ struct TicketInfoView: View {
                             Text("Entwerten")
                                 .font(.title2)
                                 .padding()
+                                .frame(maxWidth: .infinity)
                                 .background(Color.red)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
+                                .padding(.horizontal, 20)
                         }
+                        .padding(.top, 20)
+
                         Spacer()
                     }
                 }

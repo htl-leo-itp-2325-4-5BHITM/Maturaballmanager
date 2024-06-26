@@ -39,8 +39,7 @@ class ScannerViewModel: ObservableObject {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.errorMessage = nil
-                    self.ticketDTO = nil
+                    self.errorMessage = "Ungültiger QR-Code"
                     self.dataInvalid = true
                     self.navigationLinkActive = true
                 }

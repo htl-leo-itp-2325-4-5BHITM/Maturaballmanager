@@ -5,12 +5,21 @@ struct FAQView: View {
 
     var body: some View {
         NavigationView {
-            List(viewModel.faqs) { faq in
-                DisclosureGroup(faq.question) {
-                    Text(faq.answer)
-                        .padding()
+            ZStack {
+                if viewModel.isLoading {
+                    VStack {
+                        Spacer()
+                        ProgressView("Laden...")
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .padding()
+                        Spacer()
+                    }
+                } else {
+                    List(viewModel.faqs) { faq in
+                        FAQRow(faq: faq)
+                            .padding(.vertical, 10)
+                    }
                 }
-                .padding()
             }
             .navigationTitle("FAQ")
             .onAppear {
@@ -19,3 +28,4 @@ struct FAQView: View {
         }
     }
 }
+

@@ -10,7 +10,7 @@ class NetworkMonitor: ObservableObject {
     init() {
         monitor.pathUpdateHandler = { path in
             DispatchQueue.main.async {
-                self.isConnected = path.status == .satisfied
+                self.isConnected = (path.status == .satisfied)
             }
         }
         monitor.start(queue: queue)
