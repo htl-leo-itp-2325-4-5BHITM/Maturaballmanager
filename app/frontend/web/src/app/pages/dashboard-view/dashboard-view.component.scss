@@ -1,0 +1,61 @@
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.dashboard-card {
+  box-sizing: border-box;
+}
+
+.large-card {
+  flex: 1 1 100%;
+  min-width: 100%;
+}
+
+.medium-card {
+  flex: 1 1 48%;
+  min-width: 48%;
+}
+
+.small-card {
+  flex: 1 1 23%;
+  min-width: 23%;
+}
+
+.echart {
+  height: 200px;
+  width: 100%;
+}
+
+.progress-container {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #4caf50;
+  transition: width 0.3s ease-in-out;
+}
+
+nb-card-header {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+nb-card-body h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+nb-card-body p {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
+}

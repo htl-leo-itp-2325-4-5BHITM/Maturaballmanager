@@ -1,23 +1,31 @@
-import { Component } from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
-import {NavBarComponent} from "./components/nav-bar-old/nav-bar.component";
-import {AuthService} from "./services/auth.service";
-import {NavigationComponent} from "./navigation/navigation.component";
+import {Component} from "@angular/core";
+import {NbActionsModule, NbLayoutModule, NbSidebarModule, NbSidebarService} from "@nebular/theme";
+import {NavigationBarComponent} from "./components/navigation-bar/navigation-bar.component";
+import {RouterOutlet} from "@angular/router";
+import {AppModule} from "./app.module";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-    imports: [RouterOutlet, NavBarComponent, NavigationComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [
+    NbLayoutModule,
+    NavigationBarComponent,
+    NbSidebarModule,
+    AppModule,
+    RouterOutlet,
+    NbActionsModule
+  ],
+  providers: [NbSidebarService],
+  styleUrl:  'app.component.scss'
 })
 export class AppComponent {
-  title = 'Maturaballmanager';
+  title = 'my-app';
 
-    constructor(private authService: AuthService, private router: Router) {
-        if (this.authService.isLoggedIn()) {
-            this.router.navigate(['/dashboard']);
-        }
-    }
+  constructor(private sidebarService: NbSidebarService) {}
 
+  toggleSidebar() {
+    this.sidebarService.toggle(true, 'menu-sidebar');
+    return false;
+  }
 }

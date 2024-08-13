@@ -1,1 +1,11 @@
-<app-navigation></app-navigation>
+<nb-layout>
+  <nb-layout-header fixed>
+    <nb-action class="menu-button" icon="menu-2-outline" (click)="toggleSidebar()"></nb-action>
+  </nb-layout-header>
+  <nb-sidebar class="menu-sidebar" responsive start tag="menu-sidebar" state="collapsed">
+    <app-navigation-bar></app-navigation-bar>
+  </nb-sidebar>
+  <nb-layout-column>
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+</nb-layout>

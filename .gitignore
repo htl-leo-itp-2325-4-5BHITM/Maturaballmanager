@@ -3,6 +3,7 @@
 *.tmp
 *.swp
 *.DS_Store
+*.pnpm/
 Thumbs.db
 
 # Node.js (Angular Projekt in app/frontend/web)
@@ -10,7 +11,9 @@ app/frontend/web/node_modules/
 app/frontend/web/dist/
 app/frontend/web/npm-debug.log
 app/frontend/web/yarn-error.log
-
+app/frontend/web/.angular/
+app/frontend/.idea/
+app/frontend/web/.pnpm/
 # Angular spezifische Dateien
 app/frontend/web/.angular/cache/
 app/frontend/web/.angular.lock
@@ -39,6 +42,7 @@ app/backend/*.log
 *.njsproj
 *.sln
 *.sw?
+.pnpm/
 
 # Betriebssystemspezifische Dateien
 .DS_Store
