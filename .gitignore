@@ -43,6 +43,7 @@ app/backend/*.log
 *.sln
 *.sw?
 .pnpm/
+app/frontend/web/pnpm-lock.yaml
 
 # Betriebssystemspezifische Dateien
 .DS_Store
