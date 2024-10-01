@@ -16,7 +16,7 @@ jobs:
     steps:
       # Checkout das Repository ins richtige Verzeichnis
       - name: Checkout code
-        run: git clone git clone https://github.com/htl-leo-itp-2325-4-5BHITM/Maturaballmanager.git
+        run: git clone https://github.com/htl-leo-itp-2325-4-5BHITM/Maturaballmanager.git
 
       # Prüfen, ob das Verzeichnis existiert
       - name: Verify frontend directory
