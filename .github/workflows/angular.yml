@@ -13,14 +13,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: app/frontend/web
-
     steps:
-      # Git Checkout (ohne actions/checkout)
+      # Checkout das Repository ins richtige Verzeichnis
       - name: Checkout code
         run: git clone ${{ github.repository_url }} .
+
+      # Prüfen, ob das Verzeichnis existiert
+      - name: Verify frontend directory
+        run: ls -la app/frontend/web
 
       # Manuelle Installation von Node.js
       - name: Install Node.js
@@ -30,15 +30,18 @@ jobs:
           node -v
           npm -v
 
-      # Abhängigkeiten installieren
+      # Installiere Abhängigkeiten im Web-Ordner
       - name: Install dependencies
+        working-directory: app/frontend/web
         run: npm ci
 
       # Unit-Tests ausführen
       - name: Run tests
+        working-directory: app/frontend/web
         run: npm test -- --watch=false
 
       # Produktions-Build
       - name: Build Angular app
+        working-directory: app/frontend/web
         run: npm run build -- --prod
 

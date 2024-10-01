@@ -13,14 +13,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: app/backend
-
     steps:
-      # Git Checkout (ohne actions/checkout)
+      # Checkout das Repository ins richtige Verzeichnis
       - name: Checkout code
         run: git clone ${{ github.repository_url }} .
+
+      # Prüfen, ob das Verzeichnis existiert
+      - name: Verify backend directory
+        run: ls -la app/backend
 
       # Manuelle Installation von JDK 11
       - name: Install JDK 11
@@ -29,9 +29,12 @@ jobs:
           sudo apt-get install -y openjdk-11-jdk
           java -version
 
-      # Build und Test Quarkus Projekt
+      # Build und Test des Quarkus Projekts
       - name: Build with Maven
+        working-directory: app/backend
         run: mvn clean package
 
       - name: Run tests
+        working-directory: app/backend
         run: mvn test
+
