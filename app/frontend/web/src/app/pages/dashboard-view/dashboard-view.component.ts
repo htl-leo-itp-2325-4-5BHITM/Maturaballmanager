@@ -1,36 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { NbActionsModule, NbCardModule, NbLayoutModule } from "@nebular/theme";
-import { BaseChartDirective } from "ng2-charts";
-import { CountdownTimerComponent } from "../../components/countdown-timer/countdown-timer.component";
-import { CurrencyPipe } from "@angular/common";
-import { NgxEchartsDirective } from "ngx-echarts";
+import {Component, OnInit} from '@angular/core';
+import {NbActionsModule, NbCardModule, NbLayoutModule} from "@nebular/theme";
+import {BaseChartDirective} from "ng2-charts";
+import {CurrencyPipe} from "@angular/common";
+import {NgxEchartsDirective, NgxEchartsModule} from "ngx-echarts";
+import {FinanceService} from "../../services/finance.service";
+import {CountdownTimerComponent} from "../../components/countdown-timer/countdown-timer.component";
 
 @Component({
   selector: 'app-dashboard-view',
   standalone: true,
-  imports: [NbLayoutModule, NbActionsModule, NbCardModule, BaseChartDirective, CountdownTimerComponent, CurrencyPipe, NgxEchartsDirective],
+  imports: [NbLayoutModule, NbActionsModule, NbCardModule, CountdownTimerComponent, BaseChartDirective, CurrencyPipe, NgxEchartsDirective, NgxEchartsModule],
   templateUrl: './dashboard-view.component.html',
   styleUrl: './dashboard-view.component.scss'
 })
 export class DashboardViewComponent implements OnInit {
-  totalEarnings = 15000; // Beispiel für den aktuellen Gesamtumsatz
-  earningsTarget = 20000; // Ziel für den Gesamtumsatz
-  earningsProgress: number = 20; // Fortschritt in Prozent
 
-  ticketsSold = 250; // Beispiel für die Anzahl der verkauften Tickets
-  tablesSold = 50; // Beispiel für die Anzahl der verkauften Tische
+  earningsTarget = 20000;
+  earningsProgress: number = 20;
+  totalEarnings: number = 0;
+  ticketsSold = 250;
+  tablesSold = 50;
 
-  eventDate = new Date('2024-12-31T00:00:00'); // Beispiel für das Datum des Events
+  eventDate = new Date('2025-03-07T19:00:00');
   countdownTime: number | undefined;
 
   chartOption: any;
 
-  constructor() {}
+  constructor(private financeService: FinanceService) {
+  }
 
   ngOnInit(): void {
     this.calculateCountdownTime();
     this.initializeChart();
-    this.calculateEarningsProgress();
+
+    this.financeService.getBalance().subscribe(balance => {
+      this.totalEarnings = Number(balance);
+      this.calculateEarningsProgress();
+    });
   }
 
   calculateCountdownTime() {

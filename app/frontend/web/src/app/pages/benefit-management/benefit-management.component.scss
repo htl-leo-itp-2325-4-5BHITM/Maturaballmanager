@@ -1,0 +1,91 @@
+/* src/app/components/benefit-management/benefit-management.component.scss */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.search-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  input {
+    width: 50%;
+  }
+
+  .sort-buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f5f5f5;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+
+  nb-select {
+    width: 100px;
+  }
+
+  nb-pagination {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  .search-sort-container {
+    flex-direction: column;
+    align-items: flex-start;
+
+    input {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .sort-buttons {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+
+    nb-pagination {
+      margin-top: 0.5rem;
+    }
+  }
+}

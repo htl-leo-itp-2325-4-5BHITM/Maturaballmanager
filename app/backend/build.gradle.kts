@@ -21,6 +21,7 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-mailer")
+    implementation("io.quarkus:quarkus-qute")
     implementation("io.quarkus:quarkus-rest-qute")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -29,6 +30,8 @@ dependencies {
     implementation("io.quarkus:quarkus-oidc-client")
     implementation("io.quarkus:quarkus-vertx")
     implementation("io.quarkus:quarkus-smallrye-openapi")
+    implementation("io.quarkus:quarkus-hibernate-validator")
+    implementation("org.apache.pdfbox:pdfbox:3.0.2")
     testImplementation("io.quarkus:quarkus-junit5")
 }
 

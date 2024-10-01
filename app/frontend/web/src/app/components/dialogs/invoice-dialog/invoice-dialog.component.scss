@@ -1,0 +1,43 @@
+/* src/app/components/dialogs/invoice-dialog/invoice-dialog.component.scss */
+
+nb-card {
+  width: 100%;
+}
+
+nb-card-header {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+nb-card-body {
+  padding: 2rem;
+}
+
+.form-group label {
+  font-weight: 600;
+}
+
+.text-danger {
+  font-size: 0.875rem;
+  color: #e74c3c;
+}
+
+nb-card-footer {
+  padding: 1.5rem;
+}
+
+/* Datepicker z-index Anpassung */
+::ng-deep nb-datepicker {
+  z-index: 10000 !important;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  nb-card-body {
+    padding: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+}

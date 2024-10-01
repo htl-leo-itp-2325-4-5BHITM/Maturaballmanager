@@ -1,0 +1,47 @@
+# File: .github/workflows/angular.yml
+name: Build and Test Angular
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Cache npm modules
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Run Angular unit tests
+      - name: Run tests
+        run: npm test -- --watch=false
+
+      # Build the Angular project for production
+      - name: Build Angular app
+        run: npm run build -- --prod
+

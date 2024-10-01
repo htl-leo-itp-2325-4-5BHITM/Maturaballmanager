@@ -1,0 +1,66 @@
+<!-- src/app/components/benefit-management/benefit-management.component.html -->
+<nb-card>
+    <nb-card-header>
+        <div class="header">
+            <h2>Gegenleistungen verwalten</h2>
+            <button nbButton status="primary" (click)="openCreateDialog()">
+                <nb-icon icon="plus-outline"></nb-icon> Hinzufügen
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="search-sort-container">
+            <input nbInput placeholder="Suchen..." (input)="onSearch($event.target)" />
+
+            <div class="sort-buttons">
+                <button nbButton ghost status="info" (click)="onSort('name')">
+                    Name
+                    <nb-icon
+                            *ngIf="sortColumn === 'name'"
+                            [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'">
+                    </nb-icon>
+                </button>
+                <button nbButton ghost status="info" (click)="onSort('price')">
+                    Preis
+                    <nb-icon
+                            *ngIf="sortColumn === 'price'"
+                            [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'">
+                    </nb-icon>
+                </button>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name der Leistung</th>
+                <th>Beschreibung</th>
+                <th>Preis (€)</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let benefit of filteredBenefits | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
+                <td>{{ benefit.name }}</td>
+                <td>{{ benefit.description }}</td>
+                <td>{{ benefit.price | currency:'EUR':'symbol':'1.2-2' }}</td>
+                <td>
+                    <button nbButton size="small" status="info" (click)="openEditDialog(benefit)" nbTooltip="Bearbeiten">
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
+                    <button nbButton size="small" status="danger" (click)="confirmDelete(benefit)" nbTooltip="Löschen">
+                        <nb-icon icon="trash-2-outline"></nb-icon>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-container">
+            <nb-select [(selected)]="itemsPerPage" (selectedChange)="onItemsPerPageChange($event)" placeholder="Pro Seite">
+                <nb-option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</nb-option>
+            </nb-select>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,76 @@
+/* src/app/components/invoice-management/invoice-management.component.scss */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sort-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.action-buttons button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #6c757d;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-container .form-group {
+  width: 150px;
+}
+
+/* Datepicker z-index Anpassung */
+::ng-deep nb-datepicker {
+  z-index: 10000 !important;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  .search-sort-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .pagination-container .form-group {
+    width: 100%;
+  }
+}

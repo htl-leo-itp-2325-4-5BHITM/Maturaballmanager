@@ -1,33 +1,42 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {
-  NbActionsModule, NbButtonModule,
+  NbButtonModule,
+  NbCardModule, NbDialogModule, NbDialogService,
+  NbInputModule,
   NbLayoutModule,
   NbMenuModule,
-  NbSidebarModule,
   NbSidebarService,
-  NbThemeModule
+  NbThemeModule,
+  NbToastrModule
 } from "@nebular/theme";
 import {NbEvaIconsModule} from "@nebular/eva-icons";
 import {NgxEchartsModule} from "ngx-echarts";
-
+import {ReactiveFormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [],
   imports: [
+    ReactiveFormsModule,
     CommonModule,
     NbThemeModule.forRoot({name: 'default'}),
-    NbActionsModule,
+    NbToastrModule.forRoot(),
     NbMenuModule.forRoot(),
-    NbSidebarModule.forRoot(),
     NbLayoutModule,
+    NbCardModule,
+    NbInputModule,
     NbButtonModule,
+      NbDialogModule.forRoot(),
+    NgxEchartsModule,
     NbEvaIconsModule,
     NgxEchartsModule.forRoot({
-      echarts: () => import('echarts')
-    })
+      echarts: () => import('echarts'),
+    }),
   ],
-  providers: [NbSidebarService]
+  providers: [
+    NbSidebarService,
+    NbDialogService
+  ]
 })
 export class AppModule {
 }

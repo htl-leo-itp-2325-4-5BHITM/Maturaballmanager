@@ -1,5 +1,5 @@
-import {Component, Inject} from '@angular/core';
-import {NbMenuItem, NbMenuModule, NbSidebarModule, NbSidebarService} from "@nebular/theme";
+import {Component} from '@angular/core';
+import {NbMenuItem, NbMenuModule, NbMenuService, NbSidebarModule} from "@nebular/theme";
 import {config} from "../../app.config";
 
 @Component({
@@ -7,9 +7,9 @@ import {config} from "../../app.config";
   standalone: true,
   imports: [
     NbMenuModule,
-    NbSidebarModule
+    NbSidebarModule,
   ],
-  providers: [],
+  providers: [NbMenuService],
   templateUrl: './navigation-bar.component.html',
   styleUrl: './navigation-bar.component.scss'
 })

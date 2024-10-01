@@ -1,0 +1,83 @@
+<!-- src/app/components/company-list/company-management.component.html -->
+<nb-card>
+    <nb-card-header>
+        <div class="header-actions">
+            <button nbButton status="primary" (click)="openCreateDialog()">Erstellen</button>
+            <button nbButton status="danger" (click)="bulkDelete()" [disabled]="selectedCompanies.size === 0">
+                Löschen
+            </button>
+            <button nbButton status="info" (click)="exportCSV()">CSV Export</button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" (change)="toggleSelectAll($event)">
+                </th>
+                <th>Firmenname</th>
+                <th>Branche</th>
+                <th>Website</th>
+                <th>Name der Kontaktperson</th>
+                <th>Anzahl Rechnungen</th>
+                <th>Gesamtumsatz</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let company of companies">
+                <tr>
+                    <td>
+                        <input type="checkbox" [checked]="selectedCompanies.has(company.id!)" (change)="toggleSelection(company.id!, $event)">
+                    </td>
+                    <td>{{ company.name }}</td>
+                    <td>{{ company.industry }}</td>
+                    <td>
+                        <a *ngIf="company.website" [href]="company.website" target="_blank">{{ company.website }}</a>
+                        <span *ngIf="!company.website">-</span>
+                    </td>
+                    <td>
+              <span *ngIf="company.contactPersons && company.contactPersons.length > 0">
+                {{ company.contactPersons[0].firstName }} {{ company.contactPersons[0].lastName }}
+              </span>
+                        <span *ngIf="!company.contactPersons || company.contactPersons.length === 0">
+                Nicht festgelegt
+              </span>
+                    </td>
+                    <td>{{ company.invoiceCount }}</td>
+                    <td>{{ company.totalRevenue | currency }}</td>
+                    <td>
+                        <button nbButton size="small" status="warning" (click)="openEditDialog(company)">Bearbeiten</button>
+                        <button nbButton size="small" status="danger" (click)="confirmDelete(company)">Löschen</button>
+                        <button nbButton size="small" status="info" (click)="toggleDetails(company.id!)">Details</button>
+                    </td>
+                </tr>
+                <tr *ngIf="isDetailsVisible(company.id!)">
+                    <td colspan="8">
+                        <nb-card>
+                            <nb-card-header>Details von {{ company.name }}</nb-card-header>
+                            <nb-card-body>
+                                <p><strong>Adresse:</strong></p>
+                                <p *ngIf="company.address">
+                                    {{ company.address.street || '-' }} {{ company.address.houseNumber || '' }},
+                                    {{ company.address.postalCode || '' }} {{ company.address.city || '' }}
+                                </p>
+                                <p *ngIf="!company.address">Keine Adresse angegeben.</p>
+                                <p><strong>Kontaktpersonen:</strong></p>
+                                <ul>
+                                    <li *ngFor="let cp of company.contactPersons">
+                                        {{ cp.prefixTitle || '' }} {{ cp.firstName }} {{ cp.lastName }} {{ cp.suffixTitle || '' }} - {{ cp.position }}
+                                        <br>
+                                        E-Mail: {{ cp.personalEmail || '-' }}, Telefon: {{ cp.personalPhone || '-' }}
+                                    </li>
+                                </ul>
+                            </nb-card-body>
+                        </nb-card>
+                    </td>
+                </tr>
+            </ng-container>
+            </tbody>
+        </table>
+    </nb-card-body>
+</nb-card>

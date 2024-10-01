@@ -1,0 +1,14 @@
+/* src/app/components/company-list/company-management.component.scss */
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.table {
+  width: 100%;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}

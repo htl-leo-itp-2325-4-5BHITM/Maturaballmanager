@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+</head>
+<body>
+<p>Dear {{invoice.contactPerson != null ? invoice.contactPerson.first_name + " " + invoice.contactPerson.last_name : invoice.company.name}},</p>
+<p>Please find attached your invoice with the number <strong>#{{invoice.id}}</strong>.</p>
+<p>Invoice Date: {{invoice.invoiceDate}}</p>
+<p>Payment Deadline: {{invoice.paymentDeadline}}</p>
+<p>Total Amount: <strong>{{invoice.totalAmount}} €</strong></p>
+<p>Status: {{invoice.status}}</p>
+<p>Best regards,<br/>Your Company</p>
+</body>
+</html>

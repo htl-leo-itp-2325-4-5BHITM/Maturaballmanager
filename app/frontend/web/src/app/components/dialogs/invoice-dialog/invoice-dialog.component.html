@@ -1,0 +1,84 @@
+<!-- src/app/components/dialogs/invoice-dialog/invoice-dialog.component.html -->
+
+<nb-card>
+    <nb-card-header>
+        <h2>{{ title }}</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form">
+            <!-- Firma Auswahl -->
+            <div class="form-group mb-3">
+                <label for="company">Firma<span class="text-danger">*</span></label>
+                <nb-select placeholder="Firma auswählen" formControlName="company" required>
+                    <nb-option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</nb-option>
+                </nb-select>
+                <div *ngIf="form.get('company')?.hasError('required') && form.get('company')?.touched" class="text-danger">
+                    Firma ist erforderlich.
+                </div>
+            </div>
+
+            <!-- Kontaktperson Auswahl -->
+            <div class="form-group mb-3" *ngIf="contactPersons.length > 0">
+                <label for="contactPerson">Kontaktperson</label>
+                <nb-select placeholder="Kontaktperson auswählen (Optional)" formControlName="contactPerson">
+                    <nb-option [value]="null">Keine</nb-option>
+                    <nb-option *ngFor="let contact of contactPersons" [value]="contact.id">
+                        {{ contact.firstName }} {{ contact.lastName }}
+                    </nb-option>
+                </nb-select>
+            </div>
+
+            <!-- Benefits Auswahl -->
+            <div class="form-group mb-3">
+                <label for="benefits">Leistungen<span class="text-danger">*</span></label>
+                <nb-select placeholder="Leistungen auswählen" formControlName="benefits" multiple required>
+                    <nb-option *ngFor="let benefit of benefits" [value]="benefit.id">{{ benefit.name }}</nb-option>
+                </nb-select>
+                <div *ngIf="form.get('benefits')?.hasError('required') && form.get('benefits')?.touched" class="text-danger">
+                    Mindestens eine Leistung ist erforderlich.
+                </div>
+            </div>
+
+            <!-- Rechnungsdatum -->
+            <div class="form-group mb-3">
+                <label for="invoiceDate">Rechnungsdatum<span class="text-danger">*</span></label>
+                <input
+                        nbInput
+                        placeholder="Rechnungsdatum auswählen"
+                        [nbDatepicker]="invoiceDatePicker"
+                        formControlName="invoiceDate"
+                        readonly
+                />
+                <nb-datepicker #invoiceDatePicker></nb-datepicker>
+                <div *ngIf="form.get('invoiceDate')?.hasError('required') && form.get('invoiceDate')?.touched" class="text-danger">
+                    Rechnungsdatum ist erforderlich.
+                </div>
+            </div>
+
+            <!-- Zahlungsfrist -->
+            <div class="form-group mb-3">
+                <label for="paymentDeadline">Zahlungsfrist<span class="text-danger">*</span></label>
+                <input
+                        nbInput
+                        placeholder="Zahlungsfrist auswählen"
+                        [nbDatepicker]="paymentDeadlinePicker"
+                        formControlName="paymentDeadline"
+                        readonly
+                />
+                <nb-datepicker #paymentDeadlinePicker></nb-datepicker>
+                <div *ngIf="form.get('paymentDeadline')?.hasError('required') && form.get('paymentDeadline')?.touched" class="text-danger">
+                    Zahlungsfrist ist erforderlich.
+                </div>
+            </div>
+
+            <!-- Rechnung direkt versenden -->
+            <div class="form-group mb-3">
+                <nb-checkbox formControlName="sendInvoice">Rechnung direkt versenden</nb-checkbox>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-end gap-2">
+        <button nbButton status="basic" (click)="cancel()">Abbrechen</button>
+        <button nbButton status="success" (click)="submit()" [disabled]="form.invalid">Speichern</button>
+    </nb-card-footer>
+</nb-card>

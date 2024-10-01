@@ -1,0 +1,211 @@
+<!-- src/app/components/company-dialog/company-dialog.component.html -->
+
+<nb-card>
+    <nb-card-header>
+        <h2>{{ title }}</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form">
+            <!-- Schrittanzeige (optional) -->
+            <div class="steps">
+        <span *ngFor="let step of [].constructor(totalSteps); let i = index"
+              [class.active]="i + 1 === currentStep">
+          Schritt {{ i + 1 }}
+        </span>
+            </div>
+
+            <!-- Schritt 1: Firmeninformationen -->
+            <div *ngIf="currentStep === 1">
+                <div class="p-fluid p-formgrid p-grid mb-3">
+                    <!-- Firmenname -->
+                    <div class="p-field p-col-12">
+                        <label for="name">Firmenname<span class="text-danger">*</span></label>
+                        <input nbInput id="name" formControlName="name" placeholder="Firmenname" />
+                        <nb-icon *ngIf="form.get('name')?.invalid && form.get('name')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                        <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">
+                            Firmenname ist erforderlich.
+                        </div>
+                    </div>
+
+                    <!-- Branche -->
+                    <div class="p-field p-col-12">
+                        <label for="industry">Branche<span class="text-danger">*</span></label>
+                        <input nbInput id="industry" formControlName="industry" placeholder="Branche" />
+                        <nb-icon *ngIf="form.get('industry')?.invalid && form.get('industry')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                        <div *ngIf="form.get('industry')?.invalid && form.get('industry')?.touched" class="text-danger">
+                            Branche ist erforderlich.
+                        </div>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="p-field p-col-12">
+                        <label for="website">Website</label>
+                        <input nbInput id="website" formControlName="website" placeholder="Website" />
+                    </div>
+
+                    <!-- Bürotelefon -->
+                    <div class="p-field p-col-12">
+                        <label for="officePhone">Bürotelefon</label>
+                        <input nbInput id="officePhone" formControlName="officePhone" placeholder="Bürotelefon" />
+                    </div>
+
+                    <!-- Büro-E-Mail -->
+                    <div class="p-field p-col-12">
+                        <label for="officeEmail">Büro-E-Mail</label>
+                        <input nbInput id="officeEmail" formControlName="officeEmail" placeholder="Büro-E-Mail" />
+                        <nb-icon *ngIf="form.get('officeEmail')?.invalid && form.get('officeEmail')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                        <div *ngIf="form.get('officeEmail')?.invalid && form.get('officeEmail')?.touched" class="text-danger">
+                            Ungültige E-Mail-Adresse.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schritt 2: Adresse (optional) -->
+            <div *ngIf="currentStep === 2 && showAddress">
+                <div class="p-fluid p-formgrid p-grid mb-3">
+                    <!-- Straße -->
+                    <div class="p-field p-col-6">
+                        <label for="street">Straße</label>
+                        <input nbInput id="street" formControlName="street" placeholder="Straße" />
+                    </div>
+
+                    <!-- Hausnummer -->
+                    <div class="p-field p-col-6">
+                        <label for="houseNumber">Hausnummer</label>
+                        <input nbInput id="houseNumber" formControlName="houseNumber" placeholder="Hausnummer" />
+                    </div>
+
+                    <!-- Etage -->
+                    <div class="p-field p-col-6">
+                        <label for="floor">Etage</label>
+                        <input nbInput id="floor" formControlName="floor" placeholder="Etage" />
+                    </div>
+
+                    <!-- Tür -->
+                    <div class="p-field p-col-6">
+                        <label for="door">Tür</label>
+                        <input nbInput id="door" formControlName="door" placeholder="Tür" />
+                    </div>
+
+                    <!-- Postleitzahl -->
+                    <div class="p-field p-col-6">
+                        <label for="postalCode">Postleitzahl</label>
+                        <input nbInput id="postalCode" formControlName="postalCode" placeholder="Postleitzahl" />
+                    </div>
+
+                    <!-- Stadt -->
+                    <div class="p-field p-col-6">
+                        <label for="city">Stadt</label>
+                        <input nbInput id="city" formControlName="city" placeholder="Stadt" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schritt 3: Kontaktpersonen (optional) -->
+            <div *ngIf="(currentStep === 2 && showContactPersons) || (currentStep === 3 && showContactPersons)">
+                <div class="contact-persons">
+                    <div *ngFor="let cp of contactPersons.controls; let i = index" [formGroupName]="i" class="p-fluid p-formgrid p-grid mb-3">
+                        <div class="p-field p-col-12">
+                            <label>Kontaktperson {{ i + 1 }}</label>
+                        </div>
+
+                        <!-- Präfix Titel -->
+                        <div class="p-field p-col-3">
+                            <label for="prefixTitle">Präfix Titel</label>
+                            <input nbInput id="prefixTitle" formControlName="prefixTitle" placeholder="Präfix Titel" />
+                        </div>
+
+                        <!-- Vorname -->
+                        <div class="p-field p-col-3">
+                            <label for="firstName">Vorname<span class="text-danger">*</span></label>
+                            <input nbInput id="firstName" formControlName="firstName" placeholder="Vorname" />
+                            <nb-icon *ngIf="cp.get('firstName')?.invalid && cp.get('firstName')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                            <div *ngIf="cp.get('firstName')?.invalid && cp.get('firstName')?.touched" class="text-danger">
+                                Vorname ist erforderlich.
+                            </div>
+                        </div>
+
+                        <!-- Nachname -->
+                        <div class="p-field p-col-3">
+                            <label for="lastName">Nachname<span class="text-danger">*</span></label>
+                            <input nbInput id="lastName" formControlName="lastName" placeholder="Nachname" />
+                            <nb-icon *ngIf="cp.get('lastName')?.invalid && cp.get('lastName')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                            <div *ngIf="cp.get('lastName')?.invalid && cp.get('lastName')?.touched" class="text-danger">
+                                Nachname ist erforderlich.
+                            </div>
+                        </div>
+
+                        <!-- Suffix Titel -->
+                        <div class="p-field p-col-3">
+                            <label for="suffixTitle">Suffix Titel</label>
+                            <input nbInput id="suffixTitle" formControlName="suffixTitle" placeholder="Suffix Titel" />
+                        </div>
+
+                        <!-- Geschlecht -->
+                        <div class="p-field p-col-6">
+                            <label for="gender">Geschlecht<span class="text-danger">*</span></label>
+                            <nb-select id="gender" formControlName="gender" placeholder="Geschlecht auswählen" required>
+                                <nb-option value="M">Männlich</nb-option>
+                                <nb-option value="W">Weiblich</nb-option>
+                                <nb-option value="D">Divers</nb-option>
+                            </nb-select>
+                            <nb-icon *ngIf="cp.get('gender')?.invalid && cp.get('gender')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                            <div *ngIf="cp.get('gender')?.invalid && cp.get('gender')?.touched" class="text-danger">
+                                Geschlecht ist erforderlich.
+                            </div>
+                        </div>
+
+                        <!-- Position -->
+                        <div class="p-field p-col-6">
+                            <label for="position">Position<span class="text-danger">*</span></label>
+                            <input nbInput id="position" formControlName="position" placeholder="Position" />
+                            <nb-icon *ngIf="cp.get('position')?.invalid && cp.get('position')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                            <div *ngIf="cp.get('position')?.invalid && cp.get('position')?.touched" class="text-danger">
+                                Position ist erforderlich.
+                            </div>
+                        </div>
+
+                        <!-- Persönliche E-Mail -->
+                        <div class="p-field p-col-6">
+                            <label for="personalEmail">Persönliche E-Mail</label>
+                            <input nbInput id="personalEmail" formControlName="personalEmail" placeholder="Persönliche E-Mail" />
+                            <nb-icon *ngIf="cp.get('personalEmail')?.invalid && cp.get('personalEmail')?.touched" icon="alert-circle-outline" status="danger"></nb-icon>
+                            <div *ngIf="cp.get('personalEmail')?.invalid && cp.get('personalEmail')?.touched" class="text-danger">
+                                Ungültige E-Mail-Adresse.
+                            </div>
+                        </div>
+
+                        <!-- Persönliches Telefon -->
+                        <div class="p-field p-col-6">
+                            <label for="personalPhone">Persönliches Telefon</label>
+                            <input nbInput id="personalPhone" formControlName="personalPhone" placeholder="Persönliches Telefon" />
+                        </div>
+
+                        <!-- Entfernen Button -->
+                        <div class="p-field p-col-12 text-right">
+                            <button nbButton status="danger" type="button" (click)="removeContactPerson(i)" *ngIf="contactPersons.length > 1">
+                                <nb-icon icon="trash-2-outline"></nb-icon> Entfernen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hinzufügen Button -->
+                <div class="p-field p-col-12 text-right">
+                    <button nbButton status="primary" type="button" (click)="addContactPerson()">
+                        <nb-icon icon="plus-outline"></nb-icon> Kontaktperson hinzufügen
+                    </button>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-between">
+        <button nbButton status="basic" (click)="cancel()">Abbrechen</button>
+        <div>
+            <button nbButton status="primary" (click)="previousStep()" [disabled]="currentStep === 1">Zurück</button>
+            <button nbButton status="success" (click)="nextStep()" [disabled]="!isStepValid()">Weiter</button>
+            <button nbButton status="success" (click)="submit()" [disabled]="!isFormValid()" *ngIf="currentStep === totalSteps">Speichern</button>
+        </div>
+    </nb-card-footer>
+</nb-card>
