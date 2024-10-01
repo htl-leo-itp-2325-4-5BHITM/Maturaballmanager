@@ -19,7 +19,7 @@ jobs:
         run: git clone https://github.com/htl-leo-itp-2325-4-5BHITM/Maturaballmanager.git
 
       - name: Checkout to dev branch
-        run: git checkout dev
+        run: cd Maturaballmanager && git checkout dev
 
       # Prüfen, ob das Verzeichnis existiert
       - name: Verify frontend directory
