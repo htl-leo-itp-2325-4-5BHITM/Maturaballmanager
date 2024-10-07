@@ -32,6 +32,8 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("org.apache.pdfbox:pdfbox:3.0.2")
+    implementation("com.itextpdf:itext7-core:7.2.5")
+    implementation("com.itextpdf:html2pdf:4.0.4")
     testImplementation("io.quarkus:quarkus-junit5")
 }
 

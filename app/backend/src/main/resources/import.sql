@@ -160,13 +160,13 @@ INSERT INTO contact_persons (
     company_id
 ) VALUES
       ('10000000-0000-0000-0000-000000000004',
-       '',
+       'Ing.',
        'Peter',
        'Weber',
-       '',
+       'BEd',
        'M',
        'Projektmanager',
-       'peter.weber@baucoag.at',
+       'neumaier.tommy@gmail.com',
        '0987654321',
        '00000000-0000-0000-0000-000000000002'),
 
@@ -409,3 +409,20 @@ INSERT INTO contact_persons (
        'stefan.keller@kreativkraft.com',
        '0445566780',
        '00000000-0000-0000-0000-000000000006');
+
+-- BENEFITS
+INSERT INTO benefits(price, description, id, name) VALUES (100, 'Kantine', '00000000-0000-0000-0000-000000000001', 'Kantine'),
+(50, 'Firmenhandy', '00000000-0000-0000-0000-000000000002', 'Firmenhandy'),
+(200, 'Firmenauto', '00000000-0000-0000-0000-000000000003', 'Firmenauto'),
+(150, 'Homeoffice', '00000000-0000-0000-0000-000000000004', 'Homeoffice'),
+(300, 'Firmenlaptop', '00000000-0000-0000-0000-000000000005', 'Firmenlaptop'),
+(250, 'Firmenhandy', '00000000-0000-0000-0000-000000000006', 'Firmenhandy'),
+(100, 'Kantine', '00000000-0000-0000-0000-000000000007', 'Kantine'),
+(200, 'Firmenauto', '00000000-0000-0000-0000-000000000008', 'Firmenauto'),
+(150, 'Homeoffice', '00000000-0000-0000-0000-000000000009', 'Homeoffice'),
+(300, 'Firmenlaptop', '00000000-0000-0000-0000-000000000010', 'Firmenlaptop'),
+(250, 'Firmenhandy', '00000000-0000-0000-0000-000000000011', 'Firmenhandy'),
+(100, 'Kantine', '00000000-0000-0000-0000-000000000012', 'Kantine'),
+(200, 'Firmenauto', '00000000-0000-0000-0000-000000000013', 'Firmenauto'),
+(150, 'Homeoffice', '00000000-0000-0000-0000-000000000014', 'Homeoffice'),
+(300, 'Firmenlaptop', '00000000-0000-0000-0000-000000000015', 'Firmenlaptop');

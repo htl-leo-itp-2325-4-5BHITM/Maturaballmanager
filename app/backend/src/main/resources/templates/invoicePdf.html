@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Rechnung #{invoice.invoiceNumber}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #000;
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .addresses {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        .addresses .from, .addresses .to {
+            display: inline-block;
+            vertical-align: top;
+            width: 45%;
+        }
+        .addresses .from {
+            text-align: left;
+        }
+        .addresses .to {
+            text-align: right;
+        }
+        .content {
+            margin-bottom: 40px;
+        }
+        .bank-details {
+            margin-bottom: 40px;
+        }
+        .signature {
+            margin-top: 60px;
+        }
+        .signature .name {
+            text-align: left;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #dddddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <img src="data:image/png;base64,{base64Logo}" alt="Schullogo" style="max-width: 200px;">
+    <h1>Rechnung</h1>
+</div>
+
+<div class="addresses">
+    <div class="from">
+        <p>{senderName}</p>
+        <p>Maturaballkomitee der HTL Leonding</p>
+        <p>{senderStreet} {senderHouseNumber}</p>
+        <p>{senderPostalCode} {senderCity}</p>
+    </div>
+    <div class="to">
+        <p>{invoice.company.name}</p>
+        <p>z.H. {invoice.contactPerson.firstName} {invoice.contactPerson.lastName}</p>
+        <p>
+            {invoice.company.address.street} {invoice.company.address.houseNumber}
+            {#if invoice.company.address.floor != null}/{invoice.company.address.floor}{/if}
+            {#if invoice.company.address.door != null}-{invoice.company.address.door}{/if}
+        </p>
+        <p>{invoice.company.address.postalCode} {invoice.company.address.city}</p>
+    </div>
+</div>
+
+<div class="content">
+    <p>
+        <strong>Rechnungsnummer:</strong> {invoice.invoiceNumber},
+        <strong>Rechnungsdatum:</strong> {invoice.invoiceDate}
+    </p>
+    <h2>Erwerb einer Werbeleistung im Rahmen des Maturaballs 2025 der HTL Leonding</h2>
+    <p>Die Leistung umfasst:</p>
+    <table>
+        <thead>
+        <tr>
+            <th>Leistung</th>
+            <th>Beschreibung</th>
+            <th>Preis (€)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {#for benefit in invoice.benefits}
+        <tr>
+            <td>{benefit.name}</td>
+            <td>{benefit.description}</td>
+            <td>{benefit.price} €</td>
+        </tr>
+        {/for}
+        </tbody>
+    </table>
+    <p><strong>Gesamtbetrag:</strong> {invoice.totalAmount} €</p>
+    <p>
+        Bitte überweisen Sie den oben genannten Betrag bis spätestens
+        {invoice.paymentDeadline} auf folgendes Konto:
+    </p>
+</div>
+
+<div class="bank-details">
+    <p><strong>Bank:</strong> {bankAccount.bankName}</p>
+    <p><strong>Kontoinhaber:</strong> {bankAccount.accountHolder}</p>
+    <p><strong>IBAN:</strong> {bankAccount.iban}</p>
+    <p><strong>BIC:</strong> {bankAccount.bic}</p>
+    <p><strong>Verwendungszweck:</strong> "Maturaball - #{invoice.invoiceNumber}"</p>
+</div>
+
+<div class="content">
+    <p>
+        Wir bitten Sie außerdem höflichst, als Rückversicherung für Ihr Unternehmen
+        und uns als Komitee, die Rechnung zu signieren und uns postalisch oder
+        elektronisch zu retournieren.
+    </p>
+    <p>
+        Bei Fragen zur Rechnung wenden Sie sich bitte an mich, erreichbar unter
+        maturaballkomitee@htl-leonding.ac.at.
+    </p>
+</div>
+
+<div class="signature">
+    <p>Mit freundlichen Grüßen</p>
+    <p class="name">{senderName}</p>
+</div>
+</body>
+</html>

@@ -12,6 +12,7 @@ import {InvoiceManagementComponent} from "./pages/invoice-management/invoice-man
 import {provideMomentDateAdapter} from "@angular/material-moment-adapter";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {NbDatepickerAdapter} from "@nebular/theme";
+import {provideNebular} from "./nebular.providers";
 
 const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,7 +28,7 @@ const routes: Route[] = [
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideNoopAnimations(), provideAnimations(), provideHttpClient(withInterceptors([authInterceptor])), provideNativeDateAdapter()],
+  providers: [provideRouter(routes), provideNoopAnimations(), provideAnimations(), provideHttpClient(withInterceptors([authInterceptor])), provideNativeDateAdapter(), provideNebular()],
 }
 
 export const config = {

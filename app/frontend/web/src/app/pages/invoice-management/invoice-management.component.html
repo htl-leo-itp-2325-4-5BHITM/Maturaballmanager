@@ -75,13 +75,14 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let invoice of filteredInvoices | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
-                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.invoiceNumber }}</td>
                     <td>{{ invoice.company.name }}</td>
                     <td>
                         {{ invoice.contactPerson?.firstName + ' ' + invoice.contactPerson?.lastName || '—' }}
                     </td>
                     <td>{{ invoice.invoiceDate | date: 'dd.MM.yyyy' }}</td>
                     <td>{{ invoice.paymentDeadline | date: 'dd.MM.yyyy' }}</td>
+                    <td>{{ invoice.totalAmount | currency: 'EUR' }}</td>
                     <td>
                         <nb-tag [status]="getStatusTag(invoice.status)">
                             {{ invoice.status }}
@@ -142,15 +143,12 @@
             </table>
         </div>
 
-        <!-- Nachricht, wenn keine Rechnungen gefunden wurden -->
         <div *ngIf="filteredInvoices.length === 0" class="no-data text-center mt-4">
             <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
             <p class="mt-2">Keine Rechnungen gefunden.</p>
         </div>
 
-        <!-- Paginierung und Elemente pro Seite -->
         <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
-            <!-- Elemente pro Seite auswählen -->
             <div class="form-group">
                 <nb-form-field appearance="outline">
                     <nb-select
@@ -164,7 +162,6 @@
                 </nb-form-field>
             </div>
 
-            <!-- Paginierungskontrollen -->
             <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
         </div>
     </nb-card-body>

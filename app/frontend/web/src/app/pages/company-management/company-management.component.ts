@@ -1,45 +1,51 @@
-// src/app/components/company-list/company-management.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../../services/company.service';
-import { NbButtonModule, NbCardModule, NbDialogModule, NbDialogService, NbToastrModule, NbToastrService } from '@nebular/theme';
-import * as Papa from 'papaparse';
-import { Company } from "../../model/companies";
-import { CurrencyPipe, NgForOf, NgIf } from "@angular/common";
-import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
-import { CompanyDialogComponent } from "../../components/dialogs/company-dialog/company-dialog.component";
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbDialogService,
+    NbIconModule,
+    NbInputModule,
+    NbSelectModule,
+    NbToastrService, NbTooltipModule,
+} from '@nebular/theme';
+import { Company } from '../../model/companies';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { CompanyDialogComponent } from '../../components/dialogs/company-dialog/company-dialog.component';
+import { ConfirmDialogComponent } from '../../components/dialogs/confirm-dialog/confirm-dialog.component';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {ContactPerson} from "../../model/contactperson";
+import {
+    ContactPersonDialogComponent
+} from "../../components/dialogs/contact-person-dialog/contact-person-dialog.component";
 
 @Component({
     selector: 'app-company-management',
     templateUrl: './company-management.component.html',
+    styleUrls: ['./company-management.component.scss'],
     standalone: true,
     imports: [
-        NgForOf,
-        NbCardModule,
+        NgxPaginationModule,
+        NbSelectModule,
+        NbIconModule,
         NbButtonModule,
-        CurrencyPipe,
+        NgForOf,
         NgIf,
-        NbDialogModule, // Import NbDialogModule for NbDialogService
-        NbToastrModule // Import NbToastrModule for NbToastrService
+        NbCardModule,
+        NbInputModule,
+        NbTooltipModule,
+        NgClass,
     ],
-    providers: [],
-    styleUrls: ['./company-management.component.scss']
 })
 export class CompanyManagementComponent implements OnInit {
     companies: Company[] = [];
-    selectedCompanies: Set<string> = new Set();
-    displayedColumns = [
-        'select',
-        'name',
-        'industry',
-        'website',
-        'contactPerson',
-        'invoiceCount',
-        'totalRevenue',
-        'actions'
-    ];
-
-    // Für erweiterte Details
-    detailsVisible: Set<string> = new Set();
+    filteredCompanies: Company[] = [];
+    p: number = 1; // Current page
+    itemsPerPage: number = 10; // Items per page
+    sortColumn: keyof Company = 'name';
+    sortDirection: 'asc' | 'desc' = 'asc';
+    searchTerm: string = '';
+    detailsVisible: Set<string> = new Set(); // To track visible details
 
     constructor(
         private companyService: CompanyService,
@@ -48,23 +54,96 @@ export class CompanyManagementComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.companyService.getCompanies().subscribe(companies => {
-            this.companies = companies;
+        this.loadCompanies();
+    }
+
+    loadCompanies(): void {
+        this.companyService.getCompanies().subscribe({
+            next: (companies: Company[]) => {
+                this.companies = companies;
+                this.applyFilters();
+            },
+            error: (err: Error) => {
+                this.toastrService.danger('Fehler beim Laden der Unternehmen', 'Fehler');
+                console.error(err);
+            },
         });
+    }
+
+    applyFilters(): void {
+        let filtered = [...this.companies];
+        if (this.searchTerm) {
+            const term = this.searchTerm.toLowerCase();
+            filtered = filtered.filter(company =>
+                company.name.toLowerCase().includes(term) ||
+                company.industry.toLowerCase().includes(term)
+            );
+        }
+        filtered.sort((a, b) => {
+            const valueA = a[this.sortColumn] || '';
+            const valueB = b[this.sortColumn] || '';
+            return this.sortDirection === 'asc'
+                ? String(valueA).localeCompare(String(valueB))
+                : String(valueB).localeCompare(String(valueA));
+        });
+        this.filteredCompanies = filtered;
+    }
+
+    toggleDetails(companyId: string): void {
+        if (this.detailsVisible.has(companyId)) {
+            this.detailsVisible.delete(companyId);
+        } else {
+            this.detailsVisible.add(companyId);
+        }
+    }
+
+    isDetailsVisible(companyId: string): boolean {
+        return this.detailsVisible.has(companyId);
+    }
+
+    onPageChange(page: number): void {
+        this.p = page;
+    }
+
+    onItemsPerPageChange(count: number): void {
+        this.itemsPerPage = count;
+        this.p = 1; // Reset to first page
+    }
+
+    onSort(column: keyof Company): void {
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'asc';
+        }
+        this.applyFilters();
+    }
+
+    onSearch(event: EventTarget | null): void {
+        this.searchTerm = (event as HTMLInputElement)?.value || '';
+        this.p = 1;
+        this.applyFilters();
     }
 
     openCreateDialog(): void {
         this.dialogService.open(CompanyDialogComponent, {
             context: {
-                title: 'Unternehmen erstellen'
-            }
+                title: 'Unternehmen erstellen',
+            },
         }).onClose.subscribe((result: Company) => {
-            console.log("hallo")
             if (result) {
-                this.companyService.addCompany(result).subscribe(company => {
-                    this.companies.push(company);
+                this.companyService.addCompany(result).subscribe({
+                    next: (newCompany: Company) => {
+                        this.companies.push(newCompany);
+                        this.applyFilters();
+                        this.toastrService.success('Unternehmen erstellt', 'Erfolg');
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Erstellen des Unternehmens', 'Fehler');
+                        console.error(err);
+                    },
                 });
-                this.toastrService.success('Unternehmen erstellt', 'Erfolg');
             }
         });
     }
@@ -73,15 +152,24 @@ export class CompanyManagementComponent implements OnInit {
         this.dialogService.open(CompanyDialogComponent, {
             context: {
                 title: 'Unternehmen bearbeiten',
-                company: { ...company }
-            }
+                company: { ...company },
+            },
         }).onClose.subscribe((result: Company) => {
             if (result) {
-                this.companyService.updateCompany(result).subscribe(() => {
-                    const index = this.companies.findIndex(c => c.id === result.id);
-                    this.companies[index] = result;
-                })
-                this.toastrService.success('Unternehmen aktualisiert', 'Erfolg');
+                this.companyService.updateCompany(result).subscribe({
+                    next: (updatedCompany: Company) => {
+                        const index = this.companies.findIndex((c) => c.id === updatedCompany.id);
+                        if (index !== -1) {
+                            this.companies[index] = updatedCompany;
+                            this.applyFilters();
+                            this.toastrService.success('Unternehmen aktualisiert', 'Erfolg');
+                        }
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Aktualisieren des Unternehmens', 'Fehler');
+                        console.error(err);
+                    },
+                });
             }
         });
     }
@@ -90,88 +178,93 @@ export class CompanyManagementComponent implements OnInit {
         this.dialogService.open(ConfirmDialogComponent, {
             context: {
                 title: 'Löschen bestätigen',
-                message: `Möchtest du das Unternehmen "${company.name}" wirklich löschen?`
-            }
-        }).onClose.subscribe(confirmed => {
+                message: `Möchtest du das Unternehmen "${company.name}" wirklich löschen?`,
+            },
+        }).onClose.subscribe((confirmed) => {
             if (confirmed) {
-                this.companyService.deleteCompany(company.id!).subscribe(() => {
-                    this.companies = this.companies.filter(c => c.id !== company.id);
-                })
-                this.toastrService.success('Unternehmen gelöscht', 'Erfolg');
+                this.companyService.deleteCompany(company.id!).subscribe({
+                    next: () => {
+                        this.companies = this.companies.filter((c) => c.id !== company.id);
+                        this.applyFilters();
+                        this.toastrService.success('Unternehmen gelöscht', 'Erfolg');
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Löschen des Unternehmens', 'Fehler');
+                        console.error(err);
+                    },
+                });
             }
         });
     }
 
-    toggleSelection(id: string, event: any): void {
-        if (event.target.checked) {
-            this.selectedCompanies.add(id);
-        } else {
-            this.selectedCompanies.delete(id);
-        }
+    openAddContactPersonDialog(company: Company): void {
+        this.dialogService.open(ContactPersonDialogComponent, {
+            context: {
+                title: 'Kontaktperson hinzufügen',
+                company: company,
+            },
+        }).onClose.subscribe((result: ContactPerson) => {
+            if (result) {
+                this.companyService.addContactPerson(result, company.id!).subscribe({
+                    next: (newContactPerson: ContactPerson) => {
+                        // Update the company's contact persons list
+                        company.contactPersons!.push(newContactPerson);
+                        this.toastrService.success('Kontaktperson hinzugefügt', 'Erfolg');
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Hinzufügen der Kontaktperson', 'Fehler');
+                        console.error(err);
+                    },
+                });
+            }
+        });
     }
 
-    bulkDelete(): void {
-        if (this.selectedCompanies.size === 0) {
-            this.toastrService.warning('Keine Unternehmen ausgewählt', 'Warnung');
-            return;
-        }
+    openEditContactPersonDialog(company: Company, contactPerson: ContactPerson): void {
+        this.dialogService.open(ContactPersonDialogComponent, {
+            context: {
+                title: 'Kontaktperson bearbeiten',
+                company: company,
+                contactPerson: { ...contactPerson
+            },
+        }}).onClose.subscribe((result: ContactPerson) => {
+            if (result) {
+                this.companyService.updateContactPerson(result, company.id!).subscribe({
+                    next: (updatedContactPerson: ContactPerson) => {
+                        const index = company.contactPersons!.findIndex(cp => cp.id === updatedContactPerson.id);
+                        if (index !== -1) {
+                            company.contactPersons![index] = updatedContactPerson;
+                        }
+                        this.toastrService.success('Kontaktperson aktualisiert', 'Erfolg');
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Aktualisieren der Kontaktperson', 'Fehler');
+                        console.error(err);
+                    },
+                });
+            }
+        });
+    }
 
+    confirmDeleteContactPerson(company: Company, contactPerson: ContactPerson): void {
         this.dialogService.open(ConfirmDialogComponent, {
             context: {
-                title: 'Bulk-Löschen bestätigen',
-                message: `Möchtest du die ausgewählten ${this.selectedCompanies.size} Unternehmen wirklich löschen?`
-            }
-        }).onClose.subscribe(confirmed => {
+                title: 'Löschen bestätigen',
+                message: `Möchtest du die Kontaktperson "${contactPerson.firstName} ${contactPerson.lastName}" wirklich löschen?`,
+            },
+        }).onClose.subscribe((confirmed) => {
             if (confirmed) {
-                this.companyService.deleteCompanies(Array.from(this.selectedCompanies));
-                this.selectedCompanies.clear();
-                this.toastrService.success('Ausgewählte Unternehmen gelöscht', 'Erfolg');
+                this.companyService.deleteContactPerson(contactPerson.id!).subscribe({
+                    next: () => {
+                        company.contactPersons = company.contactPersons!.filter(cp => cp.id !== contactPerson.id);
+                        this.toastrService.success('Kontaktperson gelöscht', 'Erfolg');
+                    },
+                    error: (err: Error) => {
+                        this.toastrService.danger('Fehler beim Löschen der Kontaktperson', 'Fehler');
+                        console.error(err);
+                    },
+                });
             }
         });
-    }
-
-    exportCSV(): void {
-        const data = this.companies.map(company => ({
-            Firmenname: company.name,
-            Branche: company.industry,
-            Website: company.website,
-            'Name der Kontaktperson': company.contactPersons && company.contactPersons.length > 0
-                ? `${company.contactPersons[0].firstName} ${company.contactPersons[0].lastName}`
-                : 'Nicht festgelegt',
-            'Anzahl Rechnungen': company.invoiceCount,
-            'Gesamtumsatz': company.totalRevenue
-        }));
-
-        const csv = Papa.unparse(data);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'companies.csv');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    // Methoden für erweiterte Details
-    toggleDetails(id: string): void {
-        if (this.detailsVisible.has(id)) {
-            this.detailsVisible.delete(id);
-        } else {
-            this.detailsVisible.add(id);
-        }
-    }
-
-    isDetailsVisible(id: string): boolean {
-        return this.detailsVisible.has(id);
-    }
-
-    toggleSelectAll(event: any): void {
-        if (event.target.checked) {
-            this.companies.forEach(c => this.selectedCompanies.add(c.id!));
-        } else {
-            this.selectedCompanies.clear();
-        }
     }
 }

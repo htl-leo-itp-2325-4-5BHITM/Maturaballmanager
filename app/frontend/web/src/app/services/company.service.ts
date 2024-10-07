@@ -80,6 +80,40 @@ export class CompanyService {
         });
     }
 
+    /**
+     * Adds a new contact person.
+     * @param contactPerson The contact person to add.
+     * @param companyId
+     */
+    addContactPerson(contactPerson: ContactPerson, companyId: string): Observable<ContactPerson> {
+        return this.http.post<ContactPerson>(
+            `${this.baseUrl}/${companyId}/contact-persons`,
+            contactPerson,
+            this.httpOptions
+        );
+    }
+
+    /**
+     * Updates an existing contact person.
+     * @param contactPerson The contact person to update.
+     * @param companyId
+     */
+    updateContactPerson(contactPerson: ContactPerson, companyId: string): Observable<ContactPerson> {
+        return this.http.put<ContactPerson>(
+            `${this.baseUrl}/${companyId}/contact-persons/${contactPerson.id}`,
+            contactPerson,
+            this.httpOptions
+        );
+    }
+
+    /**
+     * Deletes a contact person.
+     * @param contactPersonId The ID of the contact person to delete.
+     */
+    deleteContactPerson(contactPersonId: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/contact-person/${contactPersonId}`);
+    }
+
 
     /**
      * Retrieves contact persons for a specific company.

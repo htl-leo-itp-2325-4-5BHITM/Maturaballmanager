@@ -17,7 +17,7 @@ class CompanyRepository {
 
     fun getAll(): List<Company> {
         return em.createQuery(
-            "SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.contact_persons",
+            "SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.contactPersons",
             Company::class.java
         ).resultList
     }
@@ -25,7 +25,7 @@ class CompanyRepository {
     fun getById(id: String): Company? {
         return try {
             em.createQuery(
-                "SELECT c FROM Company c LEFT JOIN FETCH c.contact_persons WHERE c.id = :id",
+                "SELECT c FROM Company c LEFT JOIN FETCH c.contactPersons WHERE c.id = :id",
                 Company::class.java
             )
                 .setParameter("id", id)
@@ -37,7 +37,7 @@ class CompanyRepository {
 
     @Transactional
     fun create(company: Company): Company {
-        company.contact_persons.forEach { it.company_id = company }
+        company.contactPersons.forEach { it.company = company }
         em.persist(company)
         return company
     }
@@ -49,12 +49,12 @@ class CompanyRepository {
         existingCompany.name = company.name
         existingCompany.industry = company.industry
         existingCompany.website = company.website
-        existingCompany.office_email = company.office_email
-        existingCompany.office_phone = company.office_phone
+        existingCompany.officeEmail = company.officeEmail
+        existingCompany.officePhone = company.officePhone
         existingCompany.address = company.address
 
-        existingCompany.contact_persons.forEach { em.remove(it) }
-        existingCompany.contact_persons = company.contact_persons
+        existingCompany.contactPersons.forEach { em.remove(it) }
+        existingCompany.contactPersons = company.contactPersons
         return existingCompany
     }
 
@@ -69,7 +69,7 @@ class CompanyRepository {
     fun getContactPersons(id: String): List<ContactPerson> {
         val company = getById(id) ?: throw EntityNotFoundException("Company not found")
         return em.createQuery(
-            "SELECT cp FROM ContactPerson cp WHERE cp.company_id = :company",
+            "SELECT cp FROM ContactPerson cp WHERE cp.company = :company",
             ContactPerson::class.java
         )
             .setParameter("company", company)

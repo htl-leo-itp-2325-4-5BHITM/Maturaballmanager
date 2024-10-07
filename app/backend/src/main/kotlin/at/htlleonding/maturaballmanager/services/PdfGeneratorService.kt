@@ -1,97 +1,54 @@
-package at.htlleonding.maturaballmanager.service
+package at.htlleonding.maturaballmanager.services
 
+import at.htlleonding.maturaballmanager.model.dtos.BankAccount
 import at.htlleonding.maturaballmanager.model.entities.Invoice
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPage
-import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.apache.pdfbox.pdmodel.font.PDType1Font
+import com.itextpdf.html2pdf.HtmlConverter
+import io.quarkus.qute.Template
 import jakarta.enterprise.context.ApplicationScoped
-import org.apache.pdfbox.pdmodel.font.PDType0Font
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts
+import jakarta.inject.Inject
+import jakarta.inject.Named
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.util.Base64
 
 @ApplicationScoped
 class PdfGeneratorService {
 
-    /**
-     * Generates a PDF for the given invoice using Apache PDFBox.
-     *
-     * @param invoice The invoice entity.
-     * @return A byte array representing the PDF.
-     */
-    fun generateInvoicePdf(invoice: Invoice): ByteArray {
-        PDDocument().use { document ->
-            val page = PDPage(PDRectangle.LETTER)
-            document.addPage(page)
+    @Inject
+    @Named("invoicePdf")
+    lateinit var invoicePdf: Template
 
-            PDPageContentStream(document, page).use { contentStream ->
-                contentStream.beginText()
-                contentStream.newLineAtOffset(50f, 700f)
-                contentStream.showText("Invoice")
-                contentStream.endText()
+    fun generateInvoicePdf(invoice: Invoice, senderName: String): ByteArray {
+        // Definieren Sie die Sender-Adresse
+        val senderStreet = "Limesstraße"
+        val senderHouseNumber = "12-14a"
+        val senderPostalCode = "4060"
+        val senderCity = "Leonding"
 
-                // Company Information
-                contentStream.beginText()
-                contentStream.newLineAtOffset(50f, 680f)
-                contentStream.showText("Company: ${invoice.company?.name}")
-                contentStream.newLineAtOffset(0f, -15f)
-                contentStream.showText("Address: ${invoice.company?.address}")
-                contentStream.endText()
+        // Laden des Logos und Umwandlung in Base64
+        val logoStream: InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream("img/htllogo_2022_black_v2-2.png")
+            ?: throw IllegalArgumentException("Logo nicht gefunden")
+        val logoBytes = logoStream.readAllBytes()
+        val base64Logo = Base64.getEncoder().encodeToString(logoBytes)
 
-                // Contact Person
-                invoice.contactPerson?.let { cp ->
-                    contentStream.beginText()
-                    contentStream.newLineAtOffset(50f, 650f)
-                    contentStream.showText("Contact Person: ${cp.first_name} ${cp.last_name}")
-                    contentStream.newLineAtOffset(0f, -15f)
-                    contentStream.showText("Email: ${cp.personal_email}")
-                    contentStream.endText()
-                }
+        // Rendern des HTML-Templates mit den Rechnungsdaten und dem Logo
+        val bankAccount: BankAccount = BankAccount("AT55 2022 2023 2024 2025", "ASPKAT2LXXX", "Sparkasse Oberösterreich", "Tommy Neumaier")
+        val htmlContent: String = invoicePdf
+            .data("invoice", invoice)
+            .data("base64Logo", base64Logo)
+            .data("senderName", senderName)
+            .data("senderStreet", senderStreet)
+            .data("senderHouseNumber", senderHouseNumber)
+            .data("senderPostalCode", senderPostalCode)
+            .data("senderCity", senderCity)
+            .data("bankAccount", bankAccount)
+            .render()
 
-                // Invoice Details
-                contentStream.beginText()
-                contentStream.newLineAtOffset(50f, if (invoice.contactPerson != null) 620f else 650f)
-                contentStream.showText("Invoice Date: ${invoice.invoiceDate}")
-                contentStream.newLineAtOffset(0f, -15f)
-                contentStream.showText("Payment Deadline: ${invoice.paymentDeadline}")
-                contentStream.endText()
+        // Konvertierung des gerenderten HTML in PDF
+        val pdfStream = ByteArrayOutputStream()
+        HtmlConverter.convertToPdf(ByteArrayInputStream(htmlContent.toByteArray()), pdfStream)
 
-                // Table Headers
-                contentStream.beginText()
-                contentStream.newLineAtOffset(50f, 580f)
-                contentStream.showText("Benefit")
-                contentStream.newLineAtOffset(200f, 0f)
-                contentStream.showText("Description")
-                contentStream.newLineAtOffset(200f, 0f)
-                contentStream.showText("Price (€)")
-                contentStream.endText()
-
-                // Table Content
-                var yPosition = 560f
-                invoice.benefits.forEach { benefit ->
-                    contentStream.beginText()
-                    contentStream.newLineAtOffset(50f, yPosition)
-                    contentStream.showText(benefit.name ?: "")
-                    contentStream.newLineAtOffset(200f, 0f)
-                    contentStream.showText(benefit.description ?: "")
-                    contentStream.newLineAtOffset(200f, 0f)
-                    contentStream.showText(String.format("%.2f", benefit.price ?: 0.0))
-                    contentStream.endText()
-                    yPosition -= 20f
-                }
-
-                // Total Amount
-                contentStream.beginText()
-                contentStream.newLineAtOffset(50f, yPosition - 20f)
-                contentStream.showText("Total Amount: ${String.format("%.2f", invoice.totalAmount)} €")
-                contentStream.endText()
-            }
-
-            // Save to ByteArrayOutputStream
-            val baos = ByteArrayOutputStream()
-            document.save(baos)
-            return baos.toByteArray()
-        }
+        return pdfStream.toByteArray()
     }
 }

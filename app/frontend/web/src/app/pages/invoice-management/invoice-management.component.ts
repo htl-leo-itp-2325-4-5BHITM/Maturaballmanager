@@ -8,7 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Invoice, Status } from "../../model/invoice";
 import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
 import { InvoiceDialogComponent } from "../../components/dialogs/invoice-dialog/invoice-dialog.component";
-import { DatePipe, NgForOf, NgIf } from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-invoice-management',
@@ -31,6 +31,7 @@ import { DatePipe, NgForOf, NgIf } from "@angular/common";
     NbInputModule,
     InvoiceDialogComponent,
     ConfirmDialogComponent,
+    CurrencyPipe,
   ]
 })
 export class InvoiceManagementComponent implements OnInit {
@@ -131,9 +132,6 @@ export class InvoiceManagementComponent implements OnInit {
     this.applyFilters();
   }
 
-  /**
-   * Öffnet den Dialog zum Erstellen einer neuen Rechnung.
-   */
   openCreateDialog(): void {
     this.dialogService.open(InvoiceDialogComponent, {
       context: {
@@ -143,6 +141,7 @@ export class InvoiceManagementComponent implements OnInit {
       closeOnEsc: false,
       autoFocus: true,
       hasScroll: false,
+      dialogClass: 'fixed-dialog-width' // Hinzugefügt
     }).onClose.subscribe((result: Invoice | undefined) => {
       if (result) {
         this.loadInvoices(); // Lade die Rechnungen neu, um die neue Rechnung anzuzeigen
@@ -151,11 +150,12 @@ export class InvoiceManagementComponent implements OnInit {
     });
   }
 
-  /**
-   * Öffnet den Dialog zum Bearbeiten einer bestehenden Rechnung.
-   * @param invoice Rechnung zum Bearbeiten
-   */
   openEditDialog(invoice: Invoice): void {
+    if (invoice.status === Status.SENT || invoice.status === Status.PAID) { // Aktualisiert um PAID
+      this.toastrService.warning('Versendete oder bezahlte Rechnungen können nicht bearbeitet werden.', 'Warnung');
+      return;
+    }
+
     this.dialogService.open(InvoiceDialogComponent, {
       context: {
         title: 'Rechnung bearbeiten',
@@ -165,6 +165,7 @@ export class InvoiceManagementComponent implements OnInit {
       closeOnEsc: false,
       autoFocus: true,
       hasScroll: false,
+      dialogClass: 'fixed-dialog-width' // Hinzugefügt
     }).onClose.subscribe((result: Invoice | undefined) => {
       if (result) {
         this.loadInvoices(); // Lade die Rechnungen neu, um die aktualisierte Rechnung anzuzeigen
@@ -225,15 +226,20 @@ export class InvoiceManagementComponent implements OnInit {
    * @param invoice Rechnung zum Herunterladen
    */
   downloadPdf(invoice: Invoice): void {
-    this.invoiceService.downloadInvoicePdf(invoice.id!).subscribe({
-      next: (blob) => {
-        saveAs(blob, `Rechnung_${invoice.id}.pdf`);
-      },
-      error: (error) => {
-        this.toastrService.danger('Fehler beim Herunterladen der Rechnung.', 'Fehler');
-        console.error(error);
-      }
+    this.invoiceService.downloadInvoicePdf(invoice.id!).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Invoice_${invoice.invoiceNumber}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Error downloading the PDF', error);
     });
+  }
+
+  download(id: string) {
+
   }
 
   /**

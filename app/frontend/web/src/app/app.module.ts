@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {
-  NbButtonModule,
+  NbButtonModule, NbCalendarMonthModelService, NbCalendarYearModelService,
   NbCardModule, NbDialogModule, NbDialogService,
   NbInputModule,
   NbLayoutModule,
@@ -35,7 +35,9 @@ import {CommonModule} from "@angular/common";
   ],
   providers: [
     NbSidebarService,
-    NbDialogService
+    NbDialogService,
+    NbCalendarYearModelService,
+      NbCalendarMonthModelService,
   ]
 })
 export class AppModule {

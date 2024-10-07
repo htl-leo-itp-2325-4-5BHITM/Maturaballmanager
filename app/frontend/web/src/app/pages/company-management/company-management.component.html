@@ -1,36 +1,45 @@
-<!-- src/app/components/company-list/company-management.component.html -->
 <nb-card>
     <nb-card-header>
-        <div class="header-actions">
-            <button nbButton status="primary" (click)="openCreateDialog()">Erstellen</button>
-            <button nbButton status="danger" (click)="bulkDelete()" [disabled]="selectedCompanies.size === 0">
-                Löschen
+        <div class="header">
+            <h2>Unternehmen verwalten</h2>
+            <button nbButton status="primary" (click)="openCreateDialog()">
+                <nb-icon icon="plus-outline"></nb-icon>
+                Hinzufügen
             </button>
-            <button nbButton status="info" (click)="exportCSV()">CSV Export</button>
         </div>
     </nb-card-header>
     <nb-card-body>
-        <table class="table table-hover">
+        <div class="search-sort-container">
+            <input nbInput placeholder="Suchen..." (input)="onSearch($event.target)"/>
+
+            <div class="sort-buttons">
+                <button nbButton ghost status="info" (click)="onSort('name')">
+                    Name
+                    <nb-icon *ngIf="sortColumn === 'name'"
+                             [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
+                </button>
+                <button nbButton ghost status="info" (click)="onSort('industry')">
+                    Branche
+                    <nb-icon *ngIf="sortColumn === 'industry'"
+                             [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></nb-icon>
+                </button>
+            </div>
+        </div>
+
+        <table class="table">
             <thead>
             <tr>
-                <th>
-                    <input type="checkbox" (change)="toggleSelectAll($event)">
-                </th>
                 <th>Firmenname</th>
                 <th>Branche</th>
                 <th>Website</th>
-                <th>Name der Kontaktperson</th>
-                <th>Anzahl Rechnungen</th>
-                <th>Gesamtumsatz</th>
                 <th>Aktionen</th>
             </tr>
             </thead>
             <tbody>
-            <ng-container *ngFor="let company of companies">
+            <!-- Main rows for companies -->
+            <ng-container
+                    *ngFor="let company of filteredCompanies | paginate: { itemsPerPage: itemsPerPage, currentPage: p }">
                 <tr>
-                    <td>
-                        <input type="checkbox" [checked]="selectedCompanies.has(company.id!)" (change)="toggleSelection(company.id!, $event)">
-                    </td>
                     <td>{{ company.name }}</td>
                     <td>{{ company.industry }}</td>
                     <td>
@@ -38,23 +47,23 @@
                         <span *ngIf="!company.website">-</span>
                     </td>
                     <td>
-              <span *ngIf="company.contactPersons && company.contactPersons.length > 0">
-                {{ company.contactPersons[0].firstName }} {{ company.contactPersons[0].lastName }}
-              </span>
-                        <span *ngIf="!company.contactPersons || company.contactPersons.length === 0">
-                Nicht festgelegt
-              </span>
-                    </td>
-                    <td>{{ company.invoiceCount }}</td>
-                    <td>{{ company.totalRevenue | currency }}</td>
-                    <td>
-                        <button nbButton size="small" status="warning" (click)="openEditDialog(company)">Bearbeiten</button>
-                        <button nbButton size="small" status="danger" (click)="confirmDelete(company)">Löschen</button>
-                        <button nbButton size="small" status="info" (click)="toggleDetails(company.id!)">Details</button>
+                        <button nbButton size="small" status="info" (click)="openEditDialog(company)"
+                                nbTooltip="Bearbeiten">
+                            <nb-icon icon="edit-outline"></nb-icon>
+                        </button>
+                        <button nbButton size="small" status="danger" (click)="confirmDelete(company)"
+                                nbTooltip="Löschen">
+                            <nb-icon icon="trash-2-outline"></nb-icon>
+                        </button>
+                        <button nbButton size="small" status="info" (click)="toggleDetails(company.id!)"
+                                nbTooltip="Details anzeigen">
+                            <nb-icon
+                                    [icon]="isDetailsVisible(company.id!) ? 'chevron-up-outline' : 'chevron-down-outline'"></nb-icon>
+                        </button>
                     </td>
                 </tr>
-                <tr *ngIf="isDetailsVisible(company.id!)">
-                    <td colspan="8">
+                <tr *ngIf="isDetailsVisible(company.id!)" [ngClass]="{ 'details-row': true }">
+                    <td colspan="4">
                         <nb-card>
                             <nb-card-header>Details von {{ company.name }}</nb-card-header>
                             <nb-card-body>
@@ -64,14 +73,41 @@
                                     {{ company.address.postalCode || '' }} {{ company.address.city || '' }}
                                 </p>
                                 <p *ngIf="!company.address">Keine Adresse angegeben.</p>
-                                <p><strong>Kontaktpersonen:</strong></p>
-                                <ul>
-                                    <li *ngFor="let cp of company.contactPersons">
-                                        {{ cp.prefixTitle || '' }} {{ cp.firstName }} {{ cp.lastName }} {{ cp.suffixTitle || '' }} - {{ cp.position }}
-                                        <br>
-                                        E-Mail: {{ cp.personalEmail || '-' }}, Telefon: {{ cp.personalPhone || '-' }}
-                                    </li>
-                                </ul>
+
+                                <h5>Kontaktpersonen</h5>
+                                <button nbButton status="primary" size="small" (click)="openAddContactPersonDialog(company)">
+                                    <nb-icon icon="person-add-outline"></nb-icon> Kontaktperson hinzufügen
+                                </button>
+
+                                <table class="contact-persons-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Position</th>
+                                        <th>E-Mail</th>
+                                        <th>Telefon</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let cp of company.contactPersons">
+                                        <td>
+                                            {{ cp.prefixTitle || '' }} {{ cp.firstName }} {{ cp.lastName }} {{ cp.suffixTitle || '' }}
+                                        </td>
+                                        <td>{{ cp.position }}</td>
+                                        <td>{{ cp.personalEmail || '-' }}</td>
+                                        <td>{{ cp.personalPhone || '-' }}</td>
+                                        <td>
+                                            <button nbButton size="small" status="info" (click)="openEditContactPersonDialog(company, cp)">
+                                                <nb-icon icon="edit-outline"></nb-icon>
+                                            </button>
+                                            <button nbButton size="small" status="danger" (click)="confirmDeleteContactPerson(company, cp)">
+                                                <nb-icon icon="trash-2-outline"></nb-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </nb-card-body>
                         </nb-card>
                     </td>
@@ -79,5 +115,12 @@
             </ng-container>
             </tbody>
         </table>
+
+        <div class="pagination-container">
+            <nb-select [(selected)]="itemsPerPage" (selectedChange)="onItemsPerPageChange($event)" placeholder="Pro Seite">
+                <nb-option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</nb-option>
+            </nb-select>
+            <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+        </div>
     </nb-card-body>
 </nb-card>

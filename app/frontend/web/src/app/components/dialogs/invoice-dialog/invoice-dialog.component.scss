@@ -26,11 +26,6 @@ nb-card-footer {
   padding: 1.5rem;
 }
 
-/* Datepicker z-index Anpassung */
-::ng-deep nb-datepicker {
-  z-index: 10000 !important;
-}
-
 /* Responsives Design */
 @media (max-width: 768px) {
   nb-card-body {
@@ -39,5 +34,20 @@ nb-card-footer {
 
   .form-group {
     margin-bottom: 1rem;
+  }
+}
+
+/* Adjust z-index for nb-datepicker overlay */
+nb-layout nb-datepicker-container {
+  z-index: 1000; /* Adjust the value as needed */
+}
+
+.fixed-dialog-width {
+  width: 600px !important; /* Festlegen der gewünschten Breite */
+}
+
+@media (max-width: 768px) {
+  .fixed-dialog-width {
+    width: 90% !important; /* Anpassung für kleinere Bildschirme */
   }
 }

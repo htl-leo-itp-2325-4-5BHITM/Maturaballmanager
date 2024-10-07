@@ -1,11 +1,12 @@
 import {Company} from "./companies";
-import {Benefit} from "./benefit";
 import {ContactPerson} from "./contactperson";
+import {Benefit} from "./benefit";
 
 export interface Invoice {
     id?: string;
+    invoiceNumber?: string;
     company: Company;
-    contactPerson?: ContactPerson | null;
+    contactPerson?: ContactPerson;
     benefits: Benefit[];
     invoiceDate: Date;
     paymentDeadline: Date;
@@ -14,7 +15,7 @@ export interface Invoice {
 }
 
 export enum Status {
-    DRAFT = 'draft',
-    SENT = 'sent',
-    PAID = 'paid',
+    DRAFT = 'DRAFT',
+    SENT = 'SENT',
+    PAID = 'PAID',
 }
