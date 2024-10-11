@@ -4,10 +4,9 @@ Eine Plattform zur Unterstützung bei der Planung und Durchführung von Maturab�
 
 ## Team
 
-* Ana Paripovic
 * Tommy Neumaier
-* Tuana Sevik
 * Oliver Schatzberger
+* Lana Šekerija
 
 ## Funktionen
 
