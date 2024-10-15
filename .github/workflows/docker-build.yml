@@ -169,7 +169,8 @@ jobs:
                 containers:
                 - name: quarkus-backend
                   imagePullPolicy: Always
-                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
+                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest
+                  command: ["tail", "-f", "/dev/null"]
                   ports:
                   - containerPort: 8080
                   env:
