@@ -32,8 +32,12 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
+          cache-dependency-path: |
+            ./app/backend/*.gradle*
+            ./app/backend/**/gradle-wrapper.properties
 
       # Cache Gradle Dependencies
       - name: Cache Gradle
@@ -69,16 +73,20 @@ jobs:
           ./gradlew build --no-daemon -x test
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest .
 
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./app/frontend/web
-          file: ./app/frontend/web/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
+        working-directory: ./app/frontend/web
+        run: |
+          npm i
+          npx ng build
+          docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
+
 
       # Install kubectl
       - name: Install kubectl
