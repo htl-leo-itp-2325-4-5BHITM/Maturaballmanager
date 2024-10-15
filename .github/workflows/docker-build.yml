@@ -40,7 +40,7 @@ jobs:
           file: ./app/backend/Dockerfile    # Path to the Dockerfile for Quarkus backend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
+          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
@@ -50,7 +50,7 @@ jobs:
           file: ./app/frontend/web/Dockerfile # Path to the Dockerfile for Angular frontend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
+          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
       # Verify that the Quarkus backend image has been pushed
       - name: Verify Quarkus Backend image is pushed
