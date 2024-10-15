@@ -72,7 +72,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./app/frontend/web/package.json
 
-      # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
         working-directory: ./app/frontend/web
         run: |
@@ -81,20 +80,17 @@ jobs:
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
           docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
-      # Install kubectl
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
 
-      # Set up kubeconfig
       - name: Set up kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
-      # Deploy PostgreSQL to LeoCloud
       - name: Apply PostgreSQL Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -149,7 +145,6 @@ jobs:
             type: ClusterIP
           EOF
 
-      # Deploy Quarkus Backend to LeoCloud
       - name: Apply Quarkus Backend Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -239,7 +234,6 @@ jobs:
             type: LoadBalancer
           EOF
 
-      # Verify Services
       - name: Verify Quarkus Backend Deployment
         run: kubectl get pods -l app=quarkus-backend
 
