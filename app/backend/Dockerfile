@@ -3,9 +3,9 @@ FROM gradle:7.5.1-jdk17 AS build
 WORKDIR /app
 
 # Copy build files and source code
-COPY build.gradle.kts settings.gradle.kts gradlew* ./
-COPY gradle ./gradle
-COPY src ./src
+COPY app/backend/build.gradle.kts app/backend/settings.gradle.kts app/backend/gradlew* ./
+COPY app/backend/gradle ./gradle
+COPY app/backend/src ./src
 
 # Build the application
 RUN ./gradlew build --no-daemon -x test
