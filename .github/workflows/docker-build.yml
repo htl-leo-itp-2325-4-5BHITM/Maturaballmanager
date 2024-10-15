@@ -64,7 +64,7 @@ jobs:
           file: ./app/backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
+          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
@@ -74,7 +74,7 @@ jobs:
           file: ./app/frontend/web/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
+          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
       # Install kubectl
       - name: Install kubectl
@@ -164,7 +164,7 @@ jobs:
               spec:
                 containers:
                 - name: quarkus-backend
-                  image: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
+                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
                   ports:
                   - containerPort: 8080
                   env:
@@ -213,7 +213,7 @@ jobs:
               spec:
                 containers:
                 - name: angular-frontend
-                  image: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
+                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
                   ports:
                   - containerPort: 80
           EOF
