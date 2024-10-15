@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 
 RUN mkdir -p /opt/application
 COPY build/*-runner.jar /opt/application/backend.jar
