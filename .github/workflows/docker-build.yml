@@ -28,25 +28,25 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # **Cache Gradle Dependencies**
+      # Cache Gradle Dependencies
       - name: Cache Gradle
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: Linux-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            Linux-gradle
+            ${{ runner.os }}-gradle
 
-      # **Cache npm Dependencies**
+      # Cache npm Dependencies
       - name: Cache npm
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: Linux-npm-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            Linux-npm
+            ${{ runner.os }}-npm
 
       # Log in to GitHub Container Registry (GHCR)
       - name: Log in to GHCR
@@ -60,54 +60,36 @@ jobs:
       - name: Build and Push Quarkus Backend Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/backend           # Path to your Quarkus backend folder
-          file: ./app/backend/Dockerfile    # Path to the Dockerfile for Quarkus backend
+          context: ./app/backend
+          file: ./app/backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/frontend/web       # Path to your Angular frontend folder
-          file: ./app/frontend/web/Dockerfile # Path to the Dockerfile for Angular frontend
+          context: ./app/frontend/web
+          file: ./app/frontend/web/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
 
       # Install kubectl
       - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Set up kubeconfig
+      - name: Set up kubeconfig
         run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
-
-      # Install GLIBC
-      - name: Install GLIBC
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential wget
-          wget http://ftp.gnu.org/gnu/libc/glibc-2.38.tar.gz
-          tar -xvzf glibc-2.38.tar.gz
-          cd glibc-2.38
-          mkdir build
-          cd build
-          ../configure --prefix=/opt/glibc-2.38
-          make -j4
-          sudo make install
-
-      # Install LeoCloud CLI
-      - name: Install leocloud CLI
-        run: |
-          bash -c "$(curl -fsSL https://cloud.htl-leonding.ac.at/html/install.sh)"
-
-      # Log in to LeoCloud
-      - name: LeoCloud Auth
-        run: leocloud auth login
-
-      # **Set up PostgreSQL Database in LeoCloud**
+      # Deploy PostgreSQL to LeoCloud
       - name: Apply PostgreSQL Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -162,7 +144,7 @@ jobs:
             type: ClusterIP
           EOF
 
-      # **Deploy Quarkus Backend to LeoCloud**
+      # Deploy Quarkus Backend to LeoCloud
       - name: Apply Quarkus Backend Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -182,7 +164,7 @@ jobs:
               spec:
                 containers:
                 - name: quarkus-backend
-                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
+                  image: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
                   ports:
                   - containerPort: 8080
                   env:
@@ -211,7 +193,7 @@ jobs:
             type: LoadBalancer
           EOF
 
-      # **Deploy Angular Frontend to LeoCloud**
+      # Deploy Angular Frontend to LeoCloud
       - name: Apply Angular Frontend Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -231,7 +213,7 @@ jobs:
               spec:
                 containers:
                 - name: angular-frontend
-                  image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
+                  image: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
                   ports:
                   - containerPort: 80
           EOF
