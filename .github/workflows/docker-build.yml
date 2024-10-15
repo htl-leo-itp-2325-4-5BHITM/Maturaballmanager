@@ -10,12 +10,14 @@ on:
       - main
       - 90-deployment
 
+permissions: 
+  packages: write
+  contents: read
+
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
-
     permissions: write-all
-
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository
