@@ -84,6 +84,20 @@ jobs:
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 
 
+      # Install GLIBC
+      - name: Install GLIBC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential wget
+          wget http://ftp.gnu.org/gnu/libc/glibc-2.38.tar.gz
+          tar -xvzf glibc-2.38.tar.gz
+          cd glibc-2.38
+          mkdir build
+          cd build
+          ../configure --prefix=/opt/glibc-2.38
+          make -j4
+          sudo make install
+
       # Install LeoCloud CLI
       - name: Install leocloud CLI
         run: |
