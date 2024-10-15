@@ -57,13 +57,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push Quarkus Backend Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./app/backend  # Ensure correct build context
-          file: ./app/backend/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
+        working-directory: ./app/backend
+        run: |
+          ./gradlew build --no-daemon -x test
+          docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest .
+
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
