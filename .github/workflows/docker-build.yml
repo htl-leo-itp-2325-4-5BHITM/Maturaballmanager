@@ -1,19 +1,23 @@
-name: Build and Push Quarkus and Angular Docker Images
+name: Build, Push, and Deploy to LeoCloud
 
 on:
   push:
     branches:
-      - 90-deployment
       - main
+      - 90-deployment
   pull_request:
     branches:
       - main
       - 90-deployment
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
-    permissions: write-all
+
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
 
     steps:
       # Checkout the repository
@@ -23,6 +27,26 @@ jobs:
       # Set up Docker Buildx for multi-platform builds
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      # **Cache Gradle Dependencies**
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      # **Cache npm Dependencies**
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm
 
       # Log in to GitHub Container Registry (GHCR)
       - name: Log in to GHCR
@@ -40,7 +64,7 @@ jobs:
           file: ./app/backend/Dockerfile    # Path to the Dockerfile for Quarkus backend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leomail-quarkus-backend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
 
       # Build and Push Angular Frontend Docker Image
       - name: Build and Push Angular Frontend Docker image
@@ -50,14 +74,176 @@ jobs:
           file: ./app/frontend/web/Dockerfile # Path to the Dockerfile for Angular frontend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
 
-      # Verify that the Quarkus backend image has been pushed
-      - name: Verify Quarkus Backend image is pushed
+      # Install kubectl
+      - name: Install kubectl
         run: |
-          docker pull ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https
+          sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update
+          sudo apt-get install -y kubectl
 
-      # Verify that the Angular frontend image has been pushed
-      - name: Verify Angular Frontend image is pushed
+      # Install LeoCloud CLI
+      - name: Install leocloud CLI
         run: |
-          docker pull ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
+          bash -c "$(curl -fsSL https://cloud.htl-leonding.ac.at/html/install.sh)"
+
+      # Log in to LeoCloud
+      - name: LeoCloud Auth
+        run: leocloud auth login
+
+      # **Set up PostgreSQL Database in LeoCloud**
+      - name: Apply PostgreSQL Deployment
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: postgres
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: postgres
+            template:
+              metadata:
+                labels:
+                  app: postgres
+              spec:
+                containers:
+                - name: postgres
+                  image: postgres:13
+                  ports:
+                  - containerPort: 5432
+                  env:
+                  - name: POSTGRES_DB
+                    value: "your_database"
+                  - name: POSTGRES_USER
+                    value: "your_user"
+                  - name: POSTGRES_PASSWORD
+                    value: "your_password"
+                  volumeMounts:
+                  - name: postgres-storage
+                    mountPath: /var/lib/postgresql/data
+            volumes:
+            - name: postgres-storage
+              emptyDir: {}
+          EOF
+
+      - name: Apply PostgreSQL Service
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: postgres-service
+          spec:
+            selector:
+              app: postgres
+            ports:
+              - protocol: TCP
+                port: 5432
+                targetPort: 5432
+            type: ClusterIP
+          EOF
+
+      # **Deploy Quarkus Backend to LeoCloud**
+      - name: Apply Quarkus Backend Deployment
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: quarkus-backend
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: quarkus-backend
+            template:
+              metadata:
+                labels:
+                  app: quarkus-backend
+              spec:
+                containers:
+                - name: quarkus-backend
+                  image: ghcr.io/${{ github.repository_owner }}/leomail-quarkus-backend:latest
+                  ports:
+                  - containerPort: 8080
+                  env:
+                  - name: QUARKUS_DATASOURCE_JDBC_URL
+                    value: "jdbc:postgresql://postgres-service:5432/your_database"
+                  - name: QUARKUS_DATASOURCE_USERNAME
+                    value: "your_user"
+                  - name: QUARKUS_DATASOURCE_PASSWORD
+                    value: "your_password"
+          EOF
+
+      - name: Apply Quarkus Backend Service
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: quarkus-backend-service
+          spec:
+            selector:
+              app: quarkus-backend
+            ports:
+              - protocol: TCP
+                port: 8080
+                targetPort: 8080
+            type: LoadBalancer
+          EOF
+
+      # **Deploy Angular Frontend to LeoCloud**
+      - name: Apply Angular Frontend Deployment
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: angular-frontend
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: angular-frontend
+            template:
+              metadata:
+                labels:
+                  app: angular-frontend
+              spec:
+                containers:
+                - name: angular-frontend
+                  image: ghcr.io/${{ github.repository_owner }}/leoball-angular-frontend:latest
+                  ports:
+                  - containerPort: 80
+          EOF
+
+      - name: Apply Angular Frontend Service
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: angular-frontend-service
+          spec:
+            selector:
+              app: angular-frontend
+            ports:
+              - protocol: TCP
+                port: 80
+                targetPort: 80
+            type: LoadBalancer
+          EOF
+
+      # Verify Services
+      - name: Verify Quarkus Backend Deployment
+        run: kubectl get pods -l app=quarkus-backend
+
+      - name: Verify Angular Frontend Deployment
+        run: kubectl get pods -l app=angular-frontend
