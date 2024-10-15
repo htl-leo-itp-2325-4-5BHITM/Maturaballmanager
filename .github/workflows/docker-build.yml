@@ -63,6 +63,7 @@ jobs:
         run: |
           ./gradlew build --no-daemon -x test
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest .
+          docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest
 
       - name: Install Node
         uses: actions/setup-node@v4
@@ -78,7 +79,7 @@ jobs:
           npm i --legacy-peer-deps
           npx ng build
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
-
+          docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
       # Install kubectl
       - name: Install kubectl
