@@ -199,7 +199,6 @@ jobs:
             type: LoadBalancer
           EOF
 
-      # Deploy Angular Frontend to LeoCloud
       - name: Apply Angular Frontend Deployment
         run: |
           kubectl apply -f - <<EOF
