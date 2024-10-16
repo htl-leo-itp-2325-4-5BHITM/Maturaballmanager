@@ -272,7 +272,7 @@ jobs:
                   pathType: Prefix
                   backend:
                     service:
-                      name: angular-frontend
+                      name: angular-frontend-service
                       port:
                         number: 80
           EOF
