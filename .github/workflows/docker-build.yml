@@ -189,12 +189,8 @@ jobs:
                   ports:
                   - containerPort: 8080
                   env:
-                  - name: QUARKUS_DATASOURCE_JDBC_URL
-                    value: "jdbc:postgresql://postgres-service:5432/maturaballmanager"
-                  - name: QUARKUS_DATASOURCE_USERNAME
-                    value: "maturaballmanager"
-                  - name: QUARKUS_DATASOURCE_PASSWORD
-                    value: "maturaballmanager"
+                  - name: QUARKUS_PROFILE
+                    value: prod
           EOF
 
       - name: Apply Quarkus Backend Service
