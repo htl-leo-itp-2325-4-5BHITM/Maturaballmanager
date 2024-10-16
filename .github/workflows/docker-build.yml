@@ -100,7 +100,7 @@ jobs:
           kind: NetworkPolicy
           metadata:
             name: allow-all-outgoing
-            namespace: default  # Adjust namespace if needed
+            namespace: student-it200285
           spec:
             podSelector:
               matchLabels:
