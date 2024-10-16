@@ -170,22 +170,12 @@ jobs:
                   ports:
                   - containerPort: 8080
                   env:
-                  - name: QUARKUS_OIDC_AUTH_SERVER_URL
-                    value: "https://auth.htl-leonding.ac.at/realms/2425-5bhitm"
-                  - name: QUARKUS_OIDC_CLIENT_ID
-                    value: "your-client-id"
-                  - name: QUARKUS_OIDC_CREDENTIALS_SECRET
-                    value: "your-client-secret"
                   - name: QUARKUS_DATASOURCE_JDBC_URL
                     value: "jdbc:postgresql://postgres-service:5432/your_database"
                   - name: QUARKUS_DATASOURCE_USERNAME
                     value: "your_user"
                   - name: QUARKUS_DATASOURCE_PASSWORD
                     value: "your_password"
-                  - name: HTTP_PROXY
-                    value: "http://your-proxy.com:8080" # If proxy is needed
-                  - name: HTTPS_PROXY
-                    value: "http://your-proxy.com:8080" # If proxy is needed
           EOF
 
       - name: Apply Quarkus Backend Service
@@ -235,16 +225,15 @@ jobs:
           apiVersion: v1
           kind: Service
           metadata:
-            name: angular-frontend-service
+            name: angular-frontend
           spec:
+            ports:
+              - port: 80
+                targetPort: 80
+                protocol: TCP
             selector:
               app: angular-frontend
-            ports:
-              - protocol: TCP
-                port: 80
-                targetPort: 80
-            type: LoadBalancer
-          EOF
+          EOFudq
 
       - name: Apply Angular Frontend Ingress
         run: |
@@ -252,8 +241,9 @@ jobs:
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: angular-frontend-ingress
+            name: angular-frontend
           spec:
+            ingressClassName: nginx
             rules:
             - host: it200285.cloud.htl-leonding.ac.at
               http:
@@ -262,7 +252,7 @@ jobs:
                   pathType: Prefix
                   backend:
                     service:
-                      name: angular-frontend-service
+                      name: angular-frontend
                       port:
                         number: 80
           EOF
