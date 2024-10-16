@@ -174,6 +174,8 @@ jobs:
                     value: "your_user"
                   - name: QUARKUS_DATASOURCE_PASSWORD
                     value: "your_password"
+                  - name: KEYCLOAK_URL
+                    value: "https://auth.htl-leonding.ac.at" # External Keycloak URL
           EOF
 
       - name: Apply Quarkus Backend Service
@@ -233,6 +235,28 @@ jobs:
                 targetPort: 80
             type: LoadBalancer
           EOF
+
+      - name: Apply Angular Frontend Ingress
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: angular-frontend-ingress
+          spec:
+            rules:
+            - host: it200285.cloud.htl-leonding.ac.at
+              http:
+                paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: angular-frontend-service
+                      port:
+                        number: 80
+          EOF
+
 
       - name: Verify Quarkus Backend Deployment
         run: kubectl get pods -l app=quarkus-backend
