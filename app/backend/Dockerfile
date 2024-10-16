@@ -1,3 +1,4 @@
+# Dockerfile for the backend service
 FROM eclipse-temurin:21-jre
 
 RUN mkdir -p /opt/application
