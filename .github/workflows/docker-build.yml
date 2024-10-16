@@ -243,6 +243,8 @@ jobs:
           kind: Ingress
           metadata:
             name: angular-frontend-ingress
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /
           spec:
             rules:
             - host: it200285.cloud.htl-leonding.ac.at
