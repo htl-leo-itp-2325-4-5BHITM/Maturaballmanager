@@ -80,6 +80,22 @@ jobs:
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
           docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
+      # Install Helm
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      # Install NGINX Ingress using Helm
+      - name: Install NGINX Ingress Controller
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm install nginx-ingress ingress-nginx/ingress-nginx \
+            --create-namespace \
+            --namespace ingress-nginx \
+            --set controller.publishService.enabled=true
+
+      # Install kubectl
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
         with:
@@ -91,6 +107,7 @@ jobs:
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
+      # Apply PostgreSQL Deployment
       - name: Apply PostgreSQL Deployment
         run: |
           kubectl apply -f - <<EOF
@@ -174,8 +191,6 @@ jobs:
                     value: "your_user"
                   - name: QUARKUS_DATASOURCE_PASSWORD
                     value: "your_password"
-                  - name: KEYCLOAK_URL
-                    value: "https://auth.htl-leonding.ac.at" # External Keycloak URL
           EOF
 
       - name: Apply Quarkus Backend Service
@@ -243,8 +258,6 @@ jobs:
           kind: Ingress
           metadata:
             name: angular-frontend-ingress
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /
           spec:
             rules:
             - host: it200285.cloud.htl-leonding.ac.at
@@ -258,7 +271,6 @@ jobs:
                       port:
                         number: 80
           EOF
-
 
       - name: Verify Quarkus Backend Deployment
         run: kubectl get pods -l app=quarkus-backend
