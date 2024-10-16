@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {AuthStore} from '../stores/auth.store';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>('/api/auth/login', { username, password }).pipe(
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, { username, password }).pipe(
         tap(async response => {
           if (response.access_token && response.refresh_token) {
             await this.authStore.set('auth_token', response.access_token);
@@ -50,7 +51,7 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.post<any>('/api/auth/refresh', { refreshToken: refreshToken }).toPromise();
+      const response = await this.http.post<any>(`${environment.apiUrl}/auth/refresh`, { refreshToken: refreshToken }).toPromise();
       if (response.access_token && response.refresh_token) {
         await this.authStore.set('auth_token', response.access_token);
         await this.authStore.set('refresh_token', response.refresh_token);
@@ -80,7 +81,7 @@ export class AuthService {
     });
 
     try {
-      const response = await this.http.get<any>('/api/auth/validate', { headers }).toPromise()
+      const response = await this.http.get<any>(`${environment.apiUrl}/auth/validate`, { headers }).toPromise()
       return response?.valid ?? false;
     } catch (error) {
       console.error('Token validation failed:', error);

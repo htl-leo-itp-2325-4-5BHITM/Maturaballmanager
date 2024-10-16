@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from "../model/companies";
 import {ContactPerson} from "../model/contactperson";
+import {environment} from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CompanyService {
-    private baseUrl = '/api/company'; // Proxy wird verwendet, daher kein vollständiger URL
+    private baseUrl = `${environment.apiUrl}/company`;
 
     private httpOptions = {
         headers: new HttpHeaders({
