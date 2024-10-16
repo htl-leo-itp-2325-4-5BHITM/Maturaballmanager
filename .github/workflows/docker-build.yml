@@ -92,6 +92,25 @@ jobs:
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
+      # Apply Network Policy for Quarkus Backend
+      - name: Apply Network Policy for Quarkus Backend
+        run: |
+          kubectl apply -f - <<EOF
+          apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: allow-all-outgoing
+            namespace: default  # Adjust namespace if needed
+          spec:
+            podSelector:
+              matchLabels:
+                app: quarkus-backend
+            policyTypes:
+            - Egress
+            egress:
+            - {}
+          EOF
+
       # Apply PostgreSQL Deployment
       - name: Apply PostgreSQL Deployment
         run: |
@@ -117,11 +136,11 @@ jobs:
                   - containerPort: 5432
                   env:
                   - name: POSTGRES_DB
-                    value: "your_database"
+                    value: "maturaballmanager"
                   - name: POSTGRES_USER
-                    value: "your_user"
+                    value: "maturaballmanager"
                   - name: POSTGRES_PASSWORD
-                    value: "your_password"
+                    value: "maturaballmanager"
                   volumeMounts:
                   - name: postgres-storage
                     mountPath: /var/lib/postgresql/data
@@ -171,11 +190,11 @@ jobs:
                   - containerPort: 8080
                   env:
                   - name: QUARKUS_DATASOURCE_JDBC_URL
-                    value: "jdbc:postgresql://postgres-service:5432/your_database"
+                    value: "jdbc:postgresql://postgres-service:5432/maturaballmanager"
                   - name: QUARKUS_DATASOURCE_USERNAME
-                    value: "your_user"
+                    value: "maturaballmanager"
                   - name: QUARKUS_DATASOURCE_PASSWORD
-                    value: "your_password"
+                    value: "maturaballmanager"
           EOF
 
       - name: Apply Quarkus Backend Service
