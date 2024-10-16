@@ -80,21 +80,6 @@ jobs:
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
           docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
-      # Install Helm
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-
-      # Install NGINX Ingress using Helm
-      - name: Install NGINX Ingress Controller
-        run: |
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
-          helm install nginx-ingress ingress-nginx/ingress-nginx \
-            --create-namespace \
-            --namespace ingress-nginx \
-            --set controller.publishService.enabled=true
-
       # Install kubectl
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
@@ -162,7 +147,7 @@ jobs:
             type: ClusterIP
           EOF
 
-      - name: Apply Quarkus Backend Deployment
+      - name: Apply Quarkus Backend Deployment with Keycloak Configuration
         run: |
           kubectl apply -f - <<EOF
           apiVersion: apps/v1
@@ -185,12 +170,22 @@ jobs:
                   ports:
                   - containerPort: 8080
                   env:
+                  - name: QUARKUS_OIDC_AUTH_SERVER_URL
+                    value: "https://auth.htl-leonding.ac.at/realms/2425-5bhitm"
+                  - name: QUARKUS_OIDC_CLIENT_ID
+                    value: "your-client-id"
+                  - name: QUARKUS_OIDC_CREDENTIALS_SECRET
+                    value: "your-client-secret"
                   - name: QUARKUS_DATASOURCE_JDBC_URL
                     value: "jdbc:postgresql://postgres-service:5432/your_database"
                   - name: QUARKUS_DATASOURCE_USERNAME
                     value: "your_user"
                   - name: QUARKUS_DATASOURCE_PASSWORD
                     value: "your_password"
+                  - name: HTTP_PROXY
+                    value: "http://your-proxy.com:8080" # If proxy is needed
+                  - name: HTTPS_PROXY
+                    value: "http://your-proxy.com:8080" # If proxy is needed
           EOF
 
       - name: Apply Quarkus Backend Service
