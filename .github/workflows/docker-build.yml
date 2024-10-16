@@ -233,7 +233,7 @@ jobs:
                 protocol: TCP
             selector:
               app: angular-frontend
-          EOFudq
+          EOF
 
       - name: Apply Angular Frontend Ingress
         run: |
