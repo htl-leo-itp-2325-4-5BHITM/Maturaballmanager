@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://it200285.cloud.htl-leonding.ac.at/api'
+    apiUrl: 'http://quarkus-backend-service:8080/api'
 };
