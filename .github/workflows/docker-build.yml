@@ -182,7 +182,6 @@ jobs:
           metadata:
             name: quarkus-backend-service
           spec:
-            type: ClusterIP 
             selector:
               app: quarkus-backend
             ports:
@@ -237,7 +236,7 @@ jobs:
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: angular-frontend
+            name: leoball-ingress
             annotations:
               nginx.ingress.kubernetes.io/rewrite-target: /
           spec:
