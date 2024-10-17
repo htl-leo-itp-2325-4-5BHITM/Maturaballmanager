@@ -113,17 +113,31 @@ jobs:
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
-      # Apply Kubernetes Resources
-      - name: Deploy to Kubernetes
+      # Apply Kubernetes Resources for backend
+      - name: Deploy Quarkus Backend to Kubernetes
+        if: matrix.service == 'backend' && success()
+        run: |
+          kubectl apply -f .github/k8s/quarkus-backend.yaml
+
+      # Apply Kubernetes Resources for frontend
+      - name: Deploy Angular Frontend to Kubernetes
+        if: matrix.service == 'frontend' && success()
+        run: |
+          kubectl apply -f .github/k8s/angular-frontend.yaml
+
+      # Apply Postgres and Ingress resources
+      - name: Apply Postgres and Ingress Resources
+        if: matrix.service == 'backend' || matrix.service == 'frontend'
         run: |
           kubectl apply -f .github/k8s/postgres.yaml
-          kubectl apply -f .github/k8s/quarkus-backend.yaml
-          kubectl apply -f .github/k8s/angular-frontend.yaml
           kubectl apply -f .github/k8s/ingress.yaml
 
-      # Verify Deployments
+      # Verify Quarkus Backend Deployment
       - name: Verify Quarkus Backend Deployment
+        if: matrix.service == 'backend' && success()
         run: kubectl get pods -l app=quarkus-backend
 
+      # Verify Angular Frontend Deployment
       - name: Verify Angular Frontend Deployment
+        if: matrix.service == 'frontend' && success()
         run: kubectl get pods -l app=angular-frontend
