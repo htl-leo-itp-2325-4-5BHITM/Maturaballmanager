@@ -55,6 +55,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
+      # GHCR Login
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       # Build and Push Quarkus Backend Docker image
       - name: Build and Push Quarkus Backend Docker image
         if: matrix.service == 'backend'
