@@ -94,8 +94,8 @@ jobs:
         if: matrix.service == 'frontend'
         working-directory: ./app/frontend/web
         run: |
-          npm i --legacy-peer-deps
-          npx ng build
+          npm i
+          npm run build
           docker build --tag ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest .
           docker push ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
 
@@ -110,6 +110,12 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
+
+      - name: Replace env vars in postgres.yaml
+        run: |
+          sed -i 's/\${POSTGRES_DB}/${{ secrets.POSTGRES_DB }}/g' .github/k8s/postgres.yaml
+          sed -i 's/\${POSTGRES_USER}/${{ secrets.POSTGRES_USER }}/g' .github/k8s/postgres.yaml
+          sed -i 's/\${POSTGRES_PASSWORD}/${{ secrets.POSTGRES_PASSWORD }}/g' .github/k8s/postgres.yaml
 
       # Apply Kubernetes Resources for backend
       - name: Deploy Quarkus Backend to Kubernetes
