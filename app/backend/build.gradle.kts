@@ -23,6 +23,7 @@ dependencies {
     implementation("io.quarkus:quarkus-mailer")
     implementation("io.quarkus:quarkus-qute")
     implementation("io.quarkus:quarkus-rest-qute")
+    implementation("io.quarkus:quarkus-smallrye-health")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
