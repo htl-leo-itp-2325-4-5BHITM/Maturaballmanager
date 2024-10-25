@@ -139,3 +139,27 @@ jobs:
       - name: Verify Angular Frontend Deployment
         if: matrix.service == 'frontend' && success()
         run: kubectl get pods -l app=angular-frontend
+
+  restart_pods:
+    needs: build_and_deploy
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Restart Pods
+        run: |
+          echo "Restarting pods..."
+          kubectl rollout restart deployment
