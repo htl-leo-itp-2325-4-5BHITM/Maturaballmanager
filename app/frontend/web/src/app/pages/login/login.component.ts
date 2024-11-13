@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NbButtonModule, NbCardModule, NbInputModule, NbLayoutModule, NbToastrService} from '@nebular/theme';
 import {AuthService} from '../../services/auth.service';
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
     selector: 'app-login',
@@ -13,7 +14,8 @@ import {AuthService} from '../../services/auth.service';
         NbCardModule,
         ReactiveFormsModule,
         NbInputModule,
-        NbButtonModule
+        NbButtonModule,
+        NgOptimizedImage,
     ],
     styleUrls: ['./login.component.scss']
 })

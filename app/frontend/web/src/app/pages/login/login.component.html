@@ -1,6 +1,6 @@
 <div class="login-container">
     <nb-card>
-        <nb-card-header>Login</nb-card-header>
+        <nb-card-header><img id="logo" src="../../../assets/logo/LeoBall.png" alt="LeoBall"></nb-card-header>
         <nb-card-body>
             <form [formGroup]="loginForm" (ngSubmit)="login()">
                 <div class="form-group">
@@ -12,7 +12,7 @@
                     <input nbInput fullWidth type="password" id="password" formControlName="password"
                            placeholder="Enter your password">
                 </div>
-                <button nbButton fullWidth status="primary" type="submit">Login</button>
+                <button nbButton fullWidth status="primary" type="submit" id="loginButton">Login</button>
             </form>
         </nb-card-body>
     </nb-card>

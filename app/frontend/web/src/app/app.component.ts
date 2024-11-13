@@ -1,9 +1,10 @@
-import {Component} from "@angular/core";
-import {NbActionsModule, NbLayoutModule, NbSidebarModule, NbSidebarService, NbThemeService} from "@nebular/theme";
-import {NavigationBarComponent} from "./components/navigation-bar/navigation-bar.component";
-import {RouterOutlet} from "@angular/router";
-import {AppModule} from "./app.module";
-import {provideNebular} from "./nebular.providers";
+import { Component } from "@angular/core";
+import { NbActionsModule, NbLayoutModule, NbSidebarModule, NbSidebarService, NbThemeService } from "@nebular/theme";
+import { NavigationBarComponent } from "./components/navigation-bar/navigation-bar.component";
+import { RouterOutlet, Router } from "@angular/router";
+import { AppModule } from "./app.module";
+import { provideNebular } from "./nebular.providers";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-root',
@@ -15,15 +16,21 @@ import {provideNebular} from "./nebular.providers";
     NbActionsModule,
     RouterOutlet,
     NbSidebarModule,
-    AppModule
+    AppModule,
+    NgIf
   ],
   providers: [NbSidebarService, NbThemeService, provideNebular()],
-  styleUrl:  'app.component.scss'
+  styleUrls: ['app.component.scss']
 })
 export class AppComponent {
   title = 'my-app';
+  showLayout: boolean = true;
 
-  constructor(private sidebarService: NbSidebarService) {}
+  constructor(private sidebarService: NbSidebarService, private router: Router) {
+    this.router.events.subscribe(() => {
+      this.showLayout = this.router.url !== '/login';
+    });
+  }
 
   toggleSidebar() {
     this.sidebarService.toggle(true, 'menu-sidebar');
