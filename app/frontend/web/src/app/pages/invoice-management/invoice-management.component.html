@@ -61,7 +61,7 @@
 
         <!-- Tabellenansicht der Rechnungen -->
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped modern-table">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -69,6 +69,7 @@
                     <th>Kontaktperson</th>
                     <th>Rechnungsdatum</th>
                     <th>Zahlungsfrist</th>
+                    <th>Betrag</th>
                     <th>Status</th>
                     <th>Aktionen</th>
                 </tr>
@@ -77,16 +78,12 @@
                 <tr *ngFor="let invoice of filteredInvoices | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
                     <td>{{ invoice.invoiceNumber }}</td>
                     <td>{{ invoice.company.name }}</td>
-                    <td>
-                        {{ invoice.contactPerson?.firstName + ' ' + invoice.contactPerson?.lastName || '—' }}
-                    </td>
+                    <td>{{ invoice.contactPerson?.firstName + ' ' + invoice.contactPerson?.lastName || '—' }}</td>
                     <td>{{ invoice.invoiceDate | date: 'dd.MM.yyyy' }}</td>
                     <td>{{ invoice.paymentDeadline | date: 'dd.MM.yyyy' }}</td>
                     <td>{{ invoice.totalAmount | currency: 'EUR' }}</td>
                     <td>
-                        <nb-tag [status]="getStatusTag(invoice.status)">
-                            {{ invoice.status }}
-                        </nb-tag>
+                        <nb-badge [text]="invoice.status" [status]="getStatusTag(invoice.status)"></nb-badge>
                     </td>
                     <td class="action-buttons d-flex gap-2">
                         <!-- Bearbeiten Button -->
