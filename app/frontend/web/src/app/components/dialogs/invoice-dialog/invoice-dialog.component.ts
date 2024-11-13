@@ -13,7 +13,7 @@ import {
     NbCardModule,
     NbCheckboxModule,
     NbToastrService,
-    NbDatepickerModule, NbRadioModule
+    NbDatepickerModule, NbRadioModule, NbBadgeModule
 } from '@nebular/theme';
 import { CompanyService } from '../../../services/company.service';
 import { BenefitService } from '../../../services/benefit.service';
@@ -44,6 +44,7 @@ import {provideNebular} from "../../../nebular.providers";
         NbCheckboxModule,
         NbDatepickerModule,
         NbRadioModule,
+        NbBadgeModule,
     ],
     providers: [provideNebular()]
 })
@@ -82,9 +83,20 @@ export class InvoiceDialogComponent implements OnInit {
             paymentDeadline: [{ value: null, disabled: true }, Validators.required],
             sendOption: ['immediate', Validators.required], // Neues Feld
             scheduledSendDate: [{ value: null, disabled: true }], // Datum für geplanten Versand
-            status: [Status.DRAFT, Validators.required], // Neues Feld
             totalAmount: [{ value: 0, disabled: true }],
         });
+    }
+
+    getStatusTag(status: string): string {
+        switch (status) {
+            case 'SENT':
+                return 'info';
+            case 'PAID':
+                return 'success';
+            case 'DRAFT':
+            default:
+                return 'warning';
+        }
     }
 
     ngOnInit(): void {
@@ -186,7 +198,7 @@ export class InvoiceDialogComponent implements OnInit {
                 benefits: selectedBenefits,
                 invoiceDate: formValue.invoiceDate,
                 paymentDeadline: formValue.paymentDeadline,
-                status: formValue.status, // Status setzen
+                status: this.invoice ? this.invoice.status : Status.DRAFT,
                 totalAmount: selectedBenefits.reduce((sum, b) => sum + (b.price || 0), 0),
             };
 

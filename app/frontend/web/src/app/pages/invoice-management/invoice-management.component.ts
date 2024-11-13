@@ -2,7 +2,20 @@
 
 import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from '../../services/invoice.service';
-import { NbButtonModule, NbCardModule, NbDialogService, NbFormFieldModule, NbIconModule, NbInputModule, NbOptionModule, NbSelectModule, NbToastrService, NbTooltipModule, NbTagModule } from '@nebular/theme';
+import {
+  NbButtonModule,
+  NbCardModule,
+  NbDialogService,
+  NbFormFieldModule,
+  NbIconModule,
+  NbInputModule,
+  NbOptionModule,
+  NbSelectModule,
+  NbToastrService,
+  NbTooltipModule,
+  NbTagModule,
+  NbBadgeModule
+} from '@nebular/theme';
 import { saveAs } from 'file-saver';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Invoice, Status } from "../../model/invoice";
@@ -32,6 +45,7 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
     InvoiceDialogComponent,
     ConfirmDialogComponent,
     CurrencyPipe,
+    NbBadgeModule,
   ]
 })
 export class InvoiceManagementComponent implements OnInit {
