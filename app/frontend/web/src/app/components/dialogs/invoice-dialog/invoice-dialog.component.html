@@ -107,12 +107,6 @@
                     Versanddatum ist erforderlich.
                 </div>
             </div>
-
-            <!-- Status Anzeige -->
-            <div class="form-group" *ngIf="invoice">
-                <label for="status">Status</label>
-                <nb-badge [text]="invoice.status" [status]="getStatusTag(invoice.status)"></nb-badge>
-            </div>
         </form>
     </nb-card-body>
     <nb-card-footer class="form-footer">
