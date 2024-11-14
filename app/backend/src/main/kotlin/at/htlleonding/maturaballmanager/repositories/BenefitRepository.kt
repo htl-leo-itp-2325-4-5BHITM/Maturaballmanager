@@ -33,7 +33,7 @@ class BenefitRepository {
         existingBenefit.name = benefit.name
         existingBenefit.description = benefit.description
         existingBenefit.price = benefit.price
-        return em.merge(existingBenefit)
+        return benefit
     }
 
     @Transactional
