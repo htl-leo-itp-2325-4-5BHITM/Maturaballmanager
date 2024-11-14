@@ -19,6 +19,7 @@ import { ConfirmDialogComponent } from '../../components/dialogs/confirm-dialog/
 import { NgForOf, NgIf } from '@angular/common';
 import { ContactPerson } from '../../model/contactperson';
 import { ContactPersonDialogComponent } from '../../components/dialogs/contact-person-dialog/contact-person-dialog.component';
+import {ReportComponent} from "../../components/report/report.component";
 
 @Component({
     selector: 'app-company-management',
@@ -40,17 +41,37 @@ import { ContactPersonDialogComponent } from '../../components/dialogs/contact-p
         CompanyDialogComponent,
         ConfirmDialogComponent,
         ContactPersonDialogComponent,
+        ReportComponent,
     ],
 })
 export class CompanyManagementComponent implements OnInit {
     companies: Company[] = [];
-    filteredCompanies: Company[] = [];
-    currentPage: number = 1;
-    itemsPerPage: number = 10;
-    sortColumn: keyof Company = 'name';
-    sortDirection: 'asc' | 'desc' = 'asc';
-    searchTerm: string = '';
-    detailsVisible: Set<string> = new Set(); // Um sichtbare Details zu verfolgen
+
+    columns = [
+        { key: 'name', title: 'Firmenname', sortable: true },
+        { key: 'industry', title: 'Branche', sortable: true },
+        {
+            key: 'website',
+            title: 'Website',
+            format: (value: any) =>
+                value ? `<a href="${value}" target="_blank">${value}</a>` : '—',
+        },
+    ];
+
+    actions = [
+        {
+            icon: 'edit-outline',
+            tooltip: 'Unternehmen bearbeiten',
+            status: 'info',
+            callback: this.openEditDialog.bind(this),
+        },
+        {
+            icon: 'trash-2-outline',
+            tooltip: 'Unternehmen löschen',
+            status: 'danger',
+            callback: this.confirmDelete.bind(this),
+        },
+    ];
 
     constructor(
         private companyService: CompanyService,
@@ -66,7 +87,6 @@ export class CompanyManagementComponent implements OnInit {
         this.companyService.getCompanies().subscribe({
             next: (companies: Company[]) => {
                 this.companies = companies;
-                this.applyFilters();
             },
             error: (err: Error) => {
                 this.toastrService.danger('Fehler beim Laden der Unternehmen', 'Fehler');
@@ -75,75 +95,6 @@ export class CompanyManagementComponent implements OnInit {
         });
     }
 
-    /**
-     * Wendet Such- und Sortierfilter an.
-     */
-    applyFilters(): void {
-        let filtered = [...this.companies];
-        if (this.searchTerm) {
-            const term = this.searchTerm.toLowerCase();
-            filtered = filtered.filter(
-                (company) =>
-                    company.name.toLowerCase().includes(term) ||
-                    company.industry.toLowerCase().includes(term)
-            );
-        }
-        filtered.sort((a, b) => {
-            let valA = a[this.sortColumn] || '';
-            let valB = b[this.sortColumn] || '';
-
-            if (valA === undefined || valA === null) valA = '';
-            if (valB === undefined || valB === null) valB = '';
-
-            if (typeof valA === 'string') valA = valA.toLowerCase();
-            if (typeof valB === 'string') valB = valB.toLowerCase();
-
-            if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-            if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
-        this.filteredCompanies = filtered;
-        this.currentPage = 1; // Zurücksetzen der Pagination nach Filterung
-    }
-
-    toggleDetails(companyId: string): void {
-        if (this.detailsVisible.has(companyId)) {
-            this.detailsVisible.delete(companyId);
-        } else {
-            this.detailsVisible.add(companyId);
-        }
-    }
-
-    isDetailsVisible(companyId: string): boolean {
-        return this.detailsVisible.has(companyId);
-    }
-
-    /**
-     * Handhabt die Sucheingabe.
-     * @param event Eingabeereignis
-     */
-    onSearch(event: Event): void {
-        this.searchTerm = (event.target as HTMLInputElement)?.value || '';
-        this.applyFilters();
-    }
-
-    /**
-     * Handhabt das Sortieren, wenn auf eine Spaltenüberschrift geklickt wird.
-     * @param column Spaltenname
-     */
-    onSort(column: keyof Company): void {
-        if (this.sortColumn === column) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            this.sortColumn = column;
-            this.sortDirection = 'asc';
-        }
-        this.applyFilters();
-    }
-
-    /**
-     * Öffnet den Dialog zum Erstellen eines neuen Unternehmens.
-     */
     openCreateDialog(): void {
         this.dialogService
             .open(CompanyDialogComponent, {
@@ -158,16 +109,12 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: Company | undefined) => {
             if (result) {
-                this.loadCompanies(); // Lade die Unternehmen neu, um das neue Unternehmen anzuzeigen
+                this.loadCompanies();
                 this.toastrService.success('Unternehmen erfolgreich erstellt.', 'Erfolg');
             }
         });
     }
 
-    /**
-     * Öffnet den Dialog zum Bearbeiten eines Unternehmens.
-     * @param company Unternehmen zum Bearbeiten
-     */
     openEditDialog(company: Company): void {
         this.dialogService
             .open(CompanyDialogComponent, {
@@ -183,16 +130,12 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: Company | undefined) => {
             if (result) {
-                this.loadCompanies(); // Lade die Unternehmen neu, um das aktualisierte Unternehmen anzuzeigen
+                this.loadCompanies();
                 this.toastrService.success('Unternehmen erfolgreich aktualisiert.', 'Erfolg');
             }
         });
     }
 
-    /**
-     * Öffnet einen Bestätigungsdialog zum Löschen eines Unternehmens.
-     * @param company Unternehmen zum Löschen
-     */
     confirmDelete(company: Company): void {
         this.dialogService
             .open(ConfirmDialogComponent, {
@@ -209,7 +152,7 @@ export class CompanyManagementComponent implements OnInit {
             if (confirmed) {
                 this.companyService.deleteCompany(company.id!).subscribe({
                     next: () => {
-                        this.loadCompanies(); // Lade die Unternehmen neu, um das gelöschte Unternehmen zu entfernen
+                        this.loadCompanies();
                         this.toastrService.success('Unternehmen erfolgreich gelöscht.', 'Erfolg');
                     },
                     error: (err: Error) => {
@@ -221,10 +164,6 @@ export class CompanyManagementComponent implements OnInit {
         });
     }
 
-    /**
-     * Öffnet den Dialog zum Hinzufügen einer Kontaktperson zu einem Unternehmen.
-     * @param company Unternehmen, dem die Kontaktperson hinzugefügt wird
-     */
     openAddContactPersonDialog(company: Company): void {
         this.dialogService
             .open(ContactPersonDialogComponent, {
@@ -240,17 +179,12 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: ContactPerson | undefined) => {
             if (result) {
-                this.loadCompanies(); // Lade die Unternehmen neu, um die aktualisierten Daten anzuzeigen
+                this.loadCompanies();
                 this.toastrService.success('Kontaktperson erfolgreich hinzugefügt.', 'Erfolg');
             }
         });
     }
 
-    /**
-     * Öffnet den Dialog zum Bearbeiten einer Kontaktperson.
-     * @param company Unternehmen der Kontaktperson
-     * @param contactPerson Kontaktperson zum Bearbeiten
-     */
     openEditContactPersonDialog(company: Company, contactPerson: ContactPerson): void {
         this.dialogService
             .open(ContactPersonDialogComponent, {
@@ -267,17 +201,12 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: ContactPerson | undefined) => {
             if (result) {
-                this.loadCompanies(); // Lade die Unternehmen neu, um die aktualisierten Daten anzuzeigen
+                this.loadCompanies();
                 this.toastrService.success('Kontaktperson erfolgreich aktualisiert.', 'Erfolg');
             }
         });
     }
 
-    /**
-     * Öffnet einen Bestätigungsdialog zum Löschen einer Kontaktperson.
-     * @param company Unternehmen der Kontaktperson
-     * @param contactPerson Kontaktperson zum Löschen
-     */
     confirmDeleteContactPerson(company: Company, contactPerson: ContactPerson): void {
         this.dialogService
             .open(ConfirmDialogComponent, {
@@ -294,7 +223,7 @@ export class CompanyManagementComponent implements OnInit {
             if (confirmed) {
                 this.companyService.deleteContactPerson(contactPerson.id!).subscribe({
                     next: () => {
-                        this.loadCompanies(); // Lade die Unternehmen neu, um die gelöschte Kontaktperson zu entfernen
+                        this.loadCompanies();
                         this.toastrService.success('Kontaktperson erfolgreich gelöscht.', 'Erfolg');
                     },
                     error: (err: Error) => {
@@ -304,14 +233,5 @@ export class CompanyManagementComponent implements OnInit {
                 });
             }
         });
-    }
-
-    /**
-     * Handhabt die Änderung der Anzahl der Elemente pro Seite.
-     * @param event Auswahlereignis
-     */
-    onItemsPerPageChange(event: any): void {
-        this.itemsPerPage = event;
-        this.applyFilters();
     }
 }
