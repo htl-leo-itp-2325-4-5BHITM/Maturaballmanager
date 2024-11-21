@@ -1,8 +1,10 @@
+// this is our just created themes.scss file, make sure the path to the file is correct
+@use 'themes' as *;
 
-$primary-color: #76beec;
-$secondary-color: #65b2e1;
+// framework component styles
+@use '@nebular/theme/styles/globals' as *;
 
-::ng-deep .bs-datepicker-container {
-  z-index: 1050 !important;
+// install the framework styles
+@include nb-install() {
+  @include nb-theme-global();
 }
-

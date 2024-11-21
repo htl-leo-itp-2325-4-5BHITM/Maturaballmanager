@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+        <h3>Neues Mitglied hinzufügen</h3>
+    </nb-card-header>
+    <nb-card-body>
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input nbInput id="name" [(ngModel)]="newMember.name" name="name" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input nbInput id="email" [(ngModel)]="newMember.email" name="email" required />
+            </div>
+            <div class="form-group">
+                <label for="role">Rolle</label>
+                <input nbInput id="role" [(ngModel)]="newMember.role" name="role" required />
+            </div>
+            <div class="form-group">
+                <button nbButton status="primary" type="submit">Hinzufügen</button>
+                <button nbButton ghost (click)="close()">Abbrechen</button>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>
