@@ -1,0 +1,158 @@
+<nb-card>
+    <nb-card-header>
+        <div class="header">
+            <h2>Rechnungen verwalten</h2>
+            <button nbButton status="primary" size="small" (click)="openCreateDialog()">
+                <nb-icon icon="plus-outline"></nb-icon> Rechnung hinzufügen
+            </button>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="search-sort-container">
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="w-100">
+                    <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                    <input nbInput placeholder="Rechnungen suchen..." (input)="onSearch($event)" />
+                </nb-form-field>
+            </div>
+
+            <div class="sort-buttons">
+                <button
+                        nbButton
+                        ghost
+                        status="info"
+                        size="small"
+                        (click)="onSort('invoiceDate')"
+                        nbTooltip="Nach Rechnungsdatum sortieren"
+                        nbTooltipPlacement="top"
+                >
+                    Rechnungsdatum
+                    <nb-icon
+                            *ngIf="sortColumn === 'invoiceDate'"
+                            [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
+                    ></nb-icon>
+                </button>
+
+                <button
+                        nbButton
+                        ghost
+                        status="info"
+                        size="small"
+                        (click)="onSort('status')"
+                        nbTooltip="Nach Status sortieren"
+                        nbTooltipPlacement="top"
+                >
+                    Status
+                    <nb-icon
+                            *ngIf="sortColumn === 'status'"
+                            [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
+                    ></nb-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabellenansicht der Rechnungen -->
+        <div class="table-responsive">
+            <table class="table table-striped modern-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Firma</th>
+                    <th>Kontaktperson</th>
+                    <th>Rechnungsdatum</th>
+                    <th>Zahlungsfrist</th>
+                    <th>Betrag</th>
+                    <th>Status</th>
+                    <th>Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let invoice of filteredInvoices | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                    <td>{{ invoice.invoiceNumber }}</td>
+                    <td>{{ invoice.company.name }}</td>
+                    <td>{{ invoice.contactPerson?.firstName + ' ' + invoice.contactPerson?.lastName || '—' }}</td>
+                    <td>{{ invoice.invoiceDate | date: 'dd.MM.yyyy' }}</td>
+                    <td>{{ invoice.paymentDeadline | date: 'dd.MM.yyyy' }}</td>
+                    <td>{{ invoice.totalAmount | currency: 'EUR' }}</td>
+                    <td>
+                        <nb-badge [text]="invoice.status" [status]="getStatusTag(invoice.status)"></nb-badge>
+                    </td>
+                    <td class="action-buttons d-flex gap-2">
+                        <!-- Bearbeiten Button -->
+                        <button
+                                nbButton
+                                size="small"
+                                status="info"
+                                (click)="openEditDialog(invoice)"
+                                nbTooltip="Rechnung bearbeiten"
+                                nbTooltipPlacement="top"
+                        >
+                            <nb-icon icon="edit-outline"></nb-icon>
+                        </button>
+
+                        <!-- Löschen Button -->
+                        <button
+                                nbButton
+                                size="small"
+                                status="danger"
+                                (click)="confirmDelete(invoice)"
+                                nbTooltip="Rechnung löschen"
+                                nbTooltipPlacement="top"
+                        >
+                            <nb-icon icon="trash-2-outline"></nb-icon>
+                        </button>
+
+                        <!-- Versenden Button -->
+                        <button
+                                nbButton
+                                size="small"
+                                status="success"
+                                (click)="sendInvoice(invoice)"
+                                nbTooltip="Rechnung versenden"
+                                nbTooltipPlacement="top"
+                                [disabled]="invoice.status === Status.SENT || invoice.status === Status.PAID"
+                        >
+                            <nb-icon icon="email-outline"></nb-icon>
+                        </button>
+
+                        <!-- PDF herunterladen Button -->
+                        <button
+                                nbButton
+                                size="small"
+                                status="primary"
+                                (click)="downloadPdf(invoice)"
+                                nbTooltip="PDF herunterladen"
+                                nbTooltipPlacement="top"
+                        >
+                            <nb-icon icon="download-outline"></nb-icon>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="filteredInvoices.length === 0" class="no-data text-center mt-4">
+            <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
+            <p class="mt-2">Keine Rechnungen gefunden.</p>
+        </div>
+
+        <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
+            <div class="form-group">
+                <nb-form-field appearance="outline">
+                    <nb-select
+                            [(selected)]="itemsPerPage"
+                            (selectedChange)="onItemsPerPageChange($event)"
+                            placeholder="Elemente pro Seite"
+                            size="small"
+                    >
+                        <nb-option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</nb-option>
+                    </nb-select>
+                </nb-form-field>
+            </div>
+
+            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+        </div>
+    </nb-card-body>
+</nb-card>
