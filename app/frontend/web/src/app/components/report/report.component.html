@@ -1,0 +1,95 @@
+<nb-card>
+    <nb-card-header>
+        <div class="header">
+            <h2>{{ title }}</h2>
+            <button nbButton status="primary" size="small" (click)="addButtonCallback()">
+                <nb-icon icon="plus-outline"></nb-icon> {{ addButtonLabel }}
+            </button>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="search-sort-container">
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="w-100">
+                    <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                    <input nbInput placeholder="Suchen..." (input)="onSearch($event)" />
+                </nb-form-field>
+            </div>
+
+            <div class="sort-buttons">
+                <button
+                        nbButton
+                        ghost
+                        status="info"
+                        size="small"
+                        *ngFor="let col of columns"
+                        (click)="onSort(col.key)"
+                        nbTooltip="Sortieren"
+                        nbTooltipPlacement="top"
+                        [disabled]="!col.sortable"
+                >
+                    {{ col.title }}
+                    <nb-icon
+                            *ngIf="sortColumn === col.key"
+                            [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
+                    ></nb-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped modern-table">
+                <thead>
+                <tr>
+                    <th *ngFor="let col of columns">{{ col.title }}</th>
+                    <th *ngIf="actions.length > 0">Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let row of filteredData | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                    <td *ngFor="let col of columns">
+                        {{ col.format ? col.format(row[col.key], row) : row[col.key] }}
+                    </td>
+                    <td *ngIf="actions.length > 0" class="action-buttons">
+                        <button
+                                *ngFor="let action of actions"
+                                nbButton
+                                size="small"
+                                [status]="action.status"
+                                (click)="action.callback(row)"
+                                [nbTooltip]="action.tooltip"
+                                nbTooltipPlacement="top"
+                                [disabled]="action.disabled ? action.disabled(row) : false"
+                        >
+                            <nb-icon [icon]="action.icon"></nb-icon>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="filteredData.length === 0" class="no-data text-center mt-4">
+            <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
+            <p class="mt-2">Keine Daten gefunden.</p>
+        </div>
+
+        <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
+            <div class="form-group">
+                <nb-form-field appearance="outline">
+                    <nb-select
+                            [(selected)]="itemsPerPage"
+                            (selectedChange)="onItemsPerPageChange($event)"
+                            placeholder="Elemente pro Seite"
+                            size="small"
+                    >
+                        <nb-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</nb-option>
+                    </nb-select>
+                </nb-form-field>
+            </div>
+
+            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+        </div>
+    </nb-card-body>
+</nb-card>

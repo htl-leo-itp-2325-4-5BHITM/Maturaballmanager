@@ -58,11 +58,9 @@ class BenefitResource {
      * Aktualisiert eine bestehende Gegenleistung.
      */
     @PUT
-    @Path("/{id}")
     @Transactional
-    fun updateBenefit(@PathParam("id") id: String, @Valid updatedBenefit: Benefit): Response {
+    fun updateBenefit(@Valid updatedBenefit: Benefit): Response {
         return try {
-            updatedBenefit.id = id
             benefitRepository.update(updatedBenefit)
             Response.ok(updatedBenefit).build()
         } catch (e: EntityNotFoundException) {

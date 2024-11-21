@@ -46,7 +46,7 @@ export class BenefitService {
    * @param benefit Die aktualisierte Gegenleistung.
    */
   updateBenefit(benefit: Benefit): Observable<Benefit> {
-    return this.http.put<Benefit>(`${this.baseUrl}/${benefit.id}`, benefit, this.httpOptions);
+    return this.http.put<Benefit>(`${this.baseUrl}`, benefit, this.httpOptions);
   }
 
   /**
