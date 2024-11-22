@@ -13,6 +13,7 @@ import {provideMomentDateAdapter} from "@angular/material-moment-adapter";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {provideNebular} from "./nebular.providers";
 import {UserManagementComponent} from "./pages/user-management/user-management.component";
+import {MaturaballComponent} from "./pages/maturaball/maturaball.component";
 
 import {
   NbCalendarMonthModelService,
@@ -39,7 +40,7 @@ const routes: Route[] = [
     ]},
   { path: 'settings', children: [
       { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
-      { path: 'appointment', component: BenefitManagementComponent, canActivate: [authGuard] }
+      { path: 'appointment', component: MaturaballComponent, canActivate: [authGuard] }
     ]},
   { path: '**', redirectTo: '/dashboard' },
 ];
