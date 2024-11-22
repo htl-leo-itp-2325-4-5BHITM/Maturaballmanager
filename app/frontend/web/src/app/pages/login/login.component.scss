@@ -1,4 +1,3 @@
-@import '../../../styles.scss';
 
 .login-container {
   display: flex;
@@ -36,6 +35,11 @@ nb-card-header{
 /* button */
 #loginButton{
   //background-color: $primary-color;
+ // border-color: $primary-color;
+}
+
+#loginButton:hover{
+//  background-color: $secondary-color;
   //border-color: $primary-color;
 }
 

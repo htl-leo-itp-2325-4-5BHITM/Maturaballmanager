@@ -12,6 +12,8 @@ import {InvoiceManagementComponent} from "./pages/invoice-management/invoice-man
 import {provideMomentDateAdapter} from "@angular/material-moment-adapter";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {provideNebular} from "./nebular.providers";
+import {UserManagementComponent} from "./pages/user-management/user-management.component";
+
 import {
   NbCalendarMonthModelService,
   NbCalendarYearModelService,
@@ -34,6 +36,10 @@ const routes: Route[] = [
       { path: 'companies', component: CompanyManagementComponent, canActivate: [authGuard] },
       { path: 'benefits', component: BenefitManagementComponent, canActivate: [authGuard] },
       { path: 'invoices', component: InvoiceManagementComponent, canActivate: [authGuard] },
+    ]},
+  { path: 'settings', children: [
+      { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
+      { path: 'appointment', component: BenefitManagementComponent, canActivate: [authGuard] }
     ]},
   { path: '**', redirectTo: '/dashboard' },
 ];
@@ -147,15 +153,11 @@ export const config = {
         children: [
           {
             title: 'Benutzerverwaltung',
-            link: '/users'
+            link: '/settings/users'
           },
           {
             title: 'Maturaball',
-            link: '/appointment'
-          },
-          {
-            title: 'Reports',
-            link: '/reports'
+            link: '/settings/appointment'
           }
         ]
       }

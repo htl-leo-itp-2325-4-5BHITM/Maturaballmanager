@@ -2,9 +2,6 @@
     <nb-card-header>
         <div class="header">
             <h2>{{ title }}</h2>
-            <button nbButton status="primary" size="small" (click)="addButtonCallback()">
-                <nb-icon icon="plus-outline"></nb-icon> {{ addButtonLabel }}
-            </button>
         </div>
     </nb-card-header>
 
@@ -17,7 +14,7 @@
                 </nb-form-field>
             </div>
 
-            <div class="sort-buttons">
+           <!-- <div class="sort-buttons">
                 <button
                         nbButton
                         ghost
@@ -35,7 +32,11 @@
                             [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
                     ></nb-icon>
                 </button>
-            </div>
+            </div> -->
+
+            <button nbButton status="primary" size="small" (click)="addButtonCallback()">
+                <nb-icon icon="plus-outline"></nb-icon> {{ addButtonLabel }}
+            </button>
         </div>
 
         <div class="table-responsive">
@@ -75,21 +76,22 @@
             <p class="mt-2">Keine Daten gefunden.</p>
         </div>
 
-        <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
-            <div class="form-group">
-                <nb-form-field appearance="outline">
-                    <nb-select
-                            [(selected)]="itemsPerPage"
-                            (selectedChange)="onItemsPerPageChange($event)"
-                            placeholder="Elemente pro Seite"
-                            size="small"
-                    >
-                        <nb-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</nb-option>
-                    </nb-select>
-                </nb-form-field>
-            </div>
+        <!--
+               <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
+                   <div class="form-group">
+                       <nb-form-field appearance="outline">
+                           <nb-select
+                                   [(selected)]="itemsPerPage"
+                                   (selectedChange)="onItemsPerPageChange($event)"
+                                   placeholder="Elemente pro Seite"
+                                   size="small"
+                           >
+                               <nb-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</nb-option>
+                           </nb-select>
+                       </nb-form-field>
+                   </div>
 
-            <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
-        </div>
+                  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+        </div> -->
     </nb-card-body>
 </nb-card>
