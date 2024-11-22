@@ -41,6 +41,11 @@ nb-card-header{
 
 #loginButton:hover{
 //  background-color: $secondary-color;
+  //border-color: $primary-color;
+}
+
+#loginButton:hover{
+  //background-color: $secondary-color;
   //border-color: $secondary-color;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 3px, rgba(0, 0, 0, 0.23) 0px 3px 3px;
 }

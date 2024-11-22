@@ -1,9 +1,15 @@
-import { Component } from "@angular/core";
-import { NbActionsModule, NbLayoutModule, NbSidebarModule, NbSidebarService, NbThemeService } from "@nebular/theme";
-import { NavigationBarComponent } from "./components/navigation-bar/navigation-bar.component";
-import { RouterOutlet, Router } from "@angular/router";
-import { AppModule } from "./app.module";
-import { provideNebular } from "./nebular.providers";
+import {Component} from "@angular/core";
+import {
+  NbActionsModule,
+  NbIconLibraries,
+  NbLayoutModule,
+  NbSidebarModule,
+  NbSidebarService,
+  NbThemeService
+} from "@nebular/theme";
+import {NavigationBarComponent} from "./components/navigation-bar/navigation-bar.component";
+import {Router, RouterOutlet} from "@angular/router";
+import {provideNebular} from "./nebular.providers";
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -16,7 +22,6 @@ import {NgIf} from "@angular/common";
     NbActionsModule,
     RouterOutlet,
     NbSidebarModule,
-    AppModule,
     NgIf
   ],
   providers: [NbSidebarService, NbThemeService, provideNebular()],
@@ -26,10 +31,11 @@ export class AppComponent {
   title = 'my-app';
   showLayout: boolean = true;
 
-  constructor(private sidebarService: NbSidebarService, private router: Router) {
+  constructor(private sidebarService: NbSidebarService, private router: Router, private iconLibraries: NbIconLibraries) {
     this.router.events.subscribe(() => {
       this.showLayout = this.router.url !== '/login';
     });
+    this.iconLibraries.setDefaultPack('eva');
   }
 
   toggleSidebar() {

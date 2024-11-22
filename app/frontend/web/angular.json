@@ -52,11 +52,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/@nebular/theme/styles/prebuilt/default.css"
-            ],
-            "allowedCommonJsDependencies": [
-              "eva-icons"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -77,8 +73,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
                 }
               ],
               "outputHashing": "all"

@@ -1,10 +1,11 @@
-@import "@nebular/theme/styles/theming";
-@import "@nebular/theme/styles/themes/default";
 
-$nb-enable-css-custom-properties: true; // <-- enable css custom properties
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default';
 
 $nb-themes: nb-register-theme(
                 (
+                  // new primary color
                         color-primary-100: #faf7ff,
                         color-primary-200: #ece3ff,
                         color-primary-300: #d5bfff,
@@ -15,6 +16,7 @@ $nb-themes: nb-register-theme(
                         color-primary-800: #3e2494,
                         color-primary-900: #29157a,
                         text-basic-color: #b18aff,
+                        text-basic-color: color-basic-800,
                         text-disabled-color: color-basic-600
                 ),
                 default,

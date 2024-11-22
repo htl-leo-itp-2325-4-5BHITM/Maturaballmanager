@@ -11,9 +11,22 @@ import {BenefitManagementComponent} from "./pages/benefit-management/benefit-man
 import {InvoiceManagementComponent} from "./pages/invoice-management/invoice-management.component";
 import {provideMomentDateAdapter} from "@angular/material-moment-adapter";
 import {provideNativeDateAdapter} from "@angular/material/core";
-import {NbDatepickerAdapter} from "@nebular/theme";
 import {provideNebular} from "./nebular.providers";
 import {UserManagementComponent} from "./pages/user-management/user-management.component";
+
+import {
+  NbCalendarMonthModelService,
+  NbCalendarYearModelService,
+  NbDialogModule,
+  NbDialogService,
+  NbMenuModule,
+  NbSidebarService,
+  NbThemeModule,
+  NbToastrModule
+} from "@nebular/theme";
+import { importProvidersFrom } from "@angular/core";
+import {NgxEchartsModule} from "ngx-echarts";
+import {NbEvaIconsModule} from "@nebular/eva-icons";
 
 const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -31,9 +44,28 @@ const routes: Route[] = [
   { path: '**', redirectTo: '/dashboard' },
 ];
 
-
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideNoopAnimations(), provideAnimations(), provideHttpClient(withInterceptors([authInterceptor])), provideNativeDateAdapter(), provideNebular()],
+  providers: [
+    provideRouter(routes),
+    provideNoopAnimations(),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideNativeDateAdapter(),
+    provideMomentDateAdapter(),
+    provideNebular(),
+    importProvidersFrom(
+        NbThemeModule.forRoot({ name: 'default' }),
+        NbToastrModule.forRoot(),
+        NbMenuModule.forRoot(),
+        NbDialogModule.forRoot(),
+        NbEvaIconsModule,
+        NgxEchartsModule.forRoot({ echarts: () => import('echarts') })
+    ),
+    NbSidebarService,
+    NbDialogService,
+    NbCalendarYearModelService,
+    NbCalendarMonthModelService,
+  ]
 }
 
 export const config = {
@@ -132,4 +164,3 @@ export const config = {
     ]
   }
 }
-
