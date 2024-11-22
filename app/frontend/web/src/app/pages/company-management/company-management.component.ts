@@ -109,8 +109,10 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: Company | undefined) => {
             if (result) {
-                this.loadCompanies();
-                this.toastrService.success('Unternehmen erfolgreich erstellt.', 'Erfolg');
+                this.companyService.addCompany(result).subscribe(() => {
+                    this.loadCompanies();
+                    this.toastrService.success('Unternehmen erfolgreich erstellt.', 'Erfolg');
+                })
             }
         });
     }
@@ -130,8 +132,10 @@ export class CompanyManagementComponent implements OnInit {
             })
             .onClose.subscribe((result: Company | undefined) => {
             if (result) {
-                this.loadCompanies();
-                this.toastrService.success('Unternehmen erfolgreich aktualisiert.', 'Erfolg');
+                this.companyService.updateCompany(result).subscribe(() => {
+                    this.loadCompanies()
+                    this.toastrService.success('Unternehmen erfolgreich aktualisiert.', 'Erfolg');
+                })
             }
         });
     }

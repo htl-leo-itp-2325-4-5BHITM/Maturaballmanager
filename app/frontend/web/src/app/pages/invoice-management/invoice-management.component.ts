@@ -55,7 +55,7 @@ export class InvoiceManagementComponent implements OnInit {
 
   columns = [
     { key: 'invoiceNumber', title: 'ID', sortable: true },
-    { key: 'company.name', title: 'Firma', sortable: true },
+    { key: 'company', title: 'Firma', sortable: true, format: (value: any) => value.name || '—' },
     {
       key: 'contactPerson',
       title: 'Kontaktperson',
@@ -150,8 +150,10 @@ export class InvoiceManagementComponent implements OnInit {
         })
         .onClose.subscribe((result: Invoice | undefined) => {
       if (result) {
-        this.loadInvoices();
-        this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
+        this.invoiceService.createInvoice(result).subscribe(() => {
+          this.loadInvoices();
+          this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
+        })
       }
     });
   }
