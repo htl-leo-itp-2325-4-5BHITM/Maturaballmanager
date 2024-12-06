@@ -27,6 +27,7 @@ import {
 import { importProvidersFrom } from "@angular/core";
 import {NgxEchartsModule} from "ngx-echarts";
 import {NbEvaIconsModule} from "@nebular/eva-icons";
+import {MaturaballComponent} from "./pages/maturaball/maturaball.component";
 
 const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -39,7 +40,7 @@ const routes: Route[] = [
     ]},
   { path: 'settings', children: [
       { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
-      { path: 'appointment', component: BenefitManagementComponent, canActivate: [authGuard] }
+      { path: 'appointment', component: MaturaballComponent, canActivate: [authGuard] }
     ]},
   { path: '**', redirectTo: '/dashboard' },
 ];

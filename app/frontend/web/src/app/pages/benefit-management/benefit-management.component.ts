@@ -57,12 +57,6 @@ export class BenefitManagementComponent implements OnInit {
 
   actions = [
     {
-      icon: 'edit-outline',
-      tooltip: 'Gegenleistung bearbeiten',
-      status: 'info',
-      callback: this.openEditDialog.bind(this),
-    },
-    {
       icon: 'trash-2-outline',
       tooltip: 'Gegenleistung löschen',
       status: 'danger',

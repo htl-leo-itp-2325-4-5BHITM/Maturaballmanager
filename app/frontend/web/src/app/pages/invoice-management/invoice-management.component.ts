@@ -87,13 +87,6 @@ export class InvoiceManagementComponent implements OnInit {
 
   actions = [
     {
-      icon: 'edit-outline',
-      tooltip: 'Rechnung bearbeiten',
-      status: 'info',
-      callback: this.openEditDialog.bind(this),
-      disabled: (row: Invoice) => row.status === Status.SENT || row.status === Status.PAID,
-    },
-    {
       icon: 'trash-2-outline',
       tooltip: 'Rechnung löschen',
       status: 'danger',

@@ -1,17 +1,8 @@
-import {Component, HostListener} from '@angular/core';
-import {
-  NbButtonModule,
-  NbCardModule, NbDialogService,
-  NbFormFieldModule,
-  NbIconModule,
-  NbInputModule,
-  NbSelectModule,
-} from "@nebular/theme";
-import { NgForOf, NgIf } from "@angular/common";
-import { NgxPaginationModule } from "ngx-pagination";
-import {
-  UserManagementDialogComponent
-} from "../../components/dialogs/user-management-dialog/user-management-dialog.component";
+import { Component, HostListener, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { NbButtonModule, NbCardModule, NbDialogService, NbFormFieldModule, NbIconModule, NbInputModule, NbSelectModule } from '@nebular/theme';
+import { NgForOf, NgIf } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { UserManagementDialogComponent } from '../../components/dialogs/user-management-dialog/user-management-dialog.component';
 
 interface Member {
   id: string;
@@ -33,17 +24,18 @@ interface Member {
     NgxPaginationModule,
     NbFormFieldModule,
     NbInputModule,
-    NbSelectModule
+    NbSelectModule,
   ],
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.scss']
+  styleUrls: ['./user-management.component.scss'],
 })
-export class UserManagementComponent {
+export class UserManagementComponent implements OnChanges {
   headers: string[] = ['ID', 'Anzeigename', 'Email', 'Rolle', 'Letzter Login'];
   searchTerm: string = '';
   sortColumn: string | null = null;
   sortDirection: 'asc' | 'desc' = 'asc';
   filterMenuVisible: boolean = false;
+  selectedMember: Member | null = null;
 
   members: Member[] = [
     { id: 'IT200400', name: 'Anna Schmitz', email: 'anna.schmitz@students.htl-leonding.ac.at', role: 'Sponsoring', lastLogin: 'Nov 15, 2025' },
@@ -57,27 +49,38 @@ export class UserManagementComponent {
   ];
 
   filteredMembers = [...this.members];
-  constructor(private dialogService: NbDialogService) {}
+
+  constructor(private dialogService: NbDialogService, private cdRef: ChangeDetectorRef) {}
 
   openAddMemberDialog() {
-    this.dialogService.open(UserManagementDialogComponent);
+    this.dialogService
+        .open(UserManagementDialogComponent)
+        .onClose.subscribe((selectedMember: Member | null) => {
+      if (selectedMember) {
+        console.log(selectedMember);
+        this.members.push(selectedMember);
+        console.log(this.members);
+        this.cdRef.detectChanges(); // Manuelles Triggern der Ansicht-Überprüfung
+        this.applyFilters(); // Filter erneut anwenden
+      }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['members']) {
+      this.applyFilters();
+    }
   }
 
   get totalMembers(): number {
     return this.filteredMembers.length;
   }
 
-  /**
-   * Suche anwenden.
-   */
   onSearch(event: Event): void {
     this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     this.applyFilters();
   }
 
-  /**
-   * Sortierlogik anwenden.
-   */
   onSort(column: string): void {
     if (this.sortColumn === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -85,17 +88,12 @@ export class UserManagementComponent {
       this.sortColumn = column;
       this.sortDirection = 'asc';
     }
-    this.applyFilters(); // Filter und Sortierung anwenden
+    this.applyFilters();
   }
 
-
-  /**
-   * Filterlogik anwenden (Suche und Sortieren).
-   */
   applyFilters(): void {
     let filtered = [...this.members];
 
-    // Suche
     if (this.searchTerm) {
       filtered = filtered.filter((member) =>
           Object.values(member).some((value) =>
@@ -104,7 +102,6 @@ export class UserManagementComponent {
       );
     }
 
-    // Sortierung
     if (this.sortColumn) {
       filtered.sort((a, b) => {
         const valA = a[this.sortColumn as keyof Member]?.toString().toLowerCase() || '';
@@ -123,14 +120,24 @@ export class UserManagementComponent {
     this.filterMenuVisible = !this.filterMenuVisible;
   }
 
+  toggleDropdown(member: Member): void {
+    this.selectedMember = this.selectedMember === member ? null : member;
+  }
 
-  /**
-   * Übersetzt den Spaltenindex in den entsprechenden Schlüssel des Members-Objekts.
-   * @param index Der Index der Spalte im headers-Array.
-   * @returns Der Schlüssel im Member-Objekt.
-   */
+  editMember(member: Member): void {
+    console.log('Bearbeiten:', member);
+  }
+
+  deleteMember(member: Member): void {
+    console.log('Entfernen:', member);
+    const index = this.members.findIndex(m => m.id === member.id);
+    if (index !== -1) {
+      this.members.splice(index, 1);
+      this.filteredMembers = [...this.members];
+    }
+  }
+
   getColumnKey(index: number): keyof Member {
-    // Zuordnung zwischen headers und den Keys in Member.
     const keys: (keyof Member)[] = ['id', 'name', 'email', 'role', 'lastLogin'];
 
     if (index < 0 || index >= keys.length) {
@@ -143,8 +150,7 @@ export class UserManagementComponent {
   onOutsideClick(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.filter-menu') && !target.closest('button')) {
-      this.filterMenuVisible = false; // Schließe das Menü, wenn außerhalb geklickt wird
+      this.filterMenuVisible = false;
     }
   }
-
 }

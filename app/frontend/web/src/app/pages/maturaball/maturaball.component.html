@@ -1,1 +1,121 @@
-<p>maturaball works!</p>
+<nb-card>
+    <nb-card-header>
+        <h1>Maturaball</h1>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="form-layout">
+            <!-- Linke Seite: Formular -->
+            <div class="form-section">
+                <form>
+                    <!-- Maturaball-Motto -->
+                    <div class="form-group">
+                        <label for="motto">Maturaball-Motto</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="edit-outline"></nb-icon>
+                            <input nbInput id="motto" type="text" placeholder="Gib das Motto ein" required/>
+                        </nb-form-field>
+                    </div>
+
+                    <!-- Datum und Uhrzeit -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="date">Datum</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="calendar-outline"></nb-icon>
+                                <input nbInput id="date" type="date" required/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="time">Uhrzeit</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="clock-outline"></nb-icon>
+                                <input nbInput id="time" type="time" required/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Straße -->
+                    <div class="form-group">
+                        <label for="street">Straße</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="home-outline"></nb-icon>
+                            <input nbInput id="street" type="text" placeholder="Gib die Straße ein" required/>
+                        </nb-form-field>
+                    </div>
+
+                    <!-- Ort und PLZ -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="zip">PLZ</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="pin-outline"></nb-icon>
+                                <input nbInput id="zip" type="text" placeholder="Gib die Postleitzahl ein" required/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="city">Ort</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="map-outline"></nb-icon>
+                                <input nbInput id="city" type="text" placeholder="Gib den Ort ein" required/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Hauptverantwortlicher -->
+                    <div class="form-group">
+                        <label for="main-contact">Hauptverantwortlicher</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="person-outline"></nb-icon>
+                            <input nbInput id="main-contact" type="text" placeholder="Name des Hauptverantwortlichen"
+                                   required/>
+                        </nb-form-field>
+                    </div>
+
+                    <!-- Lehrer-Hilfen -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="teacher1">Lehrer (Hilfe 1)</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="people-outline"></nb-icon>
+                                <input nbInput id="teacher1" type="text" placeholder="Name des Lehrers"/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="teacher2">Lehrer (Hilfe 2)</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="people-outline"></nb-icon>
+                                <input nbInput id="teacher2" type="text" placeholder="Name des Lehrers"/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Rechte Seite: Ablauf Textarea -->
+            <div class="textarea-section">
+                <label for="schedule">Ablauf des Maturaballs</label>
+                <nb-form-field>
+                  <textarea
+                          nbInput
+                          id="schedule"
+                          rows="15"
+                          placeholder="Mitternachtseinlage - 12:00&#10;Eröffnung - 18:00&#10;Ballende - 02:00"
+                  ></textarea>
+                </nb-form-field>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <!-- Submit Button -->
+        <div id="button-container">
+            <div id="submitButton">
+                <button nbButton status="primary" (click)="submit()" fullWidth>Speichern</button>
+            </div>
+
+            <div id="deleteButton">
+                <button nbButton status="control" (click)="closeEvent()" fullWidth>Schließen</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

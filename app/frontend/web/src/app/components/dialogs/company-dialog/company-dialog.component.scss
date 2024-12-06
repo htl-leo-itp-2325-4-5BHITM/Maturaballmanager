@@ -145,6 +145,19 @@
   color: #2c3e50;
 }
 
+#cancelButton{
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+}
+
+#cancelButton:hover{
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
+}
+
 @media (max-width: 600px) {
   .dialog-card {
     width: 100%;

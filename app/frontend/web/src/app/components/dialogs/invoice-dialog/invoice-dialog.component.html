@@ -110,7 +110,7 @@
         </form>
     </nb-card-body>
     <nb-card-footer class="form-footer">
-        <button nbButton status="basic" (click)="cancel()">Abbrechen</button>
+        <button nbButton status="basic" id="cancelButton" (click)="cancel()">Abbrechen</button>
         <button nbButton status="success" (click)="submit()" [disabled]="form.invalid">Speichern</button>
     </nb-card-footer>
 </nb-card>

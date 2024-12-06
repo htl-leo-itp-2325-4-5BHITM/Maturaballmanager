@@ -1,0 +1,76 @@
+nb-card{
+  height: 51em;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.form-section {
+  width: 60%;
+}
+
+.textarea-section {
+  width: 40%;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 90%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.half-width {
+  margin-right: 0.1rem;
+}
+
+#submitButton {
+  font-weight: bold;
+  width: 10rem
+}
+
+#deleteButton {
+  font-weight: bold;
+  width: 10rem
+}
+
+#button-container{
+  display: flex;
+  flex-direction: row;
+}
+
+/* Beispielsweise eine spezielle Klasse für ngModel */
+input[ngModel] {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea[ngModel] {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+

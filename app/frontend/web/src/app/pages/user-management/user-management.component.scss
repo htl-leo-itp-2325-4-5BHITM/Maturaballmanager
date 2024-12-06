@@ -1,5 +1,5 @@
 nb-card{
-  height: 98%;
+  height: 51em;
 }
 
 .header {
@@ -27,7 +27,7 @@ nb-card{
 }
 
 .table-container {
-  max-height: 40em; /* Hier kannst du die maximale Höhe anpassen */
+  max-height: 38em;
   overflow-y: auto;
 }
 
@@ -50,7 +50,7 @@ th, td {
 }
 
 th {
-  background-color: #f4f4f4; /* Optional: eine helle Farbe für die Kopfzeile */
+  background-color: #f4f4f4;
 }
 
 tbody tr:hover {
@@ -86,7 +86,7 @@ tbody tr:hover {
 }
 
 .text-right{
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 
@@ -107,3 +107,19 @@ tbody tr:hover {
   padding: 0.5rem 1rem;
 }
 
+.dropdown-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 0 5px 5px 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  right: 0;
+}
+
+.dropdown-menu button {
+  font-size: 0.6rem;
+  margin-top: 5px;
+}

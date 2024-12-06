@@ -3,7 +3,6 @@
         <div class="header">
             <h5>Benutzerverwaltung</h5>
             <div>
-                <button nbButton size="small">Mitgliederrollen verwalten</button>
                 <button nbButton status="primary" size="small" (click)="openAddMemberDialog()">
                     <nb-icon icon="plus-outline"></nb-icon> Mitglieder hinzufügen
                 </button>
@@ -59,14 +58,25 @@
                     <td>{{ member.role }}</td>
                     <td>{{ member.lastLogin }}</td>
                     <td>
-                        <button nbButton size="small">
+                        <button nbButton size="small" (click)="toggleDropdown(member)">
                             <nb-icon icon="more-horizontal-outline"></nb-icon>
                         </button>
+
+                        <!-- Dropdown-Menü -->
+                        <div *ngIf="selectedMember === member" class="dropdown-menu">
+                            <button nbButton size="small" (click)="editMember(member)">
+                                Mitglied bearbeiten
+                            </button>
+                            <button nbButton status="danger" size="small" (click)="deleteMember(member)">
+                                Mitglied entfernen
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
 
         <div *ngIf="filteredMembers.length === 0" class="no-data text-center mt-4">
             <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
