@@ -141,7 +141,7 @@ export class InvoiceManagementComponent implements OnInit {
           hasScroll: false,
           dialogClass: 'fixed-dialog-width',
         })
-        .onClose.subscribe((result: Invoice | undefined) => {
+        .onClose.subscribe((result: InvoiceDT | undefined) => {
       if (result) {
         this.invoiceService.createInvoice(result).subscribe(() => {
           this.loadInvoices();

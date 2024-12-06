@@ -26,6 +26,7 @@ import { NbDialogRef } from '@nebular/theme';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {provideNebular} from "../../../nebular.providers";
+import {InvoiceDTO} from "../../../model/dtos/invoice.dto";
 
 @Component({
     selector: 'app-invoice-dialog',
@@ -103,7 +104,6 @@ export class InvoiceDialogComponent implements OnInit {
         this.loadCompanies();
         this.loadBenefits();
 
-        // Initialisierung des Statusfeldes
         this.statusOptions = [Status.DRAFT, Status.SENT, Status.PAID];
 
         if (this.invoice) {
@@ -191,20 +191,20 @@ export class InvoiceDialogComponent implements OnInit {
             const selectedContactPerson = this.contactPersons.find(cp => cp.id === formValue.contactPerson) || null;
             const selectedBenefits = this.benefits.filter(b => formValue.benefits.includes(b.id));
 
-            const invoice: Invoice = {
-                id: this.invoice?.id || undefined,
-                company: selectedCompany!,
-                contactPerson: selectedContactPerson!,
-                benefits: selectedBenefits,
-                invoiceDate: formValue.invoiceDate,
-                paymentDeadline: formValue.paymentDeadline,
-                status: this.invoice ? this.invoice.status : Status.DRAFT,
-                totalAmount: selectedBenefits.reduce((sum, b) => sum + (b.price || 0), 0),
+            const invoice: InvoiceDTO = {
+                id: this.invoice?.id as string,
+                company: selectedCompany?.id!,
+                contactPerson: selectedContactPerson?.id!,
+                benefits: selectedBenefits.map(b => b.id!),
+                invoiceDate: formValue.invoiceDate as Date,
+                paymentDeadline: formValue.paymentDeadline as Date,
+                status: formValue.status as Status,
+                totalAmount: formValue.totalAmount as number,
             };
 
             if (this.invoice) {
                 // Bearbeiten einer bestehenden Rechnung
-                this.invoiceService.updateInvoice(invoice.id!, invoice).subscribe({
+                this.invoiceService.updateInvoice(invoice.id, invoice).subscribe({
                     next: (updatedInvoice) => {
                         this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
                         this.dialogRef.close(updatedInvoice);

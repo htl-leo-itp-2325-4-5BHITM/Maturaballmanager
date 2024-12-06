@@ -1,12 +1,13 @@
 package at.htlleonding.maturaballmanager.model.entities
 
 import at.htlleonding.maturaballmanager.model.Address
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
 
 @Entity
 @Table(name = "companies")
-class Company {
+class Company: PanacheEntityBase() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,6 +41,6 @@ class Company {
     @Embedded
     var address: Address? = null
 
-    @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, targetEntity = ContactPerson::class)
+    @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = ContactPerson::class)
     var contactPersons: List<ContactPerson> = mutableListOf()
 }

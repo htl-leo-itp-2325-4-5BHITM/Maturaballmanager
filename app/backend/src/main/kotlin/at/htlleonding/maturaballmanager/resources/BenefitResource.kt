@@ -1,10 +1,13 @@
 package at.htlleonding.maturaballmanager.resources
 
-import at.htlleonding.maturaballmanager.model.entities.Benefit
+import at.htlleonding.maturaballmanager.configs.toEntity
+import at.htlleonding.maturaballmanager.configs.toDTO
+import at.htlleonding.maturaballmanager.model.dtos.BenefitDTO
 import at.htlleonding.maturaballmanager.repositories.BenefitRepository
+import io.smallrye.mutiny.Uni
 import jakarta.inject.Inject
 import jakarta.persistence.EntityNotFoundException
-import jakarta.transaction.Transactional
+import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
@@ -20,71 +23,135 @@ class BenefitResource {
 
     /**
      * GET /benefit
-     * Liefert alle Gegenleistungen.
+     * Retrieves all benefits as DTOs.
      */
     @GET
-    fun getAllBenefits(): List<Benefit> {
+    fun getAllBenefits(): Uni<Response> {
         return benefitRepository.getAll()
+            .map { benefits ->
+                val benefitDTOs = benefits.map { it.toDTO() }
+                Response.ok(benefitDTOs).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error fetching benefits: ${throwable.message}")
+                    .build()
+            }
     }
 
     /**
      * GET /benefit/{id}
-     * Liefert eine spezifische Gegenleistung anhand der ID.
+     * Retrieves a specific benefit by ID as a DTO.
      */
     @GET
     @Path("/{id}")
-    fun getBenefitById(@PathParam("id") id: String): Response {
-        val benefit = benefitRepository.getById(id)
-        return if (benefit != null) {
-            Response.ok(benefit).build()
-        } else {
-            Response.status(Response.Status.NOT_FOUND).entity("Benefit not found").build()
-        }
+    fun getBenefitById(@PathParam("id") id: String): Uni<Response> {
+        return benefitRepository.getById(id)
+            .map { benefit ->
+                if (benefit != null) {
+                    Response.ok(benefit.toDTO()).build()
+                } else {
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Benefit not found")
+                        .build()
+                }
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error fetching benefit: ${throwable.message}")
+                    .build()
+            }
     }
 
     /**
      * POST /benefit
-     * Erstellt eine neue Gegenleistung.
+     * Creates a new benefit from a DTO.
      */
     @POST
-    @Transactional
-    fun createBenefit(@Valid benefit: Benefit): Response {
-        benefitRepository.create(benefit)
-        return Response.status(Response.Status.CREATED).entity(benefit).build()
+    fun createBenefit(@Valid benefitDTO: BenefitDTO): Uni<Response> {
+        val benefitEntity = benefitDTO.toEntity()
+        return benefitRepository.create(benefitEntity)
+            .map { createdBenefit ->
+                Response.status(Response.Status.CREATED)
+                    .entity(createdBenefit.toDTO())
+                    .build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    else -> {
+                        Response.serverError()
+                            .entity("Error creating benefit: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
     /**
-     * PUT /benefit/{id}
-     * Aktualisiert eine bestehende Gegenleistung.
+     * PUT /benefit
+     * Updates an existing benefit using a DTO.
      */
     @PUT
-    @Transactional
-    fun updateBenefit(@Valid updatedBenefit: Benefit): Response {
-        return try {
-            benefitRepository.update(updatedBenefit)
-            Response.ok(updatedBenefit).build()
-        } catch (e: EntityNotFoundException) {
-            Response.status(Response.Status.NOT_FOUND).entity("Benefit not found").build()
-        } catch (e: Exception) {
-            Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating benefit: ${e.message}").build()
-        }
+    fun updateBenefit(@Valid updatedBenefitDTO: BenefitDTO): Uni<Response> {
+        println(updatedBenefitDTO)
+        val benefitEntity = updatedBenefitDTO.toEntity()
+        println(benefitEntity)
+        return benefitRepository.update(benefitEntity)
+            .map { mergedBenefit ->
+                Response.ok(mergedBenefit.toDTO()).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    else -> {
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Error updating benefit: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
     /**
      * DELETE /benefit/{id}
-     * Löscht eine Gegenleistung anhand der ID.
+     * Deletes a benefit by ID.
      */
     @DELETE
     @Path("/{id}")
-    @Transactional
-    fun deleteBenefit(@PathParam("id") id: String): Response {
-        return try {
-            benefitRepository.delete(id)
-            Response.ok().build()
-        } catch (e: EntityNotFoundException) {
-            Response.status(Response.Status.NOT_FOUND).entity("Benefit not found").build()
-        } catch (e: Exception) {
-            Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error deleting benefit: ${e.message}").build()
-        }
+    fun deleteBenefit(@PathParam("id") id: String): Uni<Response> {
+        return benefitRepository.delete(id)
+            .map {
+                Response.noContent().build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity("Benefit not found")
+                            .build()
+                    }
+                    else -> {
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Error deleting benefit: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 }

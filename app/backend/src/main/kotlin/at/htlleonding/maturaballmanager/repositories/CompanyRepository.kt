@@ -1,82 +1,71 @@
-// src/main/kotlin/at/htlleonding/maturaballmanager/repositories/CompanyRepository.kt
 package at.htlleonding.maturaballmanager.repositories
 
 import at.htlleonding.maturaballmanager.model.entities.Company
-import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.persistence.EntityManager
 import jakarta.persistence.EntityNotFoundException
-import jakarta.persistence.PersistenceContext
-import jakarta.transaction.Transactional
+import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.smallrye.mutiny.Uni
 
 @ApplicationScoped
-class CompanyRepository {
+class CompanyRepository : PanacheRepositoryBase<Company, String> {
 
-    @PersistenceContext
-    lateinit var em: EntityManager
-
-    fun getAll(): List<Company> {
-        return em.createQuery(
-            "SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.contactPersons",
-            Company::class.java
-        ).resultList
+    /**
+     * Retrieves all companies with their contact persons.
+     */
+    fun getAll(): Uni<List<Company>> {
+        return list("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.contactPersons")
     }
 
-    fun getById(id: String): Company? {
-        return try {
-            em.createQuery(
-                "SELECT c FROM Company c LEFT JOIN FETCH c.contactPersons WHERE c.id = :id",
-                Company::class.java
-            )
-                .setParameter("id", id)
-                .singleResult
-        } catch (e: Exception) {
-            null
-        }
+    /**
+     * Retrieves a company by ID with its contact persons.
+     */
+    fun getById(id: String): Uni<Company?> {
+        return find("id", id).firstResult()
     }
 
-    @Transactional
-    fun create(company: Company): Company {
+    /**
+     * Creates a new company.
+     */
+    @WithTransaction
+    fun create(company: Company): Uni<Company> {
         company.contactPersons.forEach { it.company = company }
-        em.persist(company)
-        return company
+        return persist(company)
     }
 
-    @Transactional
-    fun update(company: Company): Company {
-        val existingCompany = getById(company.id!!) ?: throw EntityNotFoundException("Company not found")
+    /**
+     * Updates an existing company.
+     */
+    @WithTransaction
+    fun update(company: Company): Uni<Company> {
+        return findById(company.id!!)
+            .onItem().ifNull().failWith(EntityNotFoundException("Company not found"))
+            .flatMap { existingCompany ->
+                existingCompany.name = company.name
+                existingCompany.industry = company.industry
+                existingCompany.website = company.website
+                existingCompany.officeEmail = company.officeEmail
+                existingCompany.officePhone = company.officePhone
+                existingCompany.address = company.address
 
-        existingCompany.name = company.name
-        existingCompany.industry = company.industry
-        existingCompany.website = company.website
-        existingCompany.officeEmail = company.officeEmail
-        existingCompany.officePhone = company.officePhone
-        existingCompany.address = company.address
+                existingCompany.contactPersons = company.contactPersons
 
-        existingCompany.contactPersons.forEach { em.remove(it) }
-        existingCompany.contactPersons = company.contactPersons
-        return existingCompany
+                persist(existingCompany)
+            }
     }
 
-    @Transactional
-    fun delete(id: String) {
-        val company = getById(id)
-        if (company != null) {
-            em.remove(company)
-        }
+    /**
+     * Deletes a company by ID.
+     */
+    @WithTransaction
+    fun delete(id: String): Uni<Boolean> {
+        return deleteById(id)
     }
 
-    fun getContactPersons(id: String): List<ContactPerson> {
-        val company = getById(id) ?: throw EntityNotFoundException("Company not found")
-        return em.createQuery(
-            "SELECT cp FROM ContactPerson cp WHERE cp.company = :company",
-            ContactPerson::class.java
-        )
-            .setParameter("company", company)
-            .resultList
-    }
-
-    fun getAllCompanies(): List<Company> {
-        return em.createQuery("SELECT c FROM Company c", Company::class.java).resultList
+    /**
+     * Retrieves all companies.
+     */
+    fun getAllCompanies(): Uni<List<Company>> {
+        return listAll()
     }
 }

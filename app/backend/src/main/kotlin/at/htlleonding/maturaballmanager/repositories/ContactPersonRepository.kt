@@ -1,39 +1,68 @@
-// ContactPersonRepository.kt
-
 package at.htlleonding.maturaballmanager.repositories
 
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
+import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceContext
+import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import io.smallrye.mutiny.Uni
 
 @ApplicationScoped
-class ContactPersonRepository {
+class ContactPersonRepository : PanacheRepositoryBase<ContactPerson, String> {
 
-    @PersistenceContext
-    lateinit var em: EntityManager
-
-    @Transactional
-    fun create(contactPerson: ContactPerson): ContactPerson {
-        em.persist(contactPerson)
-        return contactPerson
+    /**
+     * Retrieves all contact persons for a specific company.
+     */
+    fun getByCompanyId(companyId: String): Uni<List<ContactPerson>> {
+        return find("company.id", companyId).list()
     }
 
-    fun getById(id: String): ContactPerson? {
-        return em.find(ContactPerson::class.java, id)
+    /**
+     * Retrieves a contact person by ID.
+     */
+    fun getById(id: String): Uni<ContactPerson?> {
+        return findById(id)
     }
 
-    @Transactional
-    fun update(contactPerson: ContactPerson): ContactPerson {
-        return em.merge(contactPerson)
+    /**
+     * Creates a new contact person.
+     */
+    @WithTransaction
+    fun create(contactPerson: ContactPerson): Uni<ContactPerson> {
+        return persist(contactPerson)
     }
 
-    @Transactional
-    fun delete(id: String) {
-        val contactPerson = getById(id)
-        if (contactPerson != null) {
-            em.remove(contactPerson)
-        }
+    /**
+     * Updates an existing contact person.
+     */
+    @WithTransaction
+    fun update(contactPerson: ContactPerson): Uni<ContactPerson> {
+        return findById(contactPerson.id!!)
+            .onItem().ifNull().failWith(EntityNotFoundException("ContactPerson not found"))
+            .flatMap { existingContact ->
+                existingContact.firstName = contactPerson.firstName
+                existingContact.lastName = contactPerson.lastName
+                existingContact.prefixTitle = contactPerson.prefixTitle
+                existingContact.suffixTitle = contactPerson.suffixTitle
+                existingContact.gender = contactPerson.gender
+                existingContact.position = contactPerson.position
+                existingContact.personalEmail = contactPerson.personalEmail
+                existingContact.personalPhone = contactPerson.personalPhone
+                existingContact.company = contactPerson.company
+                persist(existingContact)
+            }
+    }
+
+    /**
+     * Deletes a contact person by ID.
+     */
+    @WithTransaction
+    fun delete(id: String): Uni<Void> {
+        return deleteById(id)
+            .flatMap { deleted ->
+                if (deleted) Uni.createFrom().voidItem()
+                else Uni.createFrom().failure(EntityNotFoundException("ContactPerson not found"))
+            }
     }
 }

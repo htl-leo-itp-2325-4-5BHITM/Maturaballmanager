@@ -2,7 +2,7 @@ package at.htlleonding.maturaballmanager.services
 
 import at.htlleonding.maturaballmanager.model.entities.Invoice
 import io.quarkus.mailer.Mail
-import io.quarkus.mailer.Mailer
+import io.quarkus.mailer.reactive.ReactiveMailer
 import io.quarkus.qute.Template
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -10,12 +10,18 @@ import jakarta.inject.Named
 import java.io.InputStream
 import java.time.LocalDate
 import org.eclipse.microprofile.jwt.JsonWebToken
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import io.smallrye.mutiny.Uni
+import java.io.File
 
 @ApplicationScoped
 class EmailService {
 
+    private val logger: Logger = LoggerFactory.getLogger(EmailService::class.java)
+
     @Inject
-    lateinit var mailer: Mailer
+    lateinit var mailer: ReactiveMailer
 
     @Inject
     @Named("invoiceEmail")
@@ -27,43 +33,52 @@ class EmailService {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    fun sendInvoiceEmail(invoice: Invoice) {
+    /**
+     * Sends an invoice email with an attached PDF and inline logo.
+     */
+    fun sendInvoiceEmail(invoice: Invoice): Uni<Void> {
         val currentYear = LocalDate.now().year
 
-        // Vor- und Nachnamen aus JWT-Token extrahieren
-        val firstName = jwt.claim<String>("given_name").orElse("Unbekannt")
-        val lastName = jwt.claim<String>("family_name").orElse("")
+        // Extract first and last names from JWT token
+        val firstName = jwt.getClaim<String>("given_name") ?: "Unbekannt"
+        val lastName = jwt.getClaim<String>("family_name") ?: ""
 
         val senderName = "$firstName $lastName"
 
-        // E-Mail-Inhalt aus der Vorlage rendern und den Sendernamen übergeben
         val emailContent: String = invoiceEmail
             .data("invoice", invoice)
             .data("currentYear", currentYear)
             .data("senderName", senderName)
             .render()
 
-        // PDF generieren mit SenderName
-        val pdfBytes = pdfGeneratorService.generateInvoicePdf(invoice, senderName)
+        return pdfGeneratorService.generateInvoicePdf(invoice, senderName)
+            .flatMap { pdfBytes ->
+                val recipient = invoice.contactPerson?.personalEmail
+                    ?: invoice.company?.officeEmail
 
-        // Bestimme den Empfänger
-        val recipient = invoice.contactPerson?.personalEmail
-            ?: invoice.company?.officeEmail
-            ?: throw IllegalArgumentException("Keine gültige E-Mail-Adresse für den Empfänger gefunden")
-        println(recipient)
+                logger.info("Sending invoice to: $recipient")
 
-        val subject = "Ihre Rechnung #${invoice.invoiceNumber}"
+                val subject = "Ihre Rechnung #${invoice.invoiceNumber}"
 
-        // Laden Sie das Logo als Base64 ein (optional, falls Sie es inline einfügen möchten)
-        val logoStream: InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream("img/htllogo_2022_black_v2-2.png")
-            ?: throw IllegalArgumentException("Logo nicht gefunden")
-        val logoBytes = logoStream.readAllBytes()
+                val logoBytes: ByteArray = loadLogo("img/htllogo_2022_black_v2-2.png")
+                    ?: throw IllegalStateException("Failed to load logo")
 
-        // Erstelle und sende die E-Mail
-        val mail = Mail.withHtml(recipient, subject, emailContent)
-            .addAttachment("Invoice_${invoice.invoiceNumber}.pdf", pdfBytes, "application/pdf")
-            .addInlineAttachment("logo.png", logoBytes, "image/png", "school_logo")
+                val mail = Mail.withHtml(recipient, subject, emailContent)
+                    .addAttachment("logo.png", logoBytes, "image/png", "logo", "inline")
+                    .addAttachment("Invoice_${invoice.invoiceNumber}.pdf", pdfBytes, "application/pdf")
 
-        mailer.send(mail)
+                mailer.send(mail)
+            }
+            .onFailure().invoke { err: Throwable ->
+                logger.error("Failed to send invoice email: ${err.message}", err)
+            }
+    }
+
+    /**
+     * Loads the logo from the classpath.
+     */
+    private fun loadLogo(path: String): ByteArray? {
+        val logoStream: InputStream? = Thread.currentThread().contextClassLoader.getResourceAsStream(path)
+        return logoStream?.use { it.readBytes() }
     }
 }

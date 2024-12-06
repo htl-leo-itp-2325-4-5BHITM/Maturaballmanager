@@ -113,6 +113,7 @@ export class BenefitManagementComponent implements OnInit {
         })
         .onClose.subscribe((result: Benefit | undefined) => {
       if (result) {
+        console.log(result)
         this.benefitService.updateBenefit(result).subscribe(() => {
           this.loadBenefits();
           this.toastrService.success('Gegenleistung erfolgreich aktualisiert.', 'Erfolg');

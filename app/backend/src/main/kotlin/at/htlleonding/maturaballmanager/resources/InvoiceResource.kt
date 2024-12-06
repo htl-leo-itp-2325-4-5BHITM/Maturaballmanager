@@ -1,14 +1,15 @@
 package at.htlleonding.maturaballmanager.resources
 
-import at.htlleonding.maturaballmanager.model.entities.Invoice
+import at.htlleonding.maturaballmanager.configs.toDTO
+import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
 import at.htlleonding.maturaballmanager.services.InvoiceService
 import jakarta.inject.Inject
-import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.jwt.JsonWebToken
+import io.smallrye.mutiny.Uni
 import java.util.UUID
 
 @Path("/invoices")
@@ -26,7 +27,7 @@ class InvoiceResource {
      * Retrieves all invoices.
      */
     @GET
-    fun getAllInvoices(): List<Invoice> {
+    fun getAllInvoices(): Uni<List<InvoiceDTO>> {
         return invoiceService.findAllInvoices()
     }
 
@@ -34,9 +35,16 @@ class InvoiceResource {
      * Creates a new invoice.
      */
     @POST
-    @Transactional
-    fun createInvoice(@Valid invoice: Invoice): Invoice {
-        return invoiceService.createInvoice(invoice)
+    fun createInvoice(@Valid invoiceDTO: InvoiceDTO): Uni<Response> {
+        return invoiceService.createInvoice(invoiceDTO)
+            .map { createdInvoiceDTO: InvoiceDTO ->
+                Response.status(Response.Status.CREATED).entity(createdInvoiceDTO).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failed to create invoice: ${throwable}")
+                    .build()
+            }
     }
 
     /**
@@ -44,8 +52,12 @@ class InvoiceResource {
      */
     @GET
     @Path("/{id}")
-    fun getInvoice(@PathParam("id") id: UUID): Invoice {
+    fun getInvoice(@PathParam("id") id: UUID): Uni<Response> {
         return invoiceService.findInvoice(id)
+            .map { it.toDTO() }
+            .map { invoiceDTO ->
+                Response.ok(invoiceDTO).build()
+            }
     }
 
     /**
@@ -53,9 +65,11 @@ class InvoiceResource {
      */
     @PUT
     @Path("/{id}")
-    @Transactional
-    fun updateInvoice(@PathParam("id") id: UUID, @Valid invoice: Invoice): Invoice {
-        return invoiceService.updateInvoice(id, invoice)
+    fun updateInvoice(@PathParam("id") id: UUID, @Valid invoiceDTO: InvoiceDTO): Uni<Response> {
+        return invoiceService.updateInvoice(id, invoiceDTO)
+            .map { updatedInvoiceDTO: InvoiceDTO ->
+                Response.ok(updatedInvoiceDTO).build()
+            }
     }
 
     /**
@@ -63,14 +77,22 @@ class InvoiceResource {
      */
     @DELETE
     @Path("/{id}")
-    @Transactional
-    fun deleteInvoice(@PathParam("id") id: UUID): Response {
-        val deleted = invoiceService.deleteInvoice(id)
-        return if (deleted) {
-            Response.noContent().build()
-        } else {
-            throw NotFoundException("Invoice not found")
-        }
+    fun deleteInvoice(@PathParam("id") id: UUID): Uni<Response> {
+        return invoiceService.deleteInvoice(id)
+            .map { deleted ->
+                if (deleted) {
+                    Response.noContent().build()
+                } else {
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Invoice not found")
+                        .build()
+                }
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failed to delete invoice: ${throwable.message}")
+                    .build()
+            }
     }
 
     /**
@@ -78,10 +100,16 @@ class InvoiceResource {
      */
     @POST
     @Path("/{id}/send")
-    @Transactional
-    fun sendInvoice(@PathParam("id") id: UUID): Response {
-        invoiceService.sendInvoiceByEmail(id)
-        return Response.ok().build()
+    fun sendInvoice(@PathParam("id") id: UUID): Uni<Response> {
+        return invoiceService.sendInvoiceByEmail(id)
+            .map {
+                Response.ok().entity("Invoice sent successfully").build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failed to send invoice: ${throwable.message}")
+                    .build()
+            }
     }
 
     /**
@@ -90,11 +118,18 @@ class InvoiceResource {
     @GET
     @Path("/{id}/pdf")
     @Produces("application/pdf")
-    fun getInvoicePdf(@PathParam("id") id: UUID): Response {
-        val invoice = invoiceService.findInvoice(id)
-        val pdfBytes = invoiceService.generateInvoicePdf(invoice)
-        return Response.ok(pdfBytes)
-            .header("Content-Disposition", "attachment; filename=\"Invoice_$id.pdf\"")
-            .build()
+    fun getInvoicePdf(@PathParam("id") id: UUID): Uni<Response> {
+        val senderName = jwt.getClaim<String>("name") ?: "Unknown"
+        return invoiceService.generateInvoicePdf(id, senderName)
+            .map { pdfBytes ->
+                Response.ok(pdfBytes)
+                    .header("Content-Disposition", "attachment; filename=\"Invoice_${id}.pdf\"")
+                    .build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failed to generate PDF: ${throwable.message}")
+                    .build()
+            }
     }
 }

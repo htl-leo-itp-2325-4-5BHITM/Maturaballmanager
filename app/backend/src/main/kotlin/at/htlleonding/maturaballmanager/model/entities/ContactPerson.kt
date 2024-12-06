@@ -1,8 +1,6 @@
-// src/main/kotlin/at/htlleonding/maturaballmanager/model/entities/ContactPerson.kt
-
 package at.htlleonding.maturaballmanager.model.entities
 
-import at.htlleonding.maturaballmanager.model.entities.Company
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.json.bind.annotation.JsonbTransient
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
@@ -12,7 +10,7 @@ import jakarta.validation.constraints.Pattern
 
 @Entity
 @Table(name = "contact_persons")
-class ContactPerson {
+class ContactPerson: PanacheEntityBase() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

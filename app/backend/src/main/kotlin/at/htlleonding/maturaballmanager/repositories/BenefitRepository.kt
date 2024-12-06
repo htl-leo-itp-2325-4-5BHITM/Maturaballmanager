@@ -1,48 +1,65 @@
 package at.htlleonding.maturaballmanager.repositories
 
 import at.htlleonding.maturaballmanager.model.entities.Benefit
+import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceContext
-import jakarta.transaction.Transactional
 import jakarta.persistence.EntityNotFoundException
 
 @ApplicationScoped
-class BenefitRepository {
+class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
 
-    @PersistenceContext
-    lateinit var em: EntityManager
-
-    fun getAll(): List<Benefit> {
-        return em.createQuery("SELECT b FROM Benefit b", Benefit::class.java).resultList
+    /**
+     * Retrieves all benefits.
+     */
+    fun getAll(): Uni<List<Benefit>> {
+        return listAll()
     }
 
-    fun getById(id: String): Benefit? {
-        return em.find(Benefit::class.java, id)
+    /**
+     * Retrieves a benefit by ID.
+     */
+    fun getById(id: String): Uni<Benefit?> {
+        return findById(id)
     }
 
-    @Transactional
-    fun create(benefit: Benefit): Benefit {
-        em.persist(benefit)
-        return benefit
+    /**
+     * Creates a new benefit.
+     */
+    @WithTransaction
+    fun create(benefit: Benefit): Uni<Benefit> {
+        return persist(benefit).flatMap(Uni.createFrom()::item)
     }
 
-    @Transactional
-    fun update(benefit: Benefit): Benefit {
-        val existingBenefit = getById(benefit.id!!) ?: throw EntityNotFoundException("Benefit not found")
-        existingBenefit.name = benefit.name
-        existingBenefit.description = benefit.description
-        existingBenefit.price = benefit.price
-        return benefit
+    /**
+     * Updates an existing benefit.
+     */
+    @WithTransaction
+    fun update(benefit: Benefit): Uni<Benefit> {
+        return findById(benefit.id)
+            .onItem().ifNull().failWith(EntityNotFoundException("Benefit not found"))
+            .flatMap { existingBenefit ->
+                existingBenefit.name = benefit.name
+                existingBenefit.description = benefit.description
+                existingBenefit.price = benefit.price
+                persist(existingBenefit)
+                    .replaceWith(existingBenefit)
+            }
     }
 
-    @Transactional
-    fun delete(id: String) {
-        val benefit = getById(id)
-        if (benefit != null) {
-            em.remove(benefit)
-        } else {
-            throw EntityNotFoundException("Benefit not found")
+    /**
+     * Deletes a benefit by ID.
+     */
+    @WithTransaction
+    fun delete(id: String): Uni<Void> {
+        return deleteById(id).flatMap { deleted ->
+            if (deleted) Uni.createFrom().voidItem()
+            else Uni.createFrom().failure(EntityNotFoundException("Benefit not found"))
         }
+    }
+
+    fun findAllByIds(ids: List<String>): Uni<List<Benefit>> {
+        return find("id in (?1)", ids).list()
     }
 }
