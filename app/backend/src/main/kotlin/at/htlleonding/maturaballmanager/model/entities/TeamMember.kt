@@ -10,7 +10,7 @@ data class TeamMember(
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long? = null,
+        var id: Long = -1,
 
         @Column(name = "keycloak_id", unique = true, nullable = false)
         var keycloakId: String,
@@ -40,5 +40,5 @@ data class TeamMember(
 
         var syncedAt: LocalDateTime = LocalDateTime.now()
 ) : PanacheEntityBase() {
-        constructor() : this(null, "", "", "", "", "", mutableListOf(), "", LocalDateTime.now(), LocalDateTime.now())
+        constructor() : this(-1, "", "", "", "", "", mutableListOf(), "", LocalDateTime.now(), LocalDateTime.now())
 }

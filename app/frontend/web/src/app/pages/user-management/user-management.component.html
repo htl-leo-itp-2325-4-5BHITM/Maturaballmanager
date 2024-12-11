@@ -19,7 +19,6 @@
                         <nb-icon icon="funnel-outline"></nb-icon> Sortieren
                     </button>
 
-                    <!-- Dropdown-Menü für die Filteroptionen -->
                     <div *ngIf="filterMenuVisible" class="filter-menu">
                         <button nbButton ghost size="small" *ngFor="let header of headers; let i = index" (click)="onSort(getColumnKey(i))">
                             Nach {{ header }} sortieren
@@ -36,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Scrollable Table Container -->
         <div class="table-container">
             <table class="table table-striped modern-table">
                 <thead>
@@ -62,7 +60,6 @@
                             <nb-icon icon="more-horizontal-outline"></nb-icon>
                         </button>
 
-                        <!-- Dropdown-Menü -->
                         <div *ngIf="selectedMember === member" class="dropdown-menu">
                             <button nbButton size="small" (click)="editMember(member)">
                                 Mitglied bearbeiten
@@ -76,7 +73,6 @@
                 </tbody>
             </table>
         </div>
-
 
         <div *ngIf="filteredMembers.length === 0" class="no-data text-center mt-4">
             <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>

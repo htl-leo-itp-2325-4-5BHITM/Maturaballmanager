@@ -1,12 +1,23 @@
-import { Component, HostListener, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { NbButtonModule, NbCardModule, NbDialogService, NbFormFieldModule, NbIconModule, NbInputModule, NbSelectModule } from '@nebular/theme';
+import { Component, ChangeDetectorRef, OnChanges, SimpleChanges, HostListener, OnInit } from '@angular/core';
+import {
+  NbButtonModule,
+  NbCardModule,
+  NbDialogService,
+  NbFormFieldModule,
+  NbIconModule,
+  NbInputModule,
+  NbSelectModule
+} from '@nebular/theme';
 import { NgForOf, NgIf } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UserManagementDialogComponent } from '../../components/dialogs/user-management-dialog/user-management-dialog.component';
+import { UserManagementService, DetailedTeamMemberDTO } from '../../services/user-management.service';
 
+// Map DetailedTeamMemberDTO to Member for display
 interface Member {
-  id: string;
-  name: string;
+  id: number;
+  keycloakId: string;
+  name: string; // firstName + lastName
   email: string;
   role: string;
   lastLogin: string;
@@ -29,7 +40,7 @@ interface Member {
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss'],
 })
-export class UserManagementComponent implements OnChanges {
+export class UserManagementComponent implements OnInit, OnChanges {
   headers: string[] = ['ID', 'Anzeigename', 'Email', 'Rolle', 'Letzter Login'];
   searchTerm: string = '';
   sortColumn: string | null = null;
@@ -37,32 +48,23 @@ export class UserManagementComponent implements OnChanges {
   filterMenuVisible: boolean = false;
   selectedMember: Member | null = null;
 
-  members: Member[] = [
-    { id: 'IT200400', name: 'Anna Schmitz', email: 'anna.schmitz@students.htl-leonding.ac.at', role: 'Sponsoring', lastLogin: 'Nov 15, 2025' },
-    { id: 'IT200401', name: 'Max Mustermann', email: 'max.mustermann@students.htl-leonding.ac.at', role: 'Marketing', lastLogin: 'Nov 10, 2025' },
-    { id: 'IT200402', name: 'John Doe', email: 'john.doe@students.htl-leonding.ac.at', role: 'Verkauf', lastLogin: 'Nov 12, 2025' },
-    { id: 'IT200403', name: 'Jane Smith', email: 'jane.smith@students.htl-leonding.ac.at', role: 'Admin', lastLogin: 'Nov 18, 2025' },
-    { id: 'IT200404', name: 'Maria Müller', email: 'maria.mueller@students.htl-leonding.ac.at', role: 'Technik', lastLogin: 'Nov 16, 2025' },
-    { id: 'IT200405', name: 'Hans Bauer', email: 'hans.bauer@students.htl-leonding.ac.at', role: 'Support', lastLogin: 'Nov 20, 2025' },
-    { id: 'IT200406', name: 'Lisa Schulz', email: 'lisa.schulz@students.htl-leonding.ac.at', role: 'Marketing', lastLogin: 'Nov 17, 2025' },
-    { id: 'IT200407', name: 'Peter Schmidt', email: 'peter.schmidt@students.htl-leonding.ac.at', role: 'Verkauf', lastLogin: 'Nov 14, 2025' },
-  ];
+  members: Member[] = [];
+  filteredMembers: Member[] = [];
 
-  filteredMembers = [...this.members];
+  constructor(
+      private dialogService: NbDialogService,
+      private cdRef: ChangeDetectorRef,
+      private userService: UserManagementService
+  ) {}
 
-  constructor(private dialogService: NbDialogService, private cdRef: ChangeDetectorRef) {}
+  ngOnInit() {
+    this.loadMembers();
+  }
 
-  openAddMemberDialog() {
-    this.dialogService
-        .open(UserManagementDialogComponent)
-        .onClose.subscribe((selectedMember: Member | null) => {
-      if (selectedMember) {
-        console.log(selectedMember);
-        this.members.push(selectedMember);
-        console.log(this.members);
-        this.cdRef.detectChanges(); // Manuelles Triggern der Ansicht-Überprüfung
-        this.applyFilters(); // Filter erneut anwenden
-      }
+  loadMembers() {
+    this.userService.getTeamMembers().subscribe(teamMembers => {
+      this.members = teamMembers.map(dto => this.dtoToMember(dto));
+      this.filteredMembers = [...this.members];
     });
   }
 
@@ -70,6 +72,19 @@ export class UserManagementComponent implements OnChanges {
     if (changes['members']) {
       this.applyFilters();
     }
+  }
+
+  dtoToMember(dto: DetailedTeamMemberDTO): Member {
+    const fullName = [dto.firstName, dto.lastName].filter(Boolean).join(' ');
+    const role = dto.realmRoles && dto.realmRoles.length > 0 ? dto.realmRoles[0] : 'N/A';
+    return {
+      id: dto.id,
+      keycloakId: dto.keycloakId,
+      name: fullName || dto.username,
+      email: dto.email,
+      role: role,
+      lastLogin: dto.syncedAt,
+    };
   }
 
   get totalMembers(): number {
@@ -124,17 +139,70 @@ export class UserManagementComponent implements OnChanges {
     this.selectedMember = this.selectedMember === member ? null : member;
   }
 
+  openAddMemberDialog() {
+    this.dialogService
+        .open(UserManagementDialogComponent)
+        .onClose.subscribe((selectedMember: Member | null) => {
+      if (selectedMember) {
+        // Convert Member back to DTO for saving
+        const dto = this.memberToDTO(selectedMember);
+        this.userService.addTeamMember(dto).subscribe(newDto => {
+          const newMember = this.dtoToMember(newDto);
+          this.members.push(newMember);
+          this.cdRef.detectChanges();
+          this.applyFilters();
+        });
+      }
+    });
+  }
+
   editMember(member: Member): void {
-    console.log('Bearbeiten:', member);
+    this.dialogService.open(UserManagementDialogComponent)
+        .onClose.subscribe((updatedMember: Member | null) => {
+      if (updatedMember) {
+        // Update on backend
+        const dto = this.memberToDTO(updatedMember);
+        this.userService.updateTeamMember(updatedMember.id, dto).subscribe(updatedDto => {
+          const updated = this.dtoToMember(updatedDto);
+          const index = this.members.findIndex(m => m.id === member.id);
+          if (index !== -1) {
+            this.members[index] = updated;
+            this.cdRef.detectChanges();
+            this.applyFilters();
+          }
+        });
+      }
+    });
   }
 
   deleteMember(member: Member): void {
-    console.log('Entfernen:', member);
-    const index = this.members.findIndex(m => m.id === member.id);
-    if (index !== -1) {
-      this.members.splice(index, 1);
-      this.filteredMembers = [...this.members];
-    }
+    this.userService.deleteTeamMember(member.id).subscribe(() => {
+      const index = this.members.findIndex(m => m.id === member.id);
+      if (index !== -1) {
+        this.members.splice(index, 1);
+        this.filteredMembers = [...this.members];
+      }
+    });
+  }
+
+  memberToDTO(member: Member): any {
+    // We need to convert Member back to TeamMemberDTO
+    // Member does not have all fields (like firstName, lastName), so we might need to store them differently.
+    // For simplicity, let's assume we can't perfectly recreate. We'll just guess:
+    // We'll parse the name into firstName and lastName if possible.
+    const nameParts = member.name.split(' ');
+    const firstName = nameParts.length > 0 ? nameParts[0] : undefined;
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : undefined;
+
+    return {
+      keycloakId: member.keycloakId,
+      username: member.name.replace(' ', '.').toLowerCase(), // or some logic to revert it
+      email: member.email,
+      firstName: firstName,
+      lastName: lastName,
+      realmRoles: [member.role],
+      note: null
+    };
   }
 
   getColumnKey(index: number): keyof Member {

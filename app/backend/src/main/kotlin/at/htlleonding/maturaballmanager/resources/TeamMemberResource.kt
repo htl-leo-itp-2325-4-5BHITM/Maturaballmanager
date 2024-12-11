@@ -23,6 +23,7 @@ class TeamMemberResource {
      */
     @POST
     fun addTeamMember(teamMemberDTO: TeamMemberDTO): Uni<Response> {
+        println(teamMemberDTO)
         return service.addTeamMember(teamMemberDTO)
             .onItem().transform { teamMember ->
                 Response.status(Response.Status.CREATED).entity(teamMember).build()

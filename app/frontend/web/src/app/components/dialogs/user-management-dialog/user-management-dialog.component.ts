@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
-import {NbButtonModule, NbCardModule, NbDialogRef, NbIconModule, NbInputModule, NbRadioModule} from '@nebular/theme';
-import {NgForOf, NgIf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {updateSeriesElementSelection} from "echarts/types/src/util/states";
+import { Component, Inject } from '@angular/core';
+import { NbButtonModule, NbCardModule, NbDialogRef, NbIconModule, NbInputModule, NbRadioModule, NB_DIALOG_CONFIG, NbDialogConfig } from '@nebular/theme';
+import { NgForOf, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {DetailedTeamMemberDTO, UserManagementService} from "../../../services/user-management.service";
 
 interface Member {
-  id: string;
+  id: number;
+  keycloakId: string;
   name: string;
   email: string;
+  role?: string;
+  lastLogin?: string;
 }
 
 @Component({
@@ -27,36 +30,37 @@ interface Member {
   styleUrls: ['./user-management-dialog.component.scss']
 })
 export class UserManagementDialogComponent {
-
   roles = [
-    { value: 'Marketing', label: 'Marketing', checked: true },
-    { value: 'Sponsoring', label: 'Sponsoring' },
-    { value: 'Admin', label: 'Admin' },
-  ];
-
-  members: Member[] = [
-    { id: 'IT300001', name: 'Sophia Bergmann', email: 'sophia.bergmann@students.htl-leonding.ac.at' },
-    { id: 'IT300002', name: 'Lucas Huber', email: 'lucas.huber@students.htl-leonding.ac.at' },
-    { id: 'IT300003', name: 'Emma Fischer', email: 'emma.fischer@students.htl-leonding.ac.at' },
-    { id: 'IT300004', name: 'Noah Keller', email: 'noah.keller@students.htl-leonding.ac.at' },
-    { id: 'IT300005', name: 'Mia Weber', email: 'mia.weber@students.htl-leonding.ac.at' },
-    { id: 'IT300006', name: 'Elias Wagner', email: 'elias.wagner@students.htl-leonding.ac.at' },
-    { id: 'IT300007', name: 'Lina Scholz', email: 'lina.scholz@students.htl-leonding.ac.at' },
-    { id: 'IT300008', name: 'Ben Frank', email: 'ben.frank@students.htl-leonding.ac.at' }
+    { value: 'management', label: 'Maturaballleitung', checked: true },
+    { value: 'finance', label: 'Finanzen' },
+    { value: 'sponsoring', label: 'Sponsoring' },
   ];
 
   filteredMembers: Member[] = [];
   searchQuery: string = '';
   selectedMember: Member | null = null;
   role: string | null = null;
+  isEditing: boolean = false;
 
-  constructor(protected dialogRef: NbDialogRef<UserManagementDialogComponent>) {}
+  constructor(
+      protected dialogRef: NbDialogRef<UserManagementDialogComponent>,
+      @Inject(NB_DIALOG_CONFIG) public config: NbDialogConfig<{ member?: Member }>,
+      private userService: UserManagementService
+  ) {
+    if (config.context?.member) {
+      this.isEditing = true;
+      this.selectedMember = { ...config.context.member };
+      this.role = this.selectedMember.role ?? 'Marketing';
+    } else {
+      this.role = 'Marketing';
+    }
+  }
 
   filterMembers(query: string) {
     if (query.length >= 3) {
-      this.filteredMembers = this.members.filter(member =>
-          member.name.toLowerCase().includes(query.toLowerCase())
-      );
+      this.userService.searchTeamMembers(query).subscribe(dtos => {
+        this.filteredMembers = dtos.map(dto => this.dtoToMember(dto));
+      });
     } else {
       this.filteredMembers = [];
     }
@@ -68,19 +72,25 @@ export class UserManagementDialogComponent {
     this.filteredMembers = [];
   }
 
+  dtoToMember(dto: DetailedTeamMemberDTO): Member {
+    const fullName = [dto.firstName, dto.lastName].filter(Boolean).join(' ');
+    const role = dto.realmRoles && dto.realmRoles.length > 0 ? dto.realmRoles[0] : 'N/A';
+    return {
+      id: dto.id,
+      keycloakId: dto.keycloakId,
+      name: fullName || dto.username,
+      email: dto.email,
+      role: role,
+      lastLogin: dto.syncedAt
+    };
+  }
+
   cancel() {
     this.dialogRef.close();
   }
 
   submit() {
-      /*if (this.selectedMember) {
-        const updatedMember = {
-          ...this.selectedMember,
-          role: this.role,
-          lastLogin: new Date().toLocaleDateString('en-GB')
-        };
-        this.dialogRef.close(updatedMember);
-      }*/
+    if (!this.selectedMember && !this.isEditing) return;
     const updatedMember = {
       ...this.selectedMember,
       role: this.role,

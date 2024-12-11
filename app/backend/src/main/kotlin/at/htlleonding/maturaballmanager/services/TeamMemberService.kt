@@ -5,6 +5,8 @@ import at.htlleonding.maturaballmanager.model.dtos.TeamMemberDTO
 import at.htlleonding.maturaballmanager.model.dtos.TeamMemberSearchResultDTO
 import at.htlleonding.maturaballmanager.model.entities.TeamMember
 import at.htlleonding.maturaballmanager.repositories.TeamMemberRepository
+import io.quarkus.hibernate.reactive.panache.common.WithSession
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -28,11 +30,12 @@ class TeamMemberService {
     /**
      * Adds an existing TeamMember by assigning roles in Keycloak and creating a local entity.
      */
+    @WithTransaction
     fun addTeamMember(teamMemberDTO: TeamMemberDTO): Uni<DetailedTeamMemberDTO> {
         val keycloakId = teamMemberDTO.keycloakId
-        val rolesToAdd = teamMemberDTO.realmRoles.filter { !it.startsWith("default-") }
+        val rolesToAdd = teamMemberDTO.realmRoles.filter { !it.startsWith("uma-") }
 
-        return keycloakAdminService.assignRolesToUser(keycloakId, rolesToAdd)
+        return keycloakAdminService.assignClientRolesToUser(keycloakId, rolesToAdd)
             .flatMap {
                 keycloakAdminService.getUserRepresentation(keycloakId)
             }
@@ -65,23 +68,24 @@ class TeamMemberService {
     /**
      * Updates roles and notes of an existing TeamMember.
      */
+    @WithTransaction
     fun updateTeamMember(id: Long, teamMemberDTO: TeamMemberDTO): Uni<DetailedTeamMemberDTO> {
-        val rolesToAssign = teamMemberDTO.realmRoles.filter { !it.startsWith("default-") }
+        val rolesToAssign = teamMemberDTO.realmRoles.filter { !it.startsWith("uma-") }
 
         return repository.findById(id)
             .flatMap { existingMember: TeamMember? ->
                 if (existingMember != null) {
-                    val rolesToUnassign = existingMember.realmRoles.filter { !rolesToAssign.contains(it) && !it.startsWith("default-") }
+                    val rolesToUnassign = existingMember.realmRoles.filter { !rolesToAssign.contains(it) && !it.startsWith("uma-") }
                     val rolesToAssignFiltered = rolesToAssign.filter { !existingMember.realmRoles.contains(it) }
 
                     val unassign = if (rolesToUnassign.isNotEmpty()) {
-                        keycloakAdminService.unassignRolesFromUser(existingMember.keycloakId, rolesToUnassign)
+                        keycloakAdminService.assignClientRolesToUser(existingMember.keycloakId, rolesToUnassign)
                     } else {
                         Uni.createFrom().voidItem()
                     }
 
                     val assign = if (rolesToAssignFiltered.isNotEmpty()) {
-                        keycloakAdminService.assignRolesToUser(existingMember.keycloakId, rolesToAssignFiltered)
+                        keycloakAdminService.assignClientRolesToUser(existingMember.keycloakId, rolesToAssignFiltered)
                     } else {
                         Uni.createFrom().voidItem()
                     }
@@ -109,13 +113,14 @@ class TeamMemberService {
     /**
      * Deletes an existing TeamMember by removing roles from Keycloak and deleting the local entity.
      */
+    @WithTransaction
     fun deleteTeamMember(id: Long): Uni<Void> {
         return repository.findById(id)
             .flatMap { existingMember: TeamMember? ->
                 if (existingMember != null) {
-                    val rolesToUnassign = existingMember.realmRoles.filter { !it.startsWith("default-") }
+                    val rolesToUnassign = existingMember.realmRoles.filter { !it.startsWith("uma-") }
                     if (rolesToUnassign.isNotEmpty()) {
-                        keycloakAdminService.unassignRolesFromUser(existingMember.keycloakId, rolesToUnassign)
+                        keycloakAdminService.unassignClientRolesFromUser(existingMember.keycloakId, rolesToUnassign)
                             .flatMap {
                                 repository.delete(existingMember)
                             }
@@ -176,19 +181,18 @@ class TeamMemberService {
                             if (existingMember != null) {
                                 Uni.createFrom().item(existingMember)
                             } else {
-                                // Create local entity if it doesn't exist
                                 val newTeamMember = TeamMember(
                                     keycloakId = resolvedKeycloakId,
                                     username = userRepresentation.username ?: "",
                                     email = userRepresentation.email ?: "",
                                     firstName = userRepresentation.firstName,
                                     lastName = userRepresentation.lastName,
-                                    realmRoles = userRepresentation.realmRoles.filter { !it.startsWith("default-") }.toMutableList(),
-                                    note = "", // Optional: set from another context
+                                    realmRoles = userRepresentation.realmRoles.filter { !it.startsWith("uma-") }.toMutableList(),
+                                    note = "",
                                     initialStoredAt = LocalDateTime.now(),
                                     syncedAt = LocalDateTime.now()
                                 )
-                                repository.persist(newTeamMember) // Returns Uni<TeamMember>
+                                repository.persist(newTeamMember)
                             }
                         }
                 } else {
@@ -207,7 +211,7 @@ class TeamMemberService {
      * Extension function to convert TeamMember to DetailedTeamMemberDTO
      */
     private fun TeamMember.toDetailedDTO(): DetailedTeamMemberDTO = DetailedTeamMemberDTO(
-        id = this.id!!,
+        id = this.id,
         keycloakId = this.keycloakId,
         username = this.username,
         email = this.email,
@@ -219,6 +223,7 @@ class TeamMemberService {
         syncedAt = this.syncedAt.toString()
     )
 
+    @WithSession
     fun getTeamMembers(): Uni<List<TeamMember>> {
         return repository.listAll()
     }

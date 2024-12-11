@@ -1,18 +1,18 @@
-package at.htlleonding.maturaballmanager.services
+package at.htlleonding.maturaballmanager.services;
 
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.NotFoundException
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.keycloak.admin.client.resource.RealmResource
-import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 
 @ApplicationScoped
 class KeycloakAdminService {
 
-    @ConfigProperty(name = "quarkus.oidc.auth-server-url")
+    @ConfigProperty(name = "quarkus.oidc.server-url")
     lateinit var serverUrl: String
 
     @ConfigProperty(name = "quarkus.oidc.realm")
@@ -30,52 +30,71 @@ class KeycloakAdminService {
             .serverUrl(serverUrl)
             .realm(adminRealm)
             .grantType("client_credentials")
-            .clientId(clientId)
             .clientSecret(clientSecret)
+            .clientId(clientId)
             .build()
     }
 
     /**
-     * Weist einem Benutzer Rollen zu, die nicht mit "default-" beginnen.
+     * Retrieve the internal Keycloak client UUID by the client name (clientId in Keycloak terms).
      */
-    fun assignRolesToUser(keycloakId: String, roles: List<String>): Uni<Void> {
+    private fun getClientUUID(keycloak: Keycloak, clientName: String): String {
+        val realm = keycloak.realm(adminRealm)
+        val clients = realm.clients().findAll()
+        val foundClient = clients.firstOrNull { it.clientId == clientName }
+            ?: throw NotFoundException("Client '$clientName' not found in realm '$adminRealm'")
+        return foundClient.id
+    }
+
+    /**
+     * Assigns client-level roles to a user.
+     */
+    fun assignClientRolesToUser(keycloakId: String, roles: List<String>): Uni<Void> {
         return Uni.createFrom().item {
             val keycloak = getKeycloakClient()
-            val realm: RealmResource = keycloak.realm(adminRealm)
+            val realm = keycloak.realm(adminRealm)
             val userResource = realm.users().get(keycloakId)
-            val rolesResource = userResource.roles().realmLevel()
 
-            // Filtere Rollen, die nicht mit "default-" beginnen
-            val availableRoles: List<RoleRepresentation> = realm.roles().list().filter { !it.name.startsWith("default-") }
+            val clientUUID = getClientUUID(keycloak, clientId)
+            val clientResource = realm.clients().get(clientUUID)
 
-            val rolesToAssign = availableRoles.filter { roles.contains(it.name) }
+            val clientRoles = clientResource.roles().list()
+            val rolesToAssign = clientRoles.filter { roles.contains(it.name) }
 
-            rolesResource.add(rolesToAssign)
+            if (rolesToAssign.isNotEmpty()) {
+                userResource.roles().clientLevel(clientUUID).add(rolesToAssign)
+            }
+
             keycloak.close()
         }.replaceWithVoid()
     }
 
     /**
-     * Entfernt Rollen von einem Benutzer, die nicht mit "default-" beginnen.
+     * Unassigns client-level roles from a user.
      */
-    fun unassignRolesFromUser(keycloakId: String, roles: List<String>): Uni<Void> {
+    fun unassignClientRolesFromUser(keycloakId: String, roles: List<String>): Uni<Void> {
         return Uni.createFrom().item {
             val keycloak = getKeycloakClient()
-            val realm: RealmResource = keycloak.realm(adminRealm)
+            val realm = keycloak.realm(adminRealm)
             val userResource = realm.users().get(keycloakId)
-            val rolesResource = userResource.roles().realmLevel()
 
-            // Filtere Rollen, die nicht mit "default-" beginnen
-            val availableRoles: List<RoleRepresentation> = realm.roles().list().filter { !it.name.startsWith("default-") }
+            val clientUUID = getClientUUID(keycloak, clientId)
+            val clientResource = realm.clients().get(clientUUID)
 
-            val rolesToUnassign = availableRoles.filter { roles.contains(it.name) }
+            val clientRoles = clientResource.roles().list()
+            val rolesToUnassign = clientRoles.filter { roles.contains(it.name) }
 
-            rolesResource.remove(rolesToUnassign)
+            if (rolesToUnassign.isEmpty()) {
+                keycloak.close()
+                return@item
+            }
+
+            userResource.roles().clientLevel(clientUUID).remove(rolesToUnassign)
             keycloak.close()
         }.replaceWithVoid()
     }
 
-    /**
+/**
      * Holt die UserRepresentation eines Benutzers basierend auf der Keycloak-ID.
      */
     fun getUserRepresentation(keycloakId: String): Uni<UserRepresentation?> {
