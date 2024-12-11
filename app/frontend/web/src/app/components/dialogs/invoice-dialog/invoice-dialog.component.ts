@@ -51,17 +51,15 @@ import {InvoiceDTO} from "../../../model/dtos/invoice.dto";
 })
 export class InvoiceDialogComponent implements OnInit {
     @Input() title: string = '';
-    @Input() invoice: Invoice | null = null;
+    @Input() invoice: Invoice | InvoiceDTO = {} as Invoice;
 
     form: FormGroup;
 
-    // Neue Felder für die Send-Option
     sendOptions = [
         { value: 'immediate', label: 'Direkt versenden' },
         { value: 'onDate', label: 'Am Rechnungsdatum versenden' }
     ];
 
-    // Neue Variable für Statusoptionen
     statusOptions: Status[] = [];
 
     companies: Company[] = [];
@@ -82,8 +80,8 @@ export class InvoiceDialogComponent implements OnInit {
             benefits: [[], Validators.required],
             invoiceDate: [new Date(), Validators.required],
             paymentDeadline: [{ value: null, disabled: true }, Validators.required],
-            sendOption: ['immediate', Validators.required], // Neues Feld
-            scheduledSendDate: [{ value: null, disabled: true }], // Datum für geplanten Versand
+            sendOption: ['immediate', Validators.required],
+            scheduledSendDate: [{ value: null, disabled: true }],
             totalAmount: [{ value: 0, disabled: true }],
         });
     }
@@ -103,20 +101,22 @@ export class InvoiceDialogComponent implements OnInit {
     ngOnInit(): void {
         this.loadCompanies();
         this.loadBenefits();
+        this.loadContactPersons(this.invoice?.company);
 
         this.statusOptions = [Status.DRAFT, Status.SENT, Status.PAID];
 
+        console.log(this.invoice)
         if (this.invoice) {
             this.form.patchValue({
-                company: this.invoice.company?.id,
-                contactPerson: this.invoice.contactPerson?.id || null,
-                benefits: this.invoice.benefits.map(b => b.id),
+                company: this.invoice?.company,
+                contactPerson: this.invoice?.contactPerson ?? undefined,
+                benefits: this.invoice?.benefits || [],
                 invoiceDate: this.invoice.invoiceDate ? new Date(this.invoice.invoiceDate) : new Date(),
                 paymentDeadline: this.invoice.paymentDeadline ? new Date(this.invoice.paymentDeadline) : null,
-                sendOption: this.invoice.status === Status.SENT ? 'immediate' : 'immediate', // Anpassung je nach Status
-                status: this.invoice.status, // Status setzen
+                sendOption: this.invoice.status === Status.SENT ? 'immediate' : 'immediate',
+                status: this.invoice.status,
             });
-            this.loadContactPersons(this.invoice.company?.id!);
+            this.loadContactPersons(this.invoice.company);
         }
 
         this.form.get('company')?.valueChanges.subscribe(companyId => {
@@ -130,12 +130,11 @@ export class InvoiceDialogComponent implements OnInit {
         this.form.get('invoiceDate')?.valueChanges.subscribe((date: Date) => {
             if (date) {
                 const deadline = new Date(date);
-                deadline.setDate(deadline.getDate() + 14); // 14 Tage Frist
+                deadline.setDate(deadline.getDate() + 14);
                 this.form.get('paymentDeadline')?.setValue(deadline);
             }
         });
 
-        // Listen to sendOption changes
         this.form.get('sendOption')?.valueChanges.subscribe(option => {
             if (option === 'immediate') {
                 this.form.get('scheduledSendDate')?.disable();
@@ -144,7 +143,6 @@ export class InvoiceDialogComponent implements OnInit {
             }
         });
 
-        // Initial disabling/enabling of scheduledSendDate
         const currentSendOption = this.form.get('sendOption')?.value;
         if (currentSendOption === 'immediate') {
             this.form.get('scheduledSendDate')?.disable();
@@ -152,9 +150,7 @@ export class InvoiceDialogComponent implements OnInit {
             this.form.get('scheduledSendDate')?.enable();
         }
 
-        // Falls das Formular readonly sein soll (z.B. für SENT Status)
         if (this.invoice && this.invoice.status === Status.SENT) {
-            // Nur Status ändern auf PAID erlauben
             this.form.get('company')?.disable();
             this.form.get('contactPerson')?.disable();
             this.form.get('benefits')?.disable();
@@ -162,7 +158,6 @@ export class InvoiceDialogComponent implements OnInit {
             this.form.get('paymentDeadline')?.disable();
             this.form.get('sendOption')?.disable();
             this.form.get('scheduledSendDate')?.disable();
-            // Ermögliche nur die Statusänderung
         }
     }
 
@@ -191,7 +186,7 @@ export class InvoiceDialogComponent implements OnInit {
             const selectedContactPerson = this.contactPersons.find(cp => cp.id === formValue.contactPerson) || null;
             const selectedBenefits = this.benefits.filter(b => formValue.benefits.includes(b.id));
 
-            const invoice: InvoiceDTO = {
+            this.dialogRef.close({
                 id: this.invoice?.id as string,
                 company: selectedCompany?.id!,
                 contactPerson: selectedContactPerson?.id!,
@@ -200,46 +195,7 @@ export class InvoiceDialogComponent implements OnInit {
                 paymentDeadline: formValue.paymentDeadline as Date,
                 status: formValue.status as Status,
                 totalAmount: formValue.totalAmount as number,
-            };
-
-            if (this.invoice) {
-                // Bearbeiten einer bestehenden Rechnung
-                this.invoiceService.updateInvoice(invoice.id, invoice).subscribe({
-                    next: (updatedInvoice) => {
-                        this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
-                        this.dialogRef.close(updatedInvoice);
-                    },
-                    error: (error) => {
-                        console.error('Fehler beim Aktualisieren der Rechnung', error);
-                        this.toastrService.danger('Fehler beim Aktualisieren der Rechnung.', 'Fehler');
-                    }
-                });
-            } else {
-                // Erstellen einer neuen Rechnung
-                this.invoiceService.createInvoice(invoice).subscribe({
-                    next: (newInvoice) => {
-                        if (invoice.status === Status.SENT) {
-                            this.invoiceService.sendInvoice(newInvoice.id!).subscribe({
-                                next: () => {
-                                    this.toastrService.success('Rechnung erfolgreich erstellt und versendet.', 'Erfolg');
-                                    this.dialogRef.close(newInvoice);
-                                },
-                                error: (error) => {
-                                    console.error('Fehler beim Versenden der Rechnung', error);
-                                    this.toastrService.danger('Fehler beim Versenden der Rechnung.', 'Fehler');
-                                }
-                            });
-                        } else {
-                            this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
-                            this.dialogRef.close(newInvoice);
-                        }
-                    },
-                    error: (error) => {
-                        console.error('Fehler beim Erstellen der Rechnung', error);
-                        this.toastrService.danger('Fehler beim Erstellen der Rechnung.', 'Fehler');
-                    }
-                });
-            }
+            });
         }
     }
 

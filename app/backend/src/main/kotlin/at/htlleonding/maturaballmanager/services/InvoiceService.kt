@@ -65,6 +65,8 @@ class InvoiceService {
                     }
             }
             .onFailure().invoke { throwable ->
+                // Optional: Add logging here
+                // logger.error("Failed to create invoice", throwable)
             }
     }
 
@@ -85,8 +87,10 @@ class InvoiceService {
                                 fetchBenefits(invoiceDTO.benefits)
                                     .flatMap { benefits ->
                                         existingInvoice.benefits = benefits.toMutableList()
-                                        existingInvoice.invoiceDate = invoiceDTO.invoiceDate ?: existingInvoice.invoiceDate
-                                        existingInvoice.paymentDeadline = invoiceDTO.paymentDeadline ?: existingInvoice.invoiceDate?.plusDays(14)
+                                        existingInvoice.invoiceDate =
+                                            invoiceDTO.invoiceDate ?: existingInvoice.invoiceDate
+                                        existingInvoice.paymentDeadline =
+                                            invoiceDTO.paymentDeadline ?: existingInvoice.invoiceDate?.plusDays(14)
                                         existingInvoice.status = invoiceDTO.status
                                         existingInvoice.totalAmount = benefits.sumOf { it.price ?: 0.0 }
 
@@ -123,7 +127,6 @@ class InvoiceService {
             Uni.createFrom().item<ContactPerson?>(null)
         } else {
             contactPersonRepository.findById(contactPersonId)
-                .onItem().ifNull().failWith { IllegalArgumentException("ContactPerson not found with ID: $contactPersonId") }
         }
     }
 

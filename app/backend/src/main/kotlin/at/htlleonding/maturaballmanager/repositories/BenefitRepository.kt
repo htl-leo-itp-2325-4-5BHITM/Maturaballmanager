@@ -52,11 +52,19 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
      * Deletes a benefit by ID.
      */
     @WithTransaction
-    fun delete(id: String): Uni<Void> {
-        return deleteById(id).flatMap { deleted ->
-            if (deleted) Uni.createFrom().voidItem()
-            else Uni.createFrom().failure(EntityNotFoundException("Benefit not found"))
-        }
+    fun delete(id: String): Uni<Void?>? {
+        return delete("id", id)
+            .onItem().ifNotNull().transform { null as Void? } // Transform successful deletion into Void
+            .onFailure().transform { throwable ->
+                if (throwable.message?.contains("violates foreign key constraint") == true) {
+                    IllegalStateException(
+                        "Cannot delete benefit with ID $id because it is referenced in other records.",
+                        throwable
+                    )
+                } else {
+                    throwable
+                }
+            }
     }
 
     fun findAllByIds(ids: List<String>): Uni<List<Benefit>> {

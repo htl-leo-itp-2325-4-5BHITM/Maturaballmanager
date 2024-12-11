@@ -113,4 +113,16 @@ class TeamMemberResource {
                 }
             }
     }
+
+    @GET
+    @Path("/team")
+    fun getTeamMembers(): Uni<Response> {
+        return service.getTeamMembers()
+            .onItem().transform { teamMembers ->
+                Response.ok(teamMembers).build()
+            }
+            .onFailure().recoverWithItem { e ->
+                Response.status(Response.Status.BAD_REQUEST).entity(mapOf("error" to e.message)).build()
+            }
+    }
 }

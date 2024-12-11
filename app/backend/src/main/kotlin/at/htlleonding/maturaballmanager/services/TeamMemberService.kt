@@ -218,4 +218,8 @@ class TeamMemberService {
         initialStoredAt = this.initialStoredAt.toString(),
         syncedAt = this.syncedAt.toString()
     )
+
+    fun getTeamMembers(): Uni<List<TeamMember>> {
+        return repository.listAll()
+    }
 }

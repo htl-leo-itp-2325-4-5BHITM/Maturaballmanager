@@ -23,6 +23,7 @@ import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/
 import { InvoiceDialogComponent } from "../../components/dialogs/invoice-dialog/invoice-dialog.component";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ReportComponent} from "../../components/report/report.component";
+import {InvoiceDTO} from "../../model/dtos/invoice.dto";
 
 @Component({
   selector: 'app-invoice-management',
@@ -141,7 +142,7 @@ export class InvoiceManagementComponent implements OnInit {
           hasScroll: false,
           dialogClass: 'fixed-dialog-width',
         })
-        .onClose.subscribe((result: InvoiceDT | undefined) => {
+        .onClose.subscribe((result: InvoiceDTO | undefined) => {
       if (result) {
         this.invoiceService.createInvoice(result).subscribe(() => {
           this.loadInvoices();
@@ -156,6 +157,7 @@ export class InvoiceManagementComponent implements OnInit {
       this.toastrService.warning('Versendete oder bezahlte Rechnungen können nicht bearbeitet werden.', 'Warnung');
       return;
     }
+    console.log(invoice)
 
     this.dialogService
         .open(InvoiceDialogComponent, {

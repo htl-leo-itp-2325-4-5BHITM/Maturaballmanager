@@ -12,6 +12,7 @@ import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import net.bytebuddy.pool.TypePool.Resolution.Illegal
 
 @Path("/benefit")
 @Produces(MediaType.APPLICATION_JSON)
@@ -113,10 +114,10 @@ class BenefitResource {
                             .entity(throwable.message)
                             .build()
                     }
-                    is ConstraintViolationException -> {
-                        val errors = throwable.constraintViolations.map { it.message }
+                    is IllegalStateException -> {
+                        val error = throwable.message
                         Response.status(Response.Status.BAD_REQUEST)
-                            .entity(errors)
+                            .entity(error)
                             .build()
                     }
                     else -> {
@@ -134,16 +135,21 @@ class BenefitResource {
      */
     @DELETE
     @Path("/{id}")
-    fun deleteBenefit(@PathParam("id") id: String): Uni<Response> {
+    fun deleteBenefit(@PathParam("id") id: String): Uni<Response>? {
         return benefitRepository.delete(id)
-            .map {
+            ?.map {
                 Response.noContent().build()
             }
-            .onFailure().recoverWithItem { throwable ->
+            ?.onFailure()?.recoverWithItem { throwable ->
                 when (throwable) {
                     is EntityNotFoundException -> {
                         Response.status(Response.Status.NOT_FOUND)
                             .entity("Benefit not found")
+                            .build()
+                    }
+                    is IllegalStateException -> {
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(throwable.message)
                             .build()
                     }
                     else -> {

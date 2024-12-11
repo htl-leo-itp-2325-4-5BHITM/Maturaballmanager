@@ -8,7 +8,7 @@ data class InvoiceDTO(
     var id: UUID? = null,
     var invoiceNumber: String? = null,
     var company: String? = null,
-    var contactPerson: String? = null,
+    var contactPerson: String? = "",
     var benefits: List<String> = emptyList(),
     var invoiceDate: OffsetDateTime? = null,
     var paymentDeadline: OffsetDateTime? = null,

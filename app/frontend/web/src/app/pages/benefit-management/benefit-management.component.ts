@@ -18,6 +18,7 @@ import { BenefitDialogComponent } from '../../components/dialogs/benefit-dialog/
 import { ConfirmDialogComponent } from '../../components/dialogs/confirm-dialog/confirm-dialog.component';
 import { CurrencyPipe, NgForOf, NgIf } from '@angular/common';
 import {ReportComponent} from "../../components/report/report.component";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-benefit-management',
@@ -137,9 +138,13 @@ export class BenefitManagementComponent implements OnInit {
             this.loadBenefits();
             this.toastrService.success('Gegenleistung erfolgreich gelöscht.', 'Erfolg');
           },
-          error: (error) => {
-            this.toastrService.danger('Fehler beim Löschen der Gegenleistung.', 'Fehler');
-            console.error(error);
+          error: (error: HttpErrorResponse) => {
+            console.log(error.status)
+            if(error.status === 400) {
+                this.toastrService.danger('Die Gegenleistung kann nicht gelöscht werden, da sie in einer anderen Entität verwendet wird.', 'Fehler');
+            } else {
+              this.toastrService.danger('Fehler beim Löschen der Gegenleistung.', 'Fehler');
+            }
           },
         });
       }
