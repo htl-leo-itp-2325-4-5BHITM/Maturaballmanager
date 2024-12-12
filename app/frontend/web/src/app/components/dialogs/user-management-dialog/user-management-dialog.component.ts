@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
 import { NbButtonModule, NbCardModule, NbDialogRef, NbIconModule, NbInputModule, NbRadioModule, NB_DIALOG_CONFIG, NbDialogConfig } from '@nebular/theme';
 import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,21 +38,18 @@ export class UserManagementDialogComponent {
 
   filteredMembers: Member[] = [];
   searchQuery: string = '';
-  selectedMember: Member | null = null;
+  @Input("member") member: Member | null = null;
   role: string | null = null;
   isEditing: boolean = false;
 
+
   constructor(
       protected dialogRef: NbDialogRef<UserManagementDialogComponent>,
-      @Inject(NB_DIALOG_CONFIG) public config: NbDialogConfig<{ member?: Member }>,
       private userService: UserManagementService
   ) {
-    if (config.context?.member) {
-      this.isEditing = true;
-      this.selectedMember = { ...config.context.member };
-      this.role = this.selectedMember.role ?? 'Marketing';
-    } else {
-      this.role = 'Marketing';
+    if (this.member) {
+      this.role = this.member.role ?? "";
+      this.isEditing = true
     }
   }
 
@@ -67,7 +64,7 @@ export class UserManagementDialogComponent {
   }
 
   onSelect(member: Member) {
-    this.selectedMember = member;
+    this.member = member;
     this.searchQuery = member.name;
     this.filteredMembers = [];
   }
@@ -90,9 +87,9 @@ export class UserManagementDialogComponent {
   }
 
   submit() {
-    if (!this.selectedMember && !this.isEditing) return;
+    if (!this.member && !this.isEditing) return;
     const updatedMember = {
-      ...this.selectedMember,
+      ...this.member,
       role: this.role,
       lastLogin: new Date().toLocaleDateString('en-GB')
     };

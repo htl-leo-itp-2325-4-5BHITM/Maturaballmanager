@@ -157,10 +157,17 @@ export class UserManagementComponent implements OnInit, OnChanges {
   }
 
   editMember(member: Member): void {
-    this.dialogService.open(UserManagementDialogComponent)
-        .onClose.subscribe((updatedMember: Member | null) => {
+    this.dialogService.open(UserManagementDialogComponent, {
+      autoFocus: false,
+      backdropClass: "",
+      closeOnBackdropClick: false,
+      closeOnEsc: false,
+      dialogClass: "",
+      hasBackdrop: false,
+      hasScroll: false,
+      viewContainerRef: undefined,
+      context: { member } }).onClose.subscribe((updatedMember: Member | null) => {
       if (updatedMember) {
-        // Update on backend
         const dto = this.memberToDTO(updatedMember);
         this.userService.updateTeamMember(updatedMember.id, dto).subscribe(updatedDto => {
           const updated = this.dtoToMember(updatedDto);
