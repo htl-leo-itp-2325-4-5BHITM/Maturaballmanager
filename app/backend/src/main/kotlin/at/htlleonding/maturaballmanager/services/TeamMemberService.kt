@@ -4,6 +4,7 @@ import at.htlleonding.maturaballmanager.model.dtos.DetailedTeamMemberDTO
 import at.htlleonding.maturaballmanager.model.dtos.TeamMemberDTO
 import at.htlleonding.maturaballmanager.model.dtos.TeamMemberSearchResultDTO
 import at.htlleonding.maturaballmanager.model.entities.TeamMember
+import at.htlleonding.maturaballmanager.repositories.PromRepository
 import at.htlleonding.maturaballmanager.repositories.TeamMemberRepository
 import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
@@ -18,6 +19,9 @@ import org.slf4j.LoggerFactory
 
 @ApplicationScoped
 class TeamMemberService {
+
+    @Inject
+    lateinit var promRepository: PromRepository
 
     private val logger: Logger = LoggerFactory.getLogger(TeamMemberService::class.java)
 
@@ -52,7 +56,12 @@ class TeamMemberService {
                         initialStoredAt = LocalDateTime.now(),
                         syncedAt = LocalDateTime.now()
                     )
-                    repository.persist(teamMember) // Returns Uni<TeamMember>
+                    promRepository.findLastActiveProm()
+                        .onItem().ifNull().failWith(IllegalStateException("No active Prom found"))
+                        .flatMap { activeProm ->
+                            teamMember.prom = activeProm
+                            repository.persist(teamMember) // Returns Uni<TeamMember>
+                        }
                 } else {
                     Uni.createFrom().failure<TeamMember>(NotFoundException("User not found in Keycloak."))
                 }
@@ -225,6 +234,13 @@ class TeamMemberService {
 
     @WithSession
     fun getTeamMembers(): Uni<List<TeamMember>> {
-        return repository.listAll()
+        return promRepository.findLastActiveProm()
+            .flatMap { prom ->
+                if (prom != null) {
+                    repository.list("prom", prom)
+                } else {
+                    Uni.createFrom().item(emptyList())
+                }
+            }
     }
 }

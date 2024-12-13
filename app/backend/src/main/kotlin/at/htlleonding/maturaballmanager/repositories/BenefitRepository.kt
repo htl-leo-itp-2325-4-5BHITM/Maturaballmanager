@@ -5,17 +5,28 @@ import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import jakarta.persistence.EntityNotFoundException
 
 @ApplicationScoped
 class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
 
+    @Inject
+    lateinit var promRepository: PromRepository
+
     /**
      * Retrieves all benefits.
      */
     fun getAll(): Uni<List<Benefit>> {
-        return listAll()
+        return promRepository.findLastActiveProm().flatMap { prom ->
+            if (prom != null) {
+                list("prom", prom)
+            } else {
+                Uni.createFrom().item(emptyList())
+            }
+        }
     }
+
 
     /**
      * Retrieves a benefit by ID.
@@ -29,7 +40,12 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
      */
     @WithTransaction
     fun create(benefit: Benefit): Uni<Benefit> {
-        return persist(benefit).flatMap(Uni.createFrom()::item)
+        return promRepository.findLastActiveProm()
+            .onItem().ifNull().failWith(IllegalStateException("No active Prom found"))
+            .flatMap { activeProm ->
+                benefit.prom = activeProm
+                persist(benefit)
+            }
     }
 
     /**

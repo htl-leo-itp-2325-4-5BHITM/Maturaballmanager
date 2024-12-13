@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.model.entities
 
+import at.htlleonding.maturaballmanager.repositories.PromRepository
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -38,7 +39,10 @@ data class TeamMember(
 
         var initialStoredAt: LocalDateTime = LocalDateTime.now(),
 
-        var syncedAt: LocalDateTime = LocalDateTime.now()
+        var syncedAt: LocalDateTime = LocalDateTime.now(),
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        var prom: Prom?= null
 ) : PanacheEntityBase() {
         constructor() : this(-1, "", "", "", "", "", mutableListOf(), "", LocalDateTime.now(), LocalDateTime.now())
 }

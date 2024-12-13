@@ -4,18 +4,16 @@ import at.htlleonding.maturaballmanager.model.entities.Company
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.EntityNotFoundException
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
+import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
+import jakarta.inject.Inject
 
 @ApplicationScoped
 class CompanyRepository : PanacheRepositoryBase<Company, String> {
 
-    /**
-     * Retrieves all companies with their contact persons.
-     */
-    fun getAll(): Uni<List<Company>> {
-        return list("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.contactPersons")
-    }
+    @Inject
+    lateinit var promRepository: PromRepository
 
     /**
      * Retrieves a company by ID with its contact persons.
@@ -30,7 +28,12 @@ class CompanyRepository : PanacheRepositoryBase<Company, String> {
     @WithTransaction
     fun create(company: Company): Uni<Company> {
         company.contactPersons.forEach { it.company = company }
-        return persist(company)
+        return promRepository.findLastActiveProm()
+            .onItem().ifNull().failWith(IllegalStateException("No active Prom found"))
+            .flatMap { activeProm ->
+                company.prom = activeProm
+                persist(company)
+            }
     }
 
     /**
@@ -65,7 +68,14 @@ class CompanyRepository : PanacheRepositoryBase<Company, String> {
     /**
      * Retrieves all companies.
      */
+    @WithSession
     fun getAllCompanies(): Uni<List<Company>> {
-        return listAll()
+        return promRepository.findLastActiveProm().flatMap { prom ->
+            if (prom != null) {
+                list("prom", prom)
+            } else {
+                Uni.createFrom().item(emptyList())
+            }
+        }
     }
 }

@@ -21,4 +21,9 @@ class Benefit : PanacheEntityBase() {
 
     @PositiveOrZero(message = "Preis muss positiv oder null sein")
     var price: Double = 0.0
+
+    @ManyToOne
+    @JoinColumn(name = "prom_id")
+    var prom: Prom? = null
+
 }

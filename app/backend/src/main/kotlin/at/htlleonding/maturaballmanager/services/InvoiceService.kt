@@ -1,26 +1,21 @@
 package at.htlleonding.maturaballmanager.services
 
 import at.htlleonding.maturaballmanager.configs.toDTO
-import at.htlleonding.maturaballmanager.configs.toEntity
 import at.htlleonding.maturaballmanager.model.Status
 import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
 import at.htlleonding.maturaballmanager.model.entities.Benefit
 import at.htlleonding.maturaballmanager.model.entities.Company
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import at.htlleonding.maturaballmanager.model.entities.Invoice
-import at.htlleonding.maturaballmanager.repositories.BenefitRepository
-import at.htlleonding.maturaballmanager.repositories.CompanyRepository
-import at.htlleonding.maturaballmanager.repositories.ContactPersonRepository
-import at.htlleonding.maturaballmanager.repositories.InvoiceRepository
+import at.htlleonding.maturaballmanager.repositories.*
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.NotFoundException
-import org.hibernate.Hibernate
 import java.security.SecureRandom
 import java.time.OffsetDateTime
-import java.util.UUID
+import java.util.*
 
 @ApplicationScoped
 class InvoiceService {
@@ -42,6 +37,9 @@ class InvoiceService {
 
     @Inject
     lateinit var benefitRepository: BenefitRepository
+
+    @Inject
+    lateinit var promRepository: PromRepository
 
     /**
      * Creates a new invoice.
@@ -176,9 +174,14 @@ class InvoiceService {
             totalAmount = benefits.sumOf { it.price ?: 0.0 }
         }
 
-        return invoiceRepository.persist(invoice)
-            .map { persistedInvoice ->
-                persistedInvoice.toDTO()
+        return promRepository.findLastActiveProm()
+            .onItem().ifNull().failWith(IllegalStateException("No active Prom found"))
+            .flatMap { activeProm ->
+                company.prom = activeProm
+                invoiceRepository.persist(invoice)
+                    .map { persistedInvoice ->
+                        persistedInvoice.toDTO()
+                    }
             }
     }
 
@@ -223,7 +226,16 @@ class InvoiceService {
      * Finds all invoices.
      */
     fun findAllInvoices(): Uni<List<InvoiceDTO>> {
-        return invoiceRepository.findAll().list<Invoice>().map { it.map { it.toDTO() } }
+        return promRepository.findLastActiveProm().flatMap { prom ->
+            if (prom != null) {
+                invoiceRepository.find("prom", prom).list<Invoice>().map { invoices ->
+                    invoices.map { it.toDTO() }
+                }
+            } else {
+                // Optional: Handhabung, wenn kein aktiver Prom gefunden wird
+                Uni.createFrom().item(emptyList())
+            }
+        }
     }
 
     /**
