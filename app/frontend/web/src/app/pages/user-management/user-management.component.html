@@ -3,7 +3,6 @@
         <div class="header">
             <h5>Benutzerverwaltung</h5>
             <div>
-                <button nbButton size="small">Mitgliederrollen verwalten</button>
                 <button nbButton status="primary" size="small" (click)="openAddMemberDialog()">
                     <nb-icon icon="plus-outline"></nb-icon> Mitglieder hinzufügen
                 </button>
@@ -20,7 +19,6 @@
                         <nb-icon icon="funnel-outline"></nb-icon> Sortieren
                     </button>
 
-                    <!-- Dropdown-Menü für die Filteroptionen -->
                     <div *ngIf="filterMenuVisible" class="filter-menu">
                         <button nbButton ghost size="small" *ngFor="let header of headers; let i = index" (click)="onSort(getColumnKey(i))">
                             Nach {{ header }} sortieren
@@ -37,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Scrollable Table Container -->
         <div class="table-container">
             <table class="table table-striped modern-table">
                 <thead>
@@ -59,9 +56,18 @@
                     <td>{{ member.role }}</td>
                     <td>{{ member.lastLogin }}</td>
                     <td>
-                        <button nbButton size="small">
+                        <button nbButton size="small" (click)="toggleDropdown(member)">
                             <nb-icon icon="more-horizontal-outline"></nb-icon>
                         </button>
+
+                        <div *ngIf="selectedMember === member" class="dropdown-menu">
+                            <button nbButton size="small" (click)="editMember(member)">
+                                Mitglied bearbeiten
+                            </button>
+                            <button nbButton status="danger" size="small" (click)="deleteMember(member)">
+                                Mitglied entfernen
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

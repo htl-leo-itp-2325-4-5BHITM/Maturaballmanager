@@ -58,13 +58,15 @@ export class CompanyManagementComponent implements OnInit {
         },
     ];
 
+    edit =  {
+        icon: 'edit-outline',
+        tooltip: 'Unternehmen bearbeiten',
+        status: 'info',
+        callback: this.openEditDialog.bind(this)
+    };
+
     actions = [
-        {
-            icon: 'edit-outline',
-            tooltip: 'Unternehmen bearbeiten',
-            status: 'info',
-            callback: this.openEditDialog.bind(this),
-        },
+
         {
             icon: 'trash-2-outline',
             tooltip: 'Unternehmen löschen',

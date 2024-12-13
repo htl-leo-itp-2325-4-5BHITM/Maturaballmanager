@@ -16,7 +16,7 @@ interface ColumnConfig {
   key: string;
   title: string;
   sortable?: boolean;
-  format?: (value: any, row: any) => string;
+  format?: (value: any) => string;
 }
 
 interface ActionConfig {
@@ -48,12 +48,14 @@ interface ActionConfig {
 })
 export class ReportComponent implements OnInit {
   @Input() title: string = 'Report';
+  @Input() titleForCount: string = 'Count';
   @Input() data: any[] = [];
   @Input() columns: ColumnConfig[] = [];
   @Input() actions: ActionConfig[] = [];
   @Input() pageSizeOptions: number[] = [5, 10, 20, 50];
   @Input() addButtonLabel: string = 'Hinzufügen';
   @Input() addButtonCallback: () => void = () => {};
+  @Input() editCallback!: Function;
 
   @Output() searchChange = new EventEmitter<string>();
 
@@ -64,6 +66,8 @@ export class ReportComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   searchTerm: string = '';
   expandedRows: Set<any> = new Set();
+  filterMenuVisible: boolean = false;
+
 
   ngOnInit(): void {
     this.filteredData = [...this.data];
@@ -79,36 +83,44 @@ export class ReportComponent implements OnInit {
   applyFilters(): void {
     let filtered = [...this.data];
 
+    // Suchfilter anwenden
     if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
+      const searchTermLower = this.searchTerm.toLowerCase();
       filtered = filtered.filter((row) =>
           this.columns.some((col) => {
             const value = row[col.key];
-            return value && value.toString().toLowerCase().includes(term);
+            return value && value.toString().toLowerCase().includes(searchTermLower);
           })
       );
     }
 
+    // Sortierlogik anwenden
     if (this.sortColumn) {
       filtered.sort((a, b) => {
-        let valA = a[this.sortColumn];
-        let valB = b[this.sortColumn];
+        const valA = a[this.sortColumn];
+        const valB = b[this.sortColumn];
 
-        if (valA === undefined || valA === null) valA = '';
-        if (valB === undefined || valB === null) valB = '';
+        if (valA == null) return this.sortDirection === 'asc' ? -1 : 1;
+        if (valB == null) return this.sortDirection === 'asc' ? 1 : -1;
 
-        if (typeof valA === 'string') valA = valA.toLowerCase();
-        if (typeof valB === 'string') valB = valB.toLowerCase();
+        const comparison =
+            typeof valA === 'string' && typeof valB === 'string'
+                ? valA.localeCompare(valB)
+                : valA < valB
+                    ? -1
+                    : valA > valB
+                        ? 1
+                        : 0;
 
-        if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-        if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
-        return 0;
+        return this.sortDirection === 'asc' ? comparison : -comparison;
       });
     }
 
     this.filteredData = filtered;
-    this.currentPage = 1; // Zurücksetzen der Pagination nach Filterung
+    this.currentPage = 1; // Pagination zurücksetzen
   }
+
+
 
   /**
    * Handhabt die Sucheingabe.
@@ -134,6 +146,7 @@ export class ReportComponent implements OnInit {
     this.applyFilters();
   }
 
+
   /**
    * Handhabt die Änderung der Anzahl der Elemente pro Seite.
    * @param event Auswahlereignis
@@ -150,4 +163,22 @@ export class ReportComponent implements OnInit {
       this.expandedRows.add(row);
     }
   }
+
+  onActionClick(event: MouseEvent, callback: Function, row: any): void {
+    event.stopPropagation();
+
+    if (callback) {
+      callback(row);
+    }
+  }
+
+  toggleFilterMenu(): void {
+    this.filterMenuVisible = !this.filterMenuVisible;
+  }
+
+  getLinkHTML(url: string): string {
+    return `<a href="${url}" target="_blank">${url}</a>`;
+  }
+
+
 }

@@ -13,7 +13,6 @@ class FinanceResource {
     lateinit var jwt: JsonWebToken
 
     @GET
-    @Authenticated
     @Path("/balance")
     fun getBalance(): Number {
         return 20

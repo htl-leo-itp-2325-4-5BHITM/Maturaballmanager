@@ -3,12 +3,9 @@
 package at.htlleonding.maturaballmanager.model.entities
 
 import at.htlleonding.maturaballmanager.model.Status
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase
-import jakarta.json.bind.annotation.JsonbDateFormat
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -23,16 +20,16 @@ class Invoice : PanacheEntityBase() {
     @Column(name = "invoice_number", unique = true, nullable = false)
     var invoiceNumber: String? = null
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     @NotNull(message = "Firma ist erforderlich")
     var company: Company? = null
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "contact_person_id")
     var contactPerson: ContactPerson? = null
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "invoice_benefits",
         joinColumns = [JoinColumn(name = "invoice_id")],
@@ -52,4 +49,8 @@ class Invoice : PanacheEntityBase() {
 
     @NotNull(message = "Gesamtbetrag ist erforderlich")
     var totalAmount: Double? = 0.0
+
+    @ManyToOne
+    @JoinColumn(name = "prom_id")
+    var prom: Prom? = null
 }

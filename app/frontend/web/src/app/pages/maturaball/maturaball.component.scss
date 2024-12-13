@@ -1,0 +1,91 @@
+nb-card {
+  min-height: 52em;
+  padding: 1rem;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem; // Abstand zwischen linkem Formular und Tagesablauf
+}
+
+.form-section, .textarea-section {
+  width: 50%;
+}
+
+.textarea-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.header-with-icon label {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.dayplan-row {
+  align-items: flex-end;
+}
+
+.remove-button {
+  align-self: flex-end;
+  margin-bottom: 1.6rem;
+}
+
+#submitButton, #deleteButton {
+  font-weight: bold;
+  width: 10rem;
+  margin: 0.5rem;
+}
+
+#button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}
+
+input[nbInput] {
+  width: 100%;
+}
+
+textarea[nbInput] {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

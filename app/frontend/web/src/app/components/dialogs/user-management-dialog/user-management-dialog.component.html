@@ -1,25 +1,57 @@
 <nb-card>
     <nb-card-header>
-        <h3>Neues Mitglied hinzufügen</h3>
+        <h6>{{ isEditing ? 'Mitglied bearbeiten' : 'Mitglied hinzufügen' }}</h6>
     </nb-card-header>
+
     <nb-card-body>
-        <form (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input nbInput id="name" [(ngModel)]="newMember.name" name="name" required />
+        <div style="position: relative;" id="searchSelectBox" *ngIf="!isEditing">
+            <input nbInput
+                   [(ngModel)]="searchQuery"
+                   (input)="filterMembers(searchQuery)"
+                   placeholder="Suche nach Mitglied..."
+                   style="width: 100%; padding-right: 30px;"/>
+
+            <ul *ngIf="filteredMembers.length > 0; else noResults" class="dropdown-list">
+                <li *ngFor="let member of filteredMembers" (click)="onSelect(member)">
+                    {{ member.name }}
+                </li>
+            </ul>
+
+            <ng-template #noResults>
+                <p *ngIf="member == null && searchQuery.length >= 3">Keine Mitglieder gefunden.</p>
+            </ng-template>
+        </div>
+
+        <div *ngIf="isEditing && member">
+            <div class="form-group mb-3">
+                <label for="name">Name:</label>
+                <input nbInput id="name" [(ngModel)]="member.name" [readonly]="true" />
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input nbInput id="email" [(ngModel)]="newMember.email" name="email" required />
+            <div class="form-group mb-3">
+                <label for="email">E-Mail:</label>
+                <input nbInput id="email" [(ngModel)]="member.email" [readonly]="true" />
             </div>
-            <div class="form-group">
-                <label for="role">Rolle</label>
-                <input nbInput id="role" [(ngModel)]="newMember.role" name="role" required />
-            </div>
-            <div class="form-group">
-                <button nbButton status="primary" type="submit">Hinzufügen</button>
-                <button nbButton ghost (click)="close()">Abbrechen</button>
-            </div>
-        </form>
+        </div>
+
+        <label for="radioButton">Rollen:</label>
+        <nb-radio-group [(ngModel)]="role" id="radioButton">
+            <nb-radio
+                    *ngFor="let r of roles"
+                    [value]="r.value">
+                {{ r.label }}
+            </nb-radio>
+        </nb-radio-group>
     </nb-card-body>
+
+    <nb-card-footer class="footer-actions">
+        <div class="button-group">
+      <span id="cancelButton" (click)="cancel()">
+        Abbrechen
+      </span>
+            <div class="spacer"></div>
+            <button nbButton status="success" (click)="submit()">
+                <nb-icon icon="save-outline"></nb-icon> {{ isEditing ? 'Aktualisieren' : 'Speichern' }}
+            </button>
+        </div>
+    </nb-card-footer>
 </nb-card>

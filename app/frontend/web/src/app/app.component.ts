@@ -42,4 +42,10 @@ export class AppComponent {
     this.sidebarService.toggle(true, 'menu-sidebar');
     return false;
   }
+
+    protected readonly Router = Router;
+
+  backToLogin() {
+    this.router.navigate(['/login']);
+  }
 }

@@ -93,4 +93,39 @@ export class AuthService {
     await this.authStore.delete('auth_token');
     await this.authStore.delete('refresh_token');
   }
+
+  async hasRoles(roles: string[]): Promise<boolean> {
+    const token = await this.getToken();
+    if (!token) {
+      return false;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    try {
+      const response = await this.http.post<any>(`${environment.apiUrl}/auth/hasRoles`, roles, { headers }).toPromise();
+      return response?.hasRoles ?? false
+    } catch (error) {
+      console.error('Error checking roles:', error);
+      return false;
+    }
+  }
+
+  async getUserRolesFromToken() {
+    const token = await this.getToken();
+    if (!token) {
+      return [];
+    }
+
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload);
+    const parsedPayload = JSON.parse(decodedPayload);
+
+    const clientId = environment.kcClientId
+    const clientRoles = parsedPayload.resource_access?.[clientId]?.roles || [];
+
+    return clientRoles;
+  }
 }

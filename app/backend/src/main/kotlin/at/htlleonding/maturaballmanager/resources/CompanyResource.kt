@@ -1,12 +1,14 @@
-// src/main/kotlin/at/htlleonding/maturaballmanager/resources/CompanyResource.kt
 package at.htlleonding.maturaballmanager.resources
 
 import at.htlleonding.maturaballmanager.model.entities.Company
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import at.htlleonding.maturaballmanager.repositories.CompanyRepository
 import at.htlleonding.maturaballmanager.repositories.ContactPersonRepository
+import io.smallrye.mutiny.Uni
 import jakarta.inject.Inject
+import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.ConstraintViolationException
+import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
@@ -27,8 +29,16 @@ class CompanyResource {
      * Liefert alle Unternehmen.
      */
     @GET
-    fun getAllCompanies(): List<Company> {
+    fun getAllCompanies(): Uni<Response> {
         return companyRepository.getAllCompanies()
+            .map { companies ->
+                Response.ok(companies).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error fetching companies: ${throwable.message}")
+                    .build()
+            }
     }
 
     /**
@@ -37,46 +47,85 @@ class CompanyResource {
      */
     @GET
     @Path("/{id}")
-    fun getCompanyById(@PathParam("id") id: String): Response {
-        val company = companyRepository.getById(id)
-        return if (company != null) {
-            Response.ok(company).build()
-        } else {
-            Response.status(Response.Status.NOT_FOUND).entity("Company not found").build()
-        }
+    fun getCompanyById(@PathParam("id") id: String): Uni<Response> {
+        return companyRepository.getById(id)
+            .map { company ->
+                if (company != null) {
+                    Response.ok(company).build()
+                } else {
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Company not found")
+                        .build()
+                }
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error fetching company: ${throwable.message}")
+                    .build()
+            }
     }
 
+    /**
+     * POST /company
+     * Erstellt ein neues Unternehmen.
+     */
     @POST
-    fun createCompany(company: Company): Response {
-        return try {
-            val createdCompany = companyRepository.create(company)
-            Response.status(Response.Status.CREATED).entity(createdCompany).build()
-        } catch (e: ConstraintViolationException) {
-            val errors = e.constraintViolations.map { it.message }
-            Response.status(Response.Status.BAD_REQUEST).entity(errors).build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e.message).build()
-        }
+    fun createCompany(@Valid company: Company): Uni<Response> {
+        return companyRepository.create(company)
+            .map { createdCompany ->
+                Response.status(Response.Status.CREATED)
+                    .entity(createdCompany)
+                    .build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    else -> {
+                        Response.serverError()
+                            .entity("Error creating company: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
+    /**
+     * PUT /company/{id}
+     * Aktualisiert ein bestehendes Unternehmen.
+     */
     @PUT
     @Path("/{id}")
-    fun updateCompany(@PathParam("id") id: String, updatedCompany: Company): Response {
-        val existingCompany = companyRepository.getById(id)
-        return if (existingCompany != null) {
-            updatedCompany.id = existingCompany.id
-            return try {
-                val mergedCompany = companyRepository.update(updatedCompany)
+    fun updateCompany(@PathParam("id") id: String, @Valid updatedCompany: Company): Uni<Response> {
+        updatedCompany.id = id // Ensure the ID is set correctly
+        return companyRepository.update(updatedCompany)
+            .map { mergedCompany ->
                 Response.ok(mergedCompany).build()
-            } catch (e: ConstraintViolationException) {
-                val errors = e.constraintViolations.map { it.message }
-                Response.status(Response.Status.BAD_REQUEST).entity(errors).build()
-            } catch (e: Exception) {
-                Response.serverError().entity(e.message).build()
             }
-        } else {
-            Response.status(Response.Status.NOT_FOUND).entity("Company not found").build()
-        }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    else -> {
+                        Response.serverError()
+                            .entity("Error updating company: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
     /**
@@ -85,36 +134,27 @@ class CompanyResource {
      */
     @DELETE
     @Path("/{id}")
-    fun deleteCompany(@PathParam("id") id: String): Response {
-        val company = companyRepository.getById(id)
-        return if (company != null) {
-            return try {
-                companyRepository.delete(id)
-                Response.ok().build()
-            } catch (e: Exception) {
-                Response.serverError().entity(e.message).build()
+    fun deleteCompany(@PathParam("id") id: String): Uni<Response> {
+        return companyRepository.delete(id)
+            .map {
+                Response.noContent().build()
             }
-        } else {
-            Response.status(Response.Status.NOT_FOUND).entity("Company not found").build()
-        }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    else -> {
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Error deleting company: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
-    /**
-     * POST /company/bulk-delete
-     * Löscht mehrere Unternehmen anhand einer Liste von IDs.
-     */
-    @POST
-    @Path("/bulk-delete")
-    fun deleteCompanies(ids: List<String>): Response {
-        if (ids.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("No IDs provided").build()
-        }
-        return try {
-            Response.ok().build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e.message).build()
-        }
-    }
 
     /**
      * GET /company/{id}/contact-persons
@@ -122,8 +162,25 @@ class CompanyResource {
      */
     @GET
     @Path("/{id}/contact-persons")
-    fun getContactPersonsByCompanyId(@PathParam("id") id: String): Response {
-        return Response.ok(companyRepository.getContactPersons(id)).build();
+    fun getContactPersonsByCompanyId(@PathParam("id") id: String): Uni<Response> {
+        return contactPersonRepository.getByCompanyId(id)
+            .map { contactPersons ->
+                Response.ok(contactPersons).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    else -> {
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Error fetching contact persons: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
     /**
@@ -132,20 +189,41 @@ class CompanyResource {
      */
     @POST
     @Path("/{id}/contact-persons")
-    fun addContactPerson(@PathParam("id") companyId: String, contactPerson: ContactPerson): Response {
-        return try {
-            val company = companyRepository.getById(companyId)
-                ?: return Response.status(Response.Status.NOT_FOUND).entity("Company not found").build()
-
-            contactPerson.company = company
-            val createdContactPerson = contactPersonRepository.create(contactPerson)
-            Response.status(Response.Status.CREATED).entity(createdContactPerson).build()
-        } catch (e: ConstraintViolationException) {
-            val errors = e.constraintViolations.map { it.message }
-            Response.status(Response.Status.BAD_REQUEST).entity(errors).build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e.message).build()
-        }
+    fun addContactPerson(@PathParam("id") companyId: String, @Valid contactPerson: ContactPerson): Uni<Response> {
+        return companyRepository.getById(companyId)
+            .flatMap { company ->
+                if (company != null) {
+                    contactPerson.company = company
+                    contactPersonRepository.create(contactPerson)
+                } else {
+                    Uni.createFrom().failure<EntityNotFoundException>(EntityNotFoundException("Company not found"))
+                }
+            }
+            .map { createdContactPerson ->
+                Response.status(Response.Status.CREATED)
+                    .entity(createdContactPerson)
+                    .build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    else -> {
+                        Response.serverError()
+                            .entity("Error adding contact person: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 
     /**
@@ -157,28 +235,45 @@ class CompanyResource {
     fun updateContactPerson(
         @PathParam("companyId") companyId: String,
         @PathParam("contactPersonId") contactPersonId: String,
-        updatedContactPerson: ContactPerson
-    ): Response {
-        return try {
-            val existingContactPerson = contactPersonRepository.getById(contactPersonId)
-
-            if (existingContactPerson?.company?.id != companyId) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Contact person does not belong to the company").build()
+        @Valid updatedContactPerson: ContactPerson
+    ): Uni<Response> {
+        return contactPersonRepository.getById(contactPersonId)
+            .flatMap { existingContactPerson ->
+                if (existingContactPerson?.company?.id != companyId) {
+                    Uni.createFrom().failure<EntityNotFoundException>(EntityNotFoundException("Contact person not found"))
+                } else {
+                    updatedContactPerson.id = existingContactPerson.id
+                    updatedContactPerson.company = existingContactPerson.company
+                    contactPersonRepository.update(updatedContactPerson)
+                }
             }
-
-            updatedContactPerson.id = existingContactPerson.id
-            updatedContactPerson.company = existingContactPerson.company
-
-            val mergedContactPerson = contactPersonRepository.update(updatedContactPerson)
-            Response.ok(mergedContactPerson).build()
-        } catch (e: ConstraintViolationException) {
-            val errors = e.constraintViolations.map { it.message }
-            Response.status(Response.Status.BAD_REQUEST).entity(errors).build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e.message).build()
-        }
+            .map { mergedContactPerson ->
+                Response.ok(mergedContactPerson).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is ConstraintViolationException -> {
+                        val errors = throwable.constraintViolations.map { it.message }
+                        Response.status(Response.Status.BAD_REQUEST)
+                            .entity(errors)
+                            .build()
+                    }
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity(throwable.message)
+                            .build()
+                    }
+                    is WebApplicationException -> { // For custom responses
+                        throwable.response
+                    }
+                    else -> {
+                        Response.serverError()
+                            .entity("Error updating contact person: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
-
 
     /**
      * DELETE /contact-person/{id}
@@ -186,12 +281,24 @@ class CompanyResource {
      */
     @DELETE
     @Path("/contact-person/{id}")
-    fun deleteContactPerson(@PathParam("id") contactPersonId: String): Response {
-        return try {
-            contactPersonRepository.delete(contactPersonId)
-            Response.ok().build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e.message).build()
-        }
+    fun deleteContactPerson(@PathParam("id") contactPersonId: String): Uni<Response> {
+        return contactPersonRepository.delete(contactPersonId)
+            .map {
+                Response.noContent().build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                when (throwable) {
+                    is EntityNotFoundException -> {
+                        Response.status(Response.Status.NOT_FOUND)
+                            .entity("Contact person not found")
+                            .build()
+                    }
+                    else -> {
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Error deleting contact person: ${throwable.message}")
+                            .build()
+                    }
+                }
+            }
     }
 }

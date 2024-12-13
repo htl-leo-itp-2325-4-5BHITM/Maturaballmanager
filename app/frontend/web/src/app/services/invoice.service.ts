@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Invoice } from '../model/invoice';
 import { ContactPerson } from '../model/contactperson';
 import {environment} from "../../environments/environment";
+import {InvoiceDTO} from "../model/dtos/invoice.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class InvoiceService {
    * Erstellt eine neue Rechnung.
    * @param invoice Rechnungsdaten
    */
-  createInvoice(invoice: Invoice): Observable<Invoice> {
+  createInvoice(invoice: InvoiceDTO): Observable<Invoice> {
     return this.http.post<Invoice>(this.apiUrl, invoice);
   }
 
@@ -43,7 +44,7 @@ export class InvoiceService {
    * @param id Rechnungs-ID
    * @param invoice Aktualisierte Rechnungsdaten
    */
-  updateInvoice(id: string, invoice: Invoice): Observable<Invoice> {
+  updateInvoice(id: string, invoice: InvoiceDTO): Observable<Invoice> {
     return this.http.put<Invoice>(`${this.apiUrl}/${id}`, invoice);
   }
 

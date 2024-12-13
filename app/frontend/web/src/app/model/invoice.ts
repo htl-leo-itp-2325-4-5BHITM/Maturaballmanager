@@ -5,9 +5,9 @@ import {Benefit} from "./benefit";
 export interface Invoice {
     id?: string;
     invoiceNumber?: string;
-    company: Company;
-    contactPerson?: ContactPerson;
-    benefits: Benefit[];
+    company: string;
+    contactPerson?: string[];
+    benefits: string;
     invoiceDate: Date;
     paymentDeadline: Date;
     status: Status;

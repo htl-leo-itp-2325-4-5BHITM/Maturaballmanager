@@ -426,3 +426,4 @@ INSERT INTO benefits(price, description, id, name) VALUES (100, 'Kantine', '0000
 (200, 'Firmenauto', '00000000-0000-0000-0000-000000000013', 'Firmenauto'),
 (150, 'Homeoffice', '00000000-0000-0000-0000-000000000014', 'Homeoffice'),
 (300, 'Firmenlaptop', '00000000-0000-0000-0000-000000000015', 'Firmenlaptop');
+

@@ -97,9 +97,13 @@
     </nb-card-body>
     <nb-card-footer class="footer-actions">
         <div class="button-group">
-            <button nbButton status="basic" (click)="cancel()">
+           <!--<button nbButton status="basic" id="cancelButton" (click)="cancel()">
                 <nb-icon icon="close-circle-outline"></nb-icon> Abbrechen
-            </button>
+            </button>-->
+
+            <span id="cancelButton" (click)="cancel()">
+                Abbrechen
+            </span>
             <div class="spacer"></div>
             <button nbButton status="success" (click)="submit()">
                 <nb-icon icon="save-outline"></nb-icon> Speichern

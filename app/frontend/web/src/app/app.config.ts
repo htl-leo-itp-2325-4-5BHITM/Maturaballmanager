@@ -28,17 +28,18 @@ import {
 import { importProvidersFrom } from "@angular/core";
 import {NgxEchartsModule} from "ngx-echarts";
 import {NbEvaIconsModule} from "@nebular/eva-icons";
+import {MaturaballComponent} from "./pages/maturaball/maturaball.component";
 
 const routes: Route[] = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardViewComponent, canActivate: [authGuard] },
-  { path: 'sponsoring', children: [
+  { path: '', redirectTo: '/login', pathMatch: 'full', data: { roles: [] } },
+  { path: 'login', component: LoginComponent, data: { roles: [] } },
+  { path: 'dashboard', component: DashboardViewComponent, canActivate: [authGuard], data: { roles: [] } },
+  { path: 'sponsoring', data: {roles: ["supervisor", "sponsoring", "management", "organization"]},children: [
       { path: 'companies', component: CompanyManagementComponent, canActivate: [authGuard] },
       { path: 'benefits', component: BenefitManagementComponent, canActivate: [authGuard] },
       { path: 'invoices', component: InvoiceManagementComponent, canActivate: [authGuard] },
     ]},
-  { path: 'settings', children: [
+  { path: 'settings', data: {roles: ["management", "supervisor"]}, children: [
       { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
       { path: 'appointment', component: MaturaballComponent, canActivate: [authGuard] }
     ]},
@@ -132,6 +133,7 @@ export const config = {
         title: 'Sponsoring',
         icon: 'award-outline',
         link: '/sponsoring',
+        roles: ["supervisor", "sponsoring", "management", "organization"],
         children: [
           {
             title: 'Unternehmen',
@@ -151,6 +153,7 @@ export const config = {
         title: 'Administrativa',
         icon: 'settings-2-outline',
         link: '/settings',
+        roles: ["management", "supervisor"],
         children: [
           {
             title: 'Benutzerverwaltung',
