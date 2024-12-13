@@ -243,4 +243,21 @@ class TeamMemberService {
                 }
             }
     }
+
+    fun removeAllRolesExceptSupervisor(): Uni<Void> {
+        val supervisorRoleName = "supervisor"
+
+        return getTeamMembers().flatMap {
+            it.forEach { teamMember ->
+                val rolesToUnassign = teamMember.realmRoles.filter { it != supervisorRoleName }
+                if (rolesToUnassign.isNotEmpty()) {
+                    keycloakAdminService.unassignClientRolesFromUser(teamMember.keycloakId, rolesToUnassign)
+                        .onFailure().invoke { err: Throwable ->
+                            logger.error("RemoveAllRolesExceptSupervisor failed: ${err.message}", err)
+                        }
+                }
+            }
+            Uni.createFrom().voidItem()
+        }
+    }
 }

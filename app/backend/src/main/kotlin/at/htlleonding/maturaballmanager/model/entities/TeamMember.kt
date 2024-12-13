@@ -41,7 +41,7 @@ data class TeamMember(
 
         var syncedAt: LocalDateTime = LocalDateTime.now(),
 
-        @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
         var prom: Prom?= null
 ) : PanacheEntityBase() {
         constructor() : this(-1, "", "", "", "", "", mutableListOf(), "", LocalDateTime.now(), LocalDateTime.now())

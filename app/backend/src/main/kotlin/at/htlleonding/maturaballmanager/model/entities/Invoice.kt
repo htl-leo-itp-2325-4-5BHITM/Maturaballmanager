@@ -50,7 +50,7 @@ class Invoice : PanacheEntityBase() {
     @NotNull(message = "Gesamtbetrag ist erforderlich")
     var totalAmount: Double? = 0.0
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "prom_id")
     var prom: Prom? = null
 }

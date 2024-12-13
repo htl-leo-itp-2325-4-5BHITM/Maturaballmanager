@@ -4,15 +4,21 @@ import at.htlleonding.maturaballmanager.model.Address
 import at.htlleonding.maturaballmanager.model.dtos.PromDTO
 import at.htlleonding.maturaballmanager.model.entities.DayPlan
 import at.htlleonding.maturaballmanager.model.entities.Prom
+import at.htlleonding.maturaballmanager.services.TeamMemberService
 import io.quarkus.hibernate.reactive.panache.PanacheRepository
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.ws.rs.NotFoundException
 import java.time.LocalDate
 import java.time.LocalTime
 
 @ApplicationScoped
 class PromRepository : PanacheRepository<Prom> {
+
+    @Inject
+    lateinit var teamMemberService: TeamMemberService
 
     fun findLastActiveProm(): Uni<Prom> {
         return find("active = true order by createdAt desc").firstResult()
@@ -85,13 +91,17 @@ class PromRepository : PanacheRepository<Prom> {
     }
 
     @WithTransaction
-    fun deactivateProm(id: String): Uni<Prom> {
-        return find("id",id).firstResult<Prom>()
-            .onItem().ifNull().failWith(IllegalArgumentException("Maturaball nicht gefunden"))
-            .flatMap { existingProm ->
-                existingProm.active = false
-                persist(existingProm)
+    fun deactivateProm(id: String): Uni<Void> {
+        return find("id", id).firstResult<Prom>().flatMap { prom ->
+            if (prom != null) {
+                teamMemberService.removeAllRolesExceptSupervisor()
+                    .flatMap {
+                        delete(prom)
+                    }
+            } else {
+                Uni.createFrom().failure<Void>(NotFoundException("Prom with id $id not found"))
             }
+        }
     }
 
 }

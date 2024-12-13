@@ -85,13 +85,7 @@
             </div>
 
             <!-- Send-Optionen -->
-            <div class="form-group">
-                <label>Rechnung versenden<span class="text-danger">*</span></label>
-                <nb-radio-group formControlName="sendOption">
-                    <nb-radio value="immediate">Direkt versenden</nb-radio>
-                    <nb-radio value="onDate">Am Rechnungsdatum versenden</nb-radio>
-                </nb-radio-group>
-            </div>
+            
 
             <!-- Geplantes Versanddatum -->
             <div class="form-group" *ngIf="form.get('sendOption')?.value === 'onDate'">

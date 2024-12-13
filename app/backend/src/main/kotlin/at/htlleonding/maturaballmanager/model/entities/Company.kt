@@ -44,7 +44,7 @@ class Company: PanacheEntityBase() {
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = ContactPerson::class)
     var contactPersons: List<ContactPerson> = mutableListOf()
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "prom_id")
     var prom: Prom? = null
 

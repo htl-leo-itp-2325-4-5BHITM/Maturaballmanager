@@ -132,4 +132,19 @@ class KeycloakAdminService {
             user
         }
     }
+
+    fun getClientRolesForUser(keycloakId: String): Uni<List<String>> {
+        return Uni.createFrom().item {
+            val keycloak = getKeycloakClient()
+            val realm = keycloak.realm(adminRealm)
+            val userResource = realm.users().get(keycloakId)
+
+            val clientUUID = getClientUUID(keycloak, clientId)
+            val clientRoles = userResource.roles().clientLevel(clientUUID).listAll()
+
+            keycloak.close()
+
+            clientRoles.map { it.name }
+        }
+    }
 }
