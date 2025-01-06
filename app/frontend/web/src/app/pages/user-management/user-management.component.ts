@@ -8,7 +8,7 @@ import {
   NbInputModule,
   NbSelectModule
 } from '@nebular/theme';
-import { NgForOf, NgIf } from '@angular/common';
+import {CommonModule, NgForOf, NgIf} from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UserManagementDialogComponent } from '../../components/dialogs/user-management-dialog/user-management-dialog.component';
 import { UserManagementService, DetailedTeamMemberDTO } from '../../services/user-management.service';
@@ -27,6 +27,7 @@ interface Member {
   selector: 'app-user-management',
   standalone: true,
   imports: [
+    CommonModule,
     NbCardModule,
     NbButtonModule,
     NbIconModule,
@@ -65,6 +66,7 @@ export class UserManagementComponent implements OnInit, OnChanges {
     this.userService.getTeamMembers().subscribe(teamMembers => {
       this.members = teamMembers.map(dto => this.dtoToMember(dto));
       this.filteredMembers = [...this.members];
+      console.log(teamMembers)
     });
   }
 
@@ -144,9 +146,12 @@ export class UserManagementComponent implements OnInit, OnChanges {
         .open(UserManagementDialogComponent)
         .onClose.subscribe((selectedMember: Member | null) => {
       if (selectedMember) {
-        // Convert Member back to DTO for saving
+        console.log('Neues Mitglied ausgewählt:', selectedMember);
+
         const dto = this.memberToDTO(selectedMember);
+
         this.userService.addTeamMember(dto).subscribe(newDto => {
+          this.loadMembers();
           const newMember = this.dtoToMember(newDto);
           this.members.push(newMember);
           this.cdRef.detectChanges();
@@ -155,6 +160,7 @@ export class UserManagementComponent implements OnInit, OnChanges {
       }
     });
   }
+
 
   editMember(member: Member): void {
     this.dialogService.open(UserManagementDialogComponent, {
@@ -166,7 +172,7 @@ export class UserManagementComponent implements OnInit, OnChanges {
       hasBackdrop: false,
       hasScroll: false,
       viewContainerRef: undefined,
-      context: { member } }).onClose.subscribe((updatedMember: Member | null) => {
+      context: { member, isEditing: true, role: member.role } }).onClose.subscribe((updatedMember: Member | null) => {
       if (updatedMember) {
         const dto = this.memberToDTO(updatedMember);
         this.userService.updateTeamMember(updatedMember.id, dto).subscribe(updatedDto => {
@@ -182,7 +188,9 @@ export class UserManagementComponent implements OnInit, OnChanges {
     });
   }
 
-  deleteMember(member: Member): void {
+  deleteMember(event: MouseEvent, member: Member): void {
+    event.stopPropagation();
+
     this.userService.deleteTeamMember(member.id).subscribe(() => {
       const index = this.members.findIndex(m => m.id === member.id);
       if (index !== -1) {

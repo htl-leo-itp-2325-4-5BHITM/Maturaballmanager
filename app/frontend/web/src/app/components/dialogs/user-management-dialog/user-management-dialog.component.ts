@@ -34,6 +34,7 @@ export class UserManagementDialogComponent {
     { value: 'management', label: 'Maturaballleitung', checked: true },
     { value: 'finance', label: 'Finanzen' },
     { value: 'sponsoring', label: 'Sponsoring' },
+
   ];
 
   filteredMembers: Member[] = [];
@@ -93,6 +94,7 @@ export class UserManagementDialogComponent {
       role: this.role,
       lastLogin: new Date().toLocaleDateString('en-GB')
     };
+    console.log("updatedMember", updatedMember);
     this.dialogRef.close(updatedMember);
   }
 }
