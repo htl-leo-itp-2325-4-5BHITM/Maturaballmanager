@@ -427,3 +427,53 @@ INSERT INTO benefits(price, description, id, name) VALUES (100, 'Kantine', '0000
 (150, 'Homeoffice', '00000000-0000-0000-0000-000000000014', 'Homeoffice'),
 (300, 'Firmenlaptop', '00000000-0000-0000-0000-000000000015', 'Firmenlaptop');
 
+-- ================================================
+-- Import-Skript für die Tabellen: proms und prom_tagesablauf
+-- ================================================
+
+-- ----------------------------------------
+-- Einfügen von Proms (proms)
+-- ----------------------------------------
+
+INSERT INTO proms (
+    id,
+    name,
+    street,
+    house_number,
+    floor,
+    door,
+    postal_code,
+    city,
+    country,
+    date,
+    time,
+    created_at,
+    active
+) VALUES
+-- Prom 1
+('20000000-0000-0000-0000-000000000001',
+ 'MaturaBall 2024',
+ 'Feststraße',
+ '1',
+ '2',
+ 'A',
+ '6010',
+ 'Klagenfurt',
+ 'AT',
+ '2024-06-15',
+ '18:00:00',
+ '2023-10-01T10:00:00',
+ true);
+
+-- Tagesablauf für Prom 1: MaturaBall 2024
+INSERT INTO prom_tagesablauf (
+    prom_id,
+    position,
+    time,
+    name
+) VALUES
+      ('20000000-0000-0000-0000-000000000001', 1, '17:00:00', 'Empfang'),
+      ('20000000-0000-0000-0000-000000000001', 2, '18:00:00', 'Eröffnung'),
+      ('20000000-0000-0000-0000-000000000001', 3, '19:00:00', 'Abendessen'),
+      ('20000000-0000-0000-0000-000000000001', 4, '21:00:00', 'Tanzabend'),
+      ('20000000-0000-0000-0000-000000000001', 5, '23:00:00', 'Abschluss');

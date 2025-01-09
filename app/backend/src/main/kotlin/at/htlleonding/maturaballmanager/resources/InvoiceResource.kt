@@ -101,7 +101,7 @@ class InvoiceResource {
     @POST
     @Path("/{id}/send")
     fun sendInvoice(@PathParam("id") id: UUID): Uni<Response> {
-        return invoiceService.sendInvoiceByEmail(id)
+        return invoiceService.sendInvoice(id)
             .map {
                 Response.ok().entity("Invoice sent successfully").build()
             }

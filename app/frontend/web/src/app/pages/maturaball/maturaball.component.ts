@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {NbButtonModule, NbCardModule, NbFormFieldModule, NbIconModule, NbInputModule} from "@nebular/theme";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {PromService} from "../../services/prom.service";
-import {PromDTO} from "../../model/dtos/prom.dto";
-import {NgForOf} from "@angular/common";
+import {DayPlanDTO, PromDTO} from "../../model/dtos/prom.dto";
+import {NgForOf, NgIf} from "@angular/common";
 
 interface MaturaballData {
   motto: string;
@@ -30,7 +30,8 @@ interface MaturaballData {
     NbInputModule,
     ReactiveFormsModule,
     FormsModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './maturaball.component.html',
   styleUrl: './maturaball.component.scss'
@@ -68,14 +69,19 @@ export class MaturaballComponent implements OnInit {
         this.formData.zip = activeProm.address.postalCode;
         this.formData.city = activeProm.address.city;
 
-        // dayPlan anpassen
-        this.formData.dayPlan = activeProm.dayPlan.map((dp: any) => ({
-          name: dp.name,
-          time: dp.time // HH:MM
-        }));
+        if (activeProm.dayPlan) {
+          this.formData.dayPlan = activeProm.dayPlan.map((entry: DayPlanDTO) => {
+            if (entry) {
+              return { name: entry.name, time: entry.time };
+            }
+            return { name: '', time: '' };
+          }).filter((entry: DayPlanDTO) => entry.name || entry.time); // Filtere leere Einträge
+        }
+
       } else {
         this.editingExistingProm = false;
         this.activePromId = null;
+        this.formData.dayPlan = []; // Stelle sicher, dass dayPlan leer bleibt
       }
     } catch (err) {
       console.error('Fehler beim Laden des aktiven Maturaballs', err);
@@ -98,11 +104,13 @@ export class MaturaballComponent implements OnInit {
       alert('Bitte füllen Sie alle Pflichtfelder aus!');
       return;
     }
+    console.log(this.formData)
 
     try {
       let response;
-      if (this.editingExistingProm && this.activePromId) {
+      if ( this.activePromId) {
         // Vorhandenen Maturaball updaten
+        this.formData.dayPlan = this.formData.dayPlan.filter((entry: any) => entry.name && entry.time);
         response = await this.promService.updateProm(this.activePromId, this.formData);
       } else {
         // Neuen Maturaball erstellen
@@ -117,7 +125,7 @@ export class MaturaballComponent implements OnInit {
   }
 
   async closeEvent(): Promise<void> {
-    if (this.editingExistingProm && this.activePromId) {
+    if (this.activePromId) {
       try {
         await this.promService.deactivateProm(this.activePromId);
         alert('Der aktuelle Maturaball wurde geschlossen. Nun kann ein neuer erstellt werden.');

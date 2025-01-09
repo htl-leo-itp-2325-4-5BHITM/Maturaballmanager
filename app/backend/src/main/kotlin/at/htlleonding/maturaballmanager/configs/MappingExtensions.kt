@@ -14,7 +14,8 @@ fun Invoice.toDTO(): InvoiceDTO {
         invoiceDate = this.invoiceDate,
         paymentDeadline = this.paymentDeadline,
         status = this.status,
-        totalAmount = this.totalAmount
+        totalAmount = this.totalAmount,
+        sendOption = this.sendOption
     )
 }
 

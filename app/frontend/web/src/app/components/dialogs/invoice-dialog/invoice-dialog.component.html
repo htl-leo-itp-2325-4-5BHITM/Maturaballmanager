@@ -1,5 +1,3 @@
-<!-- src/app/components/dialogs/invoice-dialog/invoice-dialog.component.html -->
-
 <nb-card>
     <nb-card-header>
         <h2>{{ title }}</h2>
@@ -69,7 +67,8 @@
                         <input placeholder="Zahlungsfrist auswählen"
                                [nbDatepicker]="paymentDeadlinePicker"
                                formControlName="paymentDeadline"
-                               nbInput>
+                               nbInput
+                               readonly>
                         <nb-datepicker #paymentDeadlinePicker></nb-datepicker>
                     </nb-form-field>
                     <div *ngIf="form.get('paymentDeadline')?.hasError('required') && form.get('paymentDeadline')?.touched" class="error-message">
@@ -82,30 +81,16 @@
                     <label for="totalAmount">Gesamtbetrag</label>
                     <input nbInput placeholder="Gesamtbetrag" formControlName="totalAmount" readonly />
                 </div>
+
             </div>
 
-            <!-- Send-Optionen -->
+            <!-- Sendeoptionen -->
             <div class="form-group">
                 <label>Rechnung versenden<span class="text-danger">*</span></label>
                 <nb-radio-group formControlName="sendOption">
                     <nb-radio value="immediate">Direkt versenden</nb-radio>
                     <nb-radio value="onDate">Am Rechnungsdatum versenden</nb-radio>
                 </nb-radio-group>
-            </div>
-
-            <!-- Geplantes Versanddatum -->
-            <div class="form-group" *ngIf="form.get('sendOption')?.value === 'onDate'">
-                <label for="scheduledSendDate">Geplantes Versanddatum<span class="text-danger">*</span></label>
-                <nb-form-field>
-                    <input placeholder="Versanddatum auswählen"
-                           [nbDatepicker]="scheduledSendDatePicker"
-                           formControlName="scheduledSendDate"
-                           nbInput required>
-                    <nb-datepicker #scheduledSendDatePicker></nb-datepicker>
-                </nb-form-field>
-                <div *ngIf="form.get('scheduledSendDate')?.hasError('required') && form.get('scheduledSendDate')?.touched" class="error-message">
-                    Versanddatum ist erforderlich.
-                </div>
             </div>
         </form>
     </nb-card-body>

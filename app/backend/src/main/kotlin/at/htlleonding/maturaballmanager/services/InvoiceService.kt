@@ -92,6 +92,14 @@ class InvoiceService {
                                         existingInvoice.status = invoiceDTO.status
                                         existingInvoice.totalAmount = benefits.sumOf { it.price ?: 0.0 }
 
+                                        existingInvoice.sendOption = invoiceDTO.sendOption ?: existingInvoice.sendOption
+
+                                        // Handle sendOption changes
+                                        if (existingInvoice.sendOption == "immediate" && existingInvoice.status == Status.DRAFT) {
+                                            // Send immediately if not already sent
+                                            sendInvoice(existingInvoice.id!!)
+                                        }
+
                                         invoiceRepository.persist(existingInvoice)
                                     }
                             }
@@ -136,8 +144,6 @@ class InvoiceService {
             Uni.createFrom().item(emptyList())
         } else {
             benefitRepository.findAllByIds(benefitIds)
-                .onItem().invoke { benefits ->
-                }
                 .flatMap { benefits ->
                     if (benefits.size != benefitIds.size) {
                         val foundIds = benefits.map { it.id }
@@ -161,7 +167,7 @@ class InvoiceService {
         uniqueNumber: String,
         company: Company,
         contactPerson: ContactPerson?,
-        benefits: List<Benefit>
+        benefits: List<Benefit>,
     ): Uni<InvoiceDTO> {
         val invoice = Invoice().apply {
             invoiceNumber = uniqueNumber
@@ -172,6 +178,8 @@ class InvoiceService {
             paymentDeadline = invoiceDTO.paymentDeadline ?: invoiceDate?.plusDays(14)
             status = invoiceDTO.status
             totalAmount = benefits.sumOf { it.price ?: 0.0 }
+            prom = company.prom
+            sendOption = invoiceDTO.sendOption ?: "immediate"
         }
 
         return promRepository.findLastActiveProm()
@@ -179,8 +187,13 @@ class InvoiceService {
             .flatMap { activeProm ->
                 company.prom = activeProm
                 invoiceRepository.persist(invoice)
-                    .map { persistedInvoice ->
-                        persistedInvoice.toDTO()
+                    .flatMap { persistedInvoice ->
+                        if (persistedInvoice.sendOption == "immediate") {
+                            sendInvoice(persistedInvoice.id!!).replaceWith(Uni.createFrom().item(persistedInvoice.toDTO()))
+                        } else {
+                            // Für sendOption='onDate' wird die Rechnung am invoiceDate versendet
+                            Uni.createFrom().item(persistedInvoice.toDTO())
+                        }
                     }
             }
     }
@@ -228,11 +241,10 @@ class InvoiceService {
     fun findAllInvoices(): Uni<List<InvoiceDTO>> {
         return promRepository.findLastActiveProm().flatMap { prom ->
             if (prom != null) {
-                invoiceRepository.find("prom", prom).list<Invoice>().map { invoices ->
+                invoiceRepository.findAllByProm(prom).map { invoices ->
                     invoices.map { it.toDTO() }
                 }
             } else {
-                // Optional: Handhabung, wenn kein aktiver Prom gefunden wird
                 Uni.createFrom().item(emptyList())
             }
         }
@@ -250,7 +262,7 @@ class InvoiceService {
      * Sends an invoice via email.
      */
     @WithTransaction
-    fun sendInvoiceByEmail(id: UUID): Uni<Void> {
+    fun sendInvoice(id: UUID): Uni<Void> {
         return findInvoice(id)
             .flatMap { invoice ->
                 emailService.sendInvoiceEmail(invoice)
@@ -260,6 +272,8 @@ class InvoiceService {
                     }
             }
             .onFailure().invoke { throwable ->
+                // Optional: Log the error
+                // logger.error("Failed to send invoice via email", throwable)
             }
     }
 
@@ -272,6 +286,8 @@ class InvoiceService {
                 pdfGeneratorService.generateInvoicePdf(invoice, senderName)
             }
             .onFailure().invoke { throwable ->
+                // Optional: Log the error
+                // logger.error("Failed to generate PDF for invoice", throwable)
             }
     }
 }

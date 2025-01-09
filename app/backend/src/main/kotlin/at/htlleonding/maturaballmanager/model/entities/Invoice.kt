@@ -53,4 +53,7 @@ class Invoice : PanacheEntityBase() {
     @ManyToOne
     @JoinColumn(name = "prom_id")
     var prom: Prom? = null
+
+    @Column(name = "send_option")
+    var sendOption: String? = "immediate"
 }

@@ -1,5 +1,3 @@
-// src/app/components/invoice-management/invoice-management.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from '../../services/invoice.service';
 import {
@@ -21,9 +19,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Invoice, Status } from "../../model/invoice";
 import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
 import { InvoiceDialogComponent } from "../../components/dialogs/invoice-dialog/invoice-dialog.component";
-import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
-import {ReportComponent} from "../../components/report/report.component";
-import {InvoiceDTO} from "../../model/dtos/invoice.dto";
+import { CurrencyPipe, DatePipe, NgForOf, NgIf } from "@angular/common";
+import { ReportComponent } from "../../components/report/report.component";
+import { InvoiceDTO } from "../../model/dtos/invoice.dto";
 
 @Component({
   selector: 'app-invoice-management',
@@ -56,7 +54,7 @@ export class InvoiceManagementComponent implements OnInit {
 
   columns = [
     { key: 'invoiceNumber', title: 'ID', sortable: true },
-    { key: 'company', title: 'Firma', sortable: true, format: (value: any) => value.name || '—' },
+    { key: 'company', title: 'Firma', sortable: true, format: (value: any) => value || '—' },
     {
       key: 'contactPerson',
       title: 'Kontaktperson',
@@ -77,6 +75,12 @@ export class InvoiceManagementComponent implements OnInit {
       key: 'totalAmount',
       title: 'Betrag',
       format: (value: any) => (value ? `${value.toFixed(2)} €` : '—'),
+    },
+    {
+      key: 'sendOption',
+      title: 'Sendeoption',
+      sortable: true,
+      format: (value: any) => value === 'immediate' ? 'Direkt versenden' : 'Am Rechnungsdatum versenden',
     },
     {
       key: 'status',
@@ -152,12 +156,11 @@ export class InvoiceManagementComponent implements OnInit {
     });
   }
 
-  openEditDialog(invoice: Invoice): void {
+  openEditDialog(invoice: InvoiceDTO): void {
     if (invoice.status === Status.SENT || invoice.status === Status.PAID) {
       this.toastrService.warning('Versendete oder bezahlte Rechnungen können nicht bearbeitet werden.', 'Warnung');
       return;
     }
-    console.log(invoice)
 
     this.dialogService
         .open(InvoiceDialogComponent, {
@@ -171,10 +174,12 @@ export class InvoiceManagementComponent implements OnInit {
           hasScroll: false,
           dialogClass: 'fixed-dialog-width',
         })
-        .onClose.subscribe((result: Invoice | undefined) => {
+        .onClose.subscribe((result: InvoiceDTO | undefined) => {
       if (result) {
-        this.loadInvoices();
-        this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
+        this.invoiceService.updateInvoice(result.id!, result).subscribe((res) => {
+          this.loadInvoices();
+          this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
+        })
       }
     });
   }
@@ -221,8 +226,8 @@ export class InvoiceManagementComponent implements OnInit {
   }
 
   downloadPdf(invoice: Invoice): void {
-    this.invoiceService.downloadInvoicePdf(invoice.id!).subscribe(
-        (blob) => {
+    this.invoiceService.generateInvoicePdf(invoice.id!).subscribe(
+        (blob: Blob) => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -230,7 +235,7 @@ export class InvoiceManagementComponent implements OnInit {
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        (error) => {
+        (error: Error) => {
           this.toastrService.danger('Fehler beim Herunterladen der PDF.', 'Fehler');
           console.error(error);
         }

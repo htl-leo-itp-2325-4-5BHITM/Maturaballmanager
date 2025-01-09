@@ -13,5 +13,6 @@ data class InvoiceDTO(
     var invoiceDate: OffsetDateTime? = null,
     var paymentDeadline: OffsetDateTime? = null,
     var status: Status = Status.DRAFT,
-    var totalAmount: Double? = 0.0
+    var totalAmount: Double? = 0.0,
+    var sendOption: String? = "immediate"
 )

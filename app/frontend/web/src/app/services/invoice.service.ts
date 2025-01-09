@@ -68,7 +68,7 @@ export class InvoiceService {
    * Lädt das PDF einer Rechnung herunter.
    * @param id Rechnungs-ID
    */
-  downloadInvoicePdf(id: string): Observable<Blob> {
+  generateInvoicePdf(id: string): Observable<Blob> {
     const headers = new HttpHeaders().append('Accept', 'application/pdf');
     return this.http.get(`${this.apiUrl}/${id}/pdf`, { headers, responseType: 'blob' }) as Observable<Blob>;
   }

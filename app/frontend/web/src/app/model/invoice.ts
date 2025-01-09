@@ -7,7 +7,6 @@ export interface Invoice {
     invoiceNumber?: string;
     company: string;
     contactPerson?: string[];
-    benefits: string;
     invoiceDate: Date;
     paymentDeadline: Date;
     status: Status;
