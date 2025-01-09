@@ -22,6 +22,7 @@ import { InvoiceDialogComponent } from "../../components/dialogs/invoice-dialog/
 import { CurrencyPipe, DatePipe, NgForOf, NgIf } from "@angular/common";
 import { ReportComponent } from "../../components/report/report.component";
 import { InvoiceDTO } from "../../model/dtos/invoice.dto";
+import {SendInvoiceDialogComponent} from "../../components/dialogs/send-invoice-dialog/send-invoice-dialog.component";
 
 @Component({
   selector: 'app-invoice-management',
@@ -98,10 +99,10 @@ export class InvoiceManagementComponent implements OnInit {
       callback: this.confirmDelete.bind(this),
     },
     {
-      icon: 'email-outline',
+      icon: 'mail-outline',
       tooltip: 'Rechnung versenden',
-      status: 'success',
-      callback: this.sendInvoice.bind(this),
+      status: 'info',
+      callback: this.openSendInvoiceDialog.bind(this),
       disabled: (row: Invoice) => row.status === Status.SENT || row.status === Status.PAID,
     },
     {
@@ -152,6 +153,27 @@ export class InvoiceManagementComponent implements OnInit {
           this.loadInvoices();
           this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
         })
+      }
+    });
+  }
+
+  /**
+   * Öffnet den Dialog zum Versenden der Rechnung per E-Mail.
+   * @param invoice Die zu sendende Rechnung
+   */
+  openSendInvoiceDialog(invoice: Invoice): void {
+    this.dialogService
+        .open(SendInvoiceDialogComponent, {
+          context: { invoice },
+          closeOnBackdropClick: false,
+          closeOnEsc: false,
+          autoFocus: true,
+          hasScroll: false,
+          dialogClass: 'fixed-dialog-width',
+        })
+        .onClose.subscribe((result: boolean) => {
+      if (result) {
+        this.loadInvoices();
       }
     });
   }
@@ -209,19 +231,6 @@ export class InvoiceManagementComponent implements OnInit {
           },
         });
       }
-    });
-  }
-
-  sendInvoice(invoice: Invoice): void {
-    this.invoiceService.sendInvoice(invoice.id!).subscribe({
-      next: () => {
-        this.loadInvoices();
-        this.toastrService.success('Rechnung erfolgreich versendet.', 'Erfolg');
-      },
-      error: (error) => {
-        this.toastrService.danger('Fehler beim Versenden der Rechnung.', 'Fehler');
-        console.error(error);
-      },
     });
   }
 

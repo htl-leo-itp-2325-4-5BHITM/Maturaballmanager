@@ -1,10 +1,9 @@
 // src/app/services/invoice.service.ts
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Invoice } from '../model/invoice';
-import { ContactPerson } from '../model/contactperson';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Invoice} from '../model/invoice';
 import {environment} from "../../environments/environment";
 import {InvoiceDTO} from "../model/dtos/invoice.dto";
 
@@ -57,11 +56,13 @@ export class InvoiceService {
   }
 
   /**
-   * Sendet eine Rechnung per E-Mail.
-   * @param id Rechnungs-ID
+   * Sendet die Rechnung an eine spezifische Zieladresse (OFFICE oder CONTACT_PERSON).
+   * @param invoiceId ID der Rechnung
+   * @param target Ziel der E-Mail (OFFICE oder CONTACT_PERSON)
    */
-  sendInvoice(id: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/send`, {});
+  sendInvoice(invoiceId: string, target: 'OFFICE' | 'CONTACT_PERSON'): Observable<any> {
+    const url = `${this.apiUrl}/${invoiceId}/send`;
+    return this.http.post(url, {target});
   }
 
   /**
@@ -74,7 +75,11 @@ export class InvoiceService {
   }
 
   /**
-   * Ruft Kontaktpersonen für eine spezifische Firma ab.
-   * @param companyId Firmen-ID
+   * Sendet die Rechnung an eine spezifische E-Mail-Adresse.
+   * @param invoiceId ID der Rechnung
+   * @param email Ziel-E-Mail-Adresse
    */
+  sendInvoiceToEmail(invoiceId: string, email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${invoiceId}/send`, {});
+  }
 }

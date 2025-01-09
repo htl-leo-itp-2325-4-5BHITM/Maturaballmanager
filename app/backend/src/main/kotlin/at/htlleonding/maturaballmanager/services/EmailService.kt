@@ -36,10 +36,9 @@ class EmailService {
     /**
      * Sends an invoice email with an attached PDF and inline logo.
      */
-    fun sendInvoiceEmail(invoice: Invoice): Uni<Void> {
+    fun sendInvoiceEmail(invoice: Invoice, email: String): Uni<Void> {
         val currentYear = LocalDate.now().year
 
-        // Extract first and last names from JWT token
         val firstName = jwt.getClaim<String>("given_name") ?: "Unbekannt"
         val lastName = jwt.getClaim<String>("family_name") ?: ""
 
@@ -53,8 +52,7 @@ class EmailService {
 
         return pdfGeneratorService.generateInvoicePdf(invoice, senderName)
             .flatMap { pdfBytes ->
-                val recipient = invoice.contactPerson?.personalEmail
-                    ?: invoice.company?.officeEmail
+                val recipient = email
 
                 logger.info("Sending invoice to: $recipient")
 
@@ -73,6 +71,7 @@ class EmailService {
                 logger.error("Failed to send invoice email: ${err.message}", err)
             }
     }
+
 
     /**
      * Loads the logo from the classpath.

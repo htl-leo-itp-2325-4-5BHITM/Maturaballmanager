@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.resources
 
+import SendInvoiceRequest
 import at.htlleonding.maturaballmanager.configs.toDTO
 import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
 import at.htlleonding.maturaballmanager.services.InvoiceService
@@ -100,8 +101,11 @@ class InvoiceResource {
      */
     @POST
     @Path("/{id}/send")
-    fun sendInvoice(@PathParam("id") id: UUID): Uni<Response> {
-        return invoiceService.sendInvoice(id)
+    fun sendInvoice(
+        @PathParam("id") id: UUID,
+        @Valid sendInvoiceRequest: SendInvoiceRequest
+    ): Uni<Response> {
+        return invoiceService.sendInvoice(id, sendInvoiceRequest.target)
             .map {
                 Response.ok().entity("Invoice sent successfully").build()
             }

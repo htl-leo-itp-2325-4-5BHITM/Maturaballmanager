@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.services
 
+import EmailTarget
 import at.htlleonding.maturaballmanager.configs.toDTO
 import at.htlleonding.maturaballmanager.model.Status
 import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
@@ -12,6 +13,7 @@ import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import jakarta.persistence.EnumType
 import jakarta.ws.rs.NotFoundException
 import java.security.SecureRandom
 import java.time.OffsetDateTime
@@ -93,13 +95,6 @@ class InvoiceService {
                                         existingInvoice.totalAmount = benefits.sumOf { it.price ?: 0.0 }
 
                                         existingInvoice.sendOption = invoiceDTO.sendOption ?: existingInvoice.sendOption
-
-                                        // Handle sendOption changes
-                                        if (existingInvoice.sendOption == "immediate" && existingInvoice.status == Status.DRAFT) {
-                                            // Send immediately if not already sent
-                                            sendInvoice(existingInvoice.id!!)
-                                        }
-
                                         invoiceRepository.persist(existingInvoice)
                                     }
                             }
@@ -188,12 +183,7 @@ class InvoiceService {
                 company.prom = activeProm
                 invoiceRepository.persist(invoice)
                     .flatMap { persistedInvoice ->
-                        if (persistedInvoice.sendOption == "immediate") {
-                            sendInvoice(persistedInvoice.id!!).replaceWith(Uni.createFrom().item(persistedInvoice.toDTO()))
-                        } else {
-                            // Für sendOption='onDate' wird die Rechnung am invoiceDate versendet
-                            Uni.createFrom().item(persistedInvoice.toDTO())
-                        }
+                        Uni.createFrom().item(persistedInvoice.toDTO())
                     }
             }
     }
@@ -259,22 +249,46 @@ class InvoiceService {
     }
 
     /**
-     * Sends an invoice via email.
+     * Sendet eine Rechnung an eine spezifische E-Mail-Adresse basierend auf der Zielauswahl.
+     * @param id ID der Rechnung
+     * @param target Ziel der E-Mail (OFFICE oder CONTACT_PERSON)
      */
     @WithTransaction
-    fun sendInvoice(id: UUID): Uni<Void> {
+    fun sendInvoice(id: UUID, target: EmailTarget): Uni<Void> {
         return findInvoice(id)
             .flatMap { invoice ->
-                emailService.sendInvoiceEmail(invoice)
-                    .flatMap {
-                        invoice.status = Status.SENT
-                        invoiceRepository.persist(invoice).replaceWithVoid()
-                    }
+                val recipient = when (target) {
+                    EmailTarget.OFFICE -> invoice.company?.officeEmail
+                    EmailTarget.CONTACT_PERSON -> invoice.contactPerson?.personalEmail
+                }
+
+                if (recipient.isNullOrBlank()) {
+                    Uni.createFrom().failure<Void>(
+                        IllegalArgumentException("Die ausgewählte E-Mail-Adresse ist nicht verfügbar.")
+                    )
+                } else if (!isValidEmail(recipient)) {
+                    Uni.createFrom().failure<Void>(
+                        IllegalArgumentException("Die ausgewählte E-Mail-Adresse ist ungültig.")
+                    )
+                } else {
+                    emailService.sendInvoiceEmail(invoice, recipient)
+                        .flatMap {
+                            invoice.status = Status.SENT
+                            invoiceRepository.persist(invoice).replaceWithVoid()
+                        }
+                }
             }
             .onFailure().invoke { throwable ->
-                // Optional: Log the error
-                // logger.error("Failed to send invoice via email", throwable)
+                // Optional: Loggen Sie den Fehler
             }
+    }
+
+    /**
+     * Überprüft die Gültigkeit der E-Mail-Adresse.
+     */
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        return email.matches(emailRegex)
     }
 
     /**
