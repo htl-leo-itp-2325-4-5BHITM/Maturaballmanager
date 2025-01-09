@@ -9,6 +9,13 @@
   height: 100%;
 }
 
+.contact-list {
+  flex: 1; /* Flexibles Layout für die Kontaktliste */
+  max-height: 100%; /* Begrenzte Höhe */
+  overflow-y: auto; /* Vertikales Scrollen aktivieren */
+  padding-right: 16px; /* Abstand rechts für den Scrollbalken */
+}
+
 .inner-box{
   width: 50%;
 }
@@ -29,7 +36,7 @@
   margin-top: 1%;
 }
 
-#new-contact-headline{
+.new-contact-headline{
   font-size:1.6em;
   font-weight: bold;
 }
@@ -49,6 +56,13 @@
   border-bottom: lightgray 1px solid;
   margin-right: 3%;
   padding: 2%;
+  padding-left: 5%;
+}
+
+.contact-item:hover{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 #contact-top-box {
@@ -93,4 +107,20 @@ nb-radio-group{
 
 #names-group input{
   width: 95%;
+}
+
+#header-box{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#close{
+  display: flex;
+  justify-content: flex-end;       /* Den Button ganz rechts platzieren */
+  align-items: center;
+}
+
+.error{
+  color: red;
 }

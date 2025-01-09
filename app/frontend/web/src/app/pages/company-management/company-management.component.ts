@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CompanyService } from '../../services/company.service';
+import {Component, OnInit} from '@angular/core';
+import {CompanyService} from '../../services/company.service';
 import {
     NbButtonModule,
     NbCardModule,
@@ -12,14 +12,19 @@ import {
     NbToastrService,
     NbTooltipModule,
 } from '@nebular/theme';
-import { Company } from '../../model/companies';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { CompanyDialogComponent } from '../../components/dialogs/company-dialog/company-dialog.component';
-import { ConfirmDialogComponent } from '../../components/dialogs/confirm-dialog/confirm-dialog.component';
-import { NgForOf, NgIf } from '@angular/common';
-import { ContactPerson } from '../../model/contactperson';
-import { ContactPersonDialogComponent } from '../../components/dialogs/contact-person-dialog/contact-person-dialog.component';
+import {Company} from '../../model/companies';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {CompanyDialogComponent} from '../../components/dialogs/company-dialog/company-dialog.component';
+import {ConfirmDialogComponent} from '../../components/dialogs/confirm-dialog/confirm-dialog.component';
+import {NgForOf, NgIf} from '@angular/common';
+import {ContactPerson} from '../../model/contactperson';
+import {
+    ContactPersonDialogComponent
+} from '../../components/dialogs/contact-person-dialog/contact-person-dialog.component';
 import {ReportComponent} from "../../components/report/report.component";
+import {
+    CompanyContactPersonDialogComponent
+} from "../../components/dialogs/company-contact-person-dialog/company-contact-person-dialog.component";
 
 @Component({
     selector: 'app-company-management',
@@ -48,8 +53,8 @@ export class CompanyManagementComponent implements OnInit {
     companies: Company[] = [];
 
     columns = [
-        { key: 'name', title: 'Firmenname', sortable: true },
-        { key: 'industry', title: 'Branche', sortable: true },
+        {key: 'name', title: 'Firmenname', sortable: true},
+        {key: 'industry', title: 'Branche', sortable: true},
         {
             key: 'website',
             title: 'Website',
@@ -58,7 +63,7 @@ export class CompanyManagementComponent implements OnInit {
         },
     ];
 
-    edit =  {
+    edit = {
         icon: 'edit-outline',
         tooltip: 'Unternehmen bearbeiten',
         status: 'info',
@@ -73,13 +78,20 @@ export class CompanyManagementComponent implements OnInit {
             status: 'danger',
             callback: this.confirmDelete.bind(this),
         },
+        {
+            icon: 'people-outline',
+            tooltip: 'Kontaktpersonen verwalten',
+            status: 'info',
+            callback: this.navigateToContacts.bind(this),
+        },
     ];
 
     constructor(
         private companyService: CompanyService,
         private dialogService: NbDialogService,
         private toastrService: NbToastrService
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {
         this.loadCompanies();
@@ -124,7 +136,7 @@ export class CompanyManagementComponent implements OnInit {
             .open(CompanyDialogComponent, {
                 context: {
                     title: 'Unternehmen bearbeiten',
-                    company: { ...company },
+                    company: {...company},
                 },
                 closeOnBackdropClick: false,
                 closeOnEsc: false,
@@ -170,6 +182,15 @@ export class CompanyManagementComponent implements OnInit {
         });
     }
 
+    navigateToContacts(company: Company) {
+        console.log("navigateToContacts wurde aufgerufen");
+        this.dialogService.open(CompanyContactPersonDialogComponent, {
+            context: {
+                companyId: company.id
+            }
+        });
+    }
+
     openAddContactPersonDialog(company: Company): void {
         this.dialogService
             .open(ContactPersonDialogComponent, {
@@ -197,7 +218,7 @@ export class CompanyManagementComponent implements OnInit {
                 context: {
                     title: 'Kontaktperson bearbeiten',
                     company: company,
-                    contactPerson: { ...contactPerson },
+                    contactPerson: {...contactPerson},
                 },
                 closeOnBackdropClick: false,
                 closeOnEsc: false,
