@@ -28,11 +28,19 @@ import { importProvidersFrom } from "@angular/core";
 import {NgxEchartsModule} from "ngx-echarts";
 import {NbEvaIconsModule} from "@nebular/eva-icons";
 import {MaturaballComponent} from "./pages/maturaball/maturaball.component";
+import {AppointmentsComponent} from "./pages/appointments/appointments.component";
+import {
+  CompanyContactPersonDialogComponent
+} from "./components/dialogs/company-contact-person-dialog/company-contact-person-dialog.component";
 
 const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full', data: { roles: [] } },
   { path: 'login', component: LoginComponent, data: { roles: [] } },
   { path: 'dashboard', component: DashboardViewComponent, canActivate: [authGuard], data: { roles: [] } },
+  { path: 'organisation', data: {roles: ["management", "supervisor","organization"]}, children: [
+      { path: 'todo', component: DashboardViewComponent, canActivate: [authGuard] },
+      { path: 'appointments', component: AppointmentsComponent, canActivate: [authGuard] }
+    ]},
   { path: 'sponsoring', data: {roles: ["supervisor", "sponsoring", "management", "organization"]},children: [
       { path: 'companies', component: CompanyManagementComponent, canActivate: [authGuard] },
       { path: 'benefits', component: BenefitManagementComponent, canActivate: [authGuard] },
@@ -42,7 +50,7 @@ const routes: Route[] = [
       { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
       { path: 'appointment', component: MaturaballComponent, canActivate: [authGuard] }
     ]},
-  { path: '**', redirectTo: '/dashboard' },
+  //{ path: '**', redirectTo: '/dashboard' },
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -80,12 +88,16 @@ export const config = {
       {
         title: 'Organisation',
         icon: 'people-outline',
+        link: '/organisation',
+        roles: ["supervisor", "sponsoring", "management", "organization"],
         children: [
           {
-            title: 'ToDo'
+            title: 'ToDo',
+            link: '/organisation/todo'
           },
           {
-            title: 'Termine'
+            title: 'Termine',
+            link: '/organisation/appointments'
           }
         ]
       },

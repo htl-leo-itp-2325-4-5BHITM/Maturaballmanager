@@ -1,77 +1,86 @@
-import {Component, OnInit} from '@angular/core';
-import {NbButtonModule, NbCardModule, NbIconModule, NbInputModule} from "@nebular/theme";
-import {NgForOf, NgIf} from "@angular/common";
+import {Component, Input, OnInit} from '@angular/core';
+import {NbButtonModule, NbCardModule, NbDialogRef, NbIconModule, NbInputModule, NbRadioModule} from "@nebular/theme";
+import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {CompanyService} from "../../../services/company.service";
+import {ContactPerson} from "../../../model/contactperson";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-company-contact-person-dialog',
   standalone: true,
   imports: [
+    CommonModule,
     NbCardModule,
     NbIconModule,
     NgIf,
     NgForOf,
     NbButtonModule,
     NbInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NbRadioModule
   ],
   templateUrl: './company-contact-person-dialog.component.html',
-  styleUrl: './company-contact-person-dialog.component.scss'
+  styleUrls: ['./company-contact-person-dialog.component.scss']
 })
 export class CompanyContactPersonDialogComponent implements OnInit {
 
-  contacts = [
-    {
-      prefixTitle: 'Dr.',
-      firstName: 'Max',
-      lastName: 'Mustermann',
-      position: 'CEO',
-      personalEmail: 'max.mustermann@example.com',
-      personalPhone: '+49 123 456789'
-    },
-    {
-      prefixTitle: 'Prof.',
-      firstName: 'Maria',
-      lastName: 'Schmidt',
-      position: 'CTO',
-      personalEmail: 'maria.schmidt@example.com',
-      personalPhone: '+49 987 654321'
-    }
-  ];
+  @Input() companyId: string | '' = ''; // Assuming companyId is passed as input
+
+  contacts: ContactPerson[] = [];
 
   // Formularsteuerung
   showNewContactForm = false;
-  newContactForm: FormGroup = new FormGroup({});
+  newContactForm: FormGroup = this.fb.group({
+    prefixTitle: [''],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    suffixTitle: [''],
+    gender: ['', Validators.required],
+    position: [''],
+    personalEmail: ['', [Validators.email]],
+    personalPhone: ['']
+  });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+              protected ref: NbDialogRef<CompanyContactPersonDialogComponent>,
+              private companyService: CompanyService,)
+  {}
 
   ngOnInit(): void {
-    // Initialisierung des Formulars für neue Kontakte
-    this.newContactForm = this.fb.group({
-      prefixTitle: [''],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      position: [''],
-      personalEmail: ['', [Validators.email]],
-      personalPhone: ['']
-    });
+    if (this.companyId != '') {
+      this.loadContacts();
+    }
   }
 
-  // Formular anzeigen oder verbergen
+  loadContacts(): void {
+    this.companyService.getContactPersonsByCompany(this.companyId).subscribe(
+        data => this.contacts = data,
+        error => console.error('Error fetching contact persons', error)
+    );
+  }
+
   toggleNewContactForm() {
     this.showNewContactForm = !this.showNewContactForm;
   }
 
-  // Neuen Kontakt speichern
+
   saveContact() {
     if (this.newContactForm.valid) {
       const newContact = this.newContactForm.value;
-      this.contacts.push(newContact);
-      this.resetNewContactForm();
+      this.companyService.addContactPerson(newContact, this.companyId).subscribe(
+          data => {
+            this.contacts.push(data);
+            this.resetNewContactForm();
+          },
+          error => console.error('Error saving new contact', error)
+      );
     } else {
       console.log('Formular ist ungültig');
     }
   }
+
+
 
   resetNewContactForm() {
     this.newContactForm.reset();
@@ -79,6 +88,16 @@ export class CompanyContactPersonDialogComponent implements OnInit {
   }
 
   deleteContact(index: number) {
-    this.contacts.splice(index, 1);
+    const contactPersonId = this.contacts[index].id;
+    if (contactPersonId) {
+      this.companyService.deleteContactPerson(contactPersonId).subscribe(
+          () => this.contacts.splice(index, 1),
+          error => console.error('Error deleting contact person', error)
+      );
+    }
+  }
+
+  fillFormWithContact(contact: ContactPerson) {
+    this.newContactForm.patchValue(contact);
   }
 }

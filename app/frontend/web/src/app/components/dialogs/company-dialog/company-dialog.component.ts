@@ -6,13 +6,17 @@ import {
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
-  NbDialogRef,
+  NbDialogRef, NbDialogService,
   NbIconModule,
   NbInputModule,
   NbRadioModule
 } from '@nebular/theme';
 import { Company } from "../../../model/companies";
 import { NgForOf, NgIf } from "@angular/common";
+import {Router} from "@angular/router";
+import {
+  CompanyContactPersonDialogComponent
+} from "../company-contact-person-dialog/company-contact-person-dialog.component";
 
 @Component({
   selector: 'app-company-dialog',
@@ -40,7 +44,8 @@ export class CompanyDialogComponent implements OnInit {
 
   constructor(
       private fb: FormBuilder,
-      protected dialogRef: NbDialogRef<CompanyDialogComponent>
+      protected dialogRef: NbDialogRef<CompanyDialogComponent>,
+      private dialogService: NbDialogService,
   ) { }
 
   ngOnInit(): void {
@@ -105,5 +110,14 @@ export class CompanyDialogComponent implements OnInit {
 
   isFormValid(): boolean {
     return this.form.valid;
+  }
+
+  navigateToContacts() {
+      console.log("navigateToContacts wurde aufgerufen");
+      this.dialogService.open(CompanyContactPersonDialogComponent, {
+        context: {
+          companyId: this.company?.id
+        }
+      });
   }
 }
