@@ -34,7 +34,7 @@ import {CompanyService} from "../../../services/company.service";
     providers: [provideNebular()]
 })
 export class SendInvoiceDialogComponent implements OnInit {
-    @Input() invoice: Invoice;
+    @Input() invoice: Invoice = {} as Invoice;
 
     form: FormGroup;
     availableEmailOptions: { value: 'OFFICE' | 'CONTACT_PERSON', label: string, email: string }[] = [];
@@ -69,17 +69,17 @@ export class SendInvoiceDialogComponent implements OnInit {
      * Initialisiert die verfügbaren E-Mail-Optionen basierend auf der Verfügbarkeit von Kontaktpersonen und Büro-E-Mail.
      */
     async initializeEmailOptions() {
-        const company = this.companyService.getCompanyById(this.invoice.company).toPromise();
-        const contactPersons = await this.companyService.getContactPersonsByCompany(company.id!).toPromise();
+        const company = await this.companyService.getCompanyById(this.invoice.company).toPromise();
+        const contactPersons = await this.companyService.getContactPersonsByCompany(company?.id!).toPromise();
 
-        let contactPerson = contactPersons?.find(cp => cp.id! === this.invoice!.contactPerson!)!;
+        let contactPerson = contactPersons?.find(cp => cp.id! === this.invoice!.contactPerson)!;
 
         // Büro-E-Mail hinzufügen, wenn vorhanden
         if (company) {
             this.availableEmailOptions.push({
                 value: 'OFFICE',
                 label: 'Büro-E-Mail',
-                email: company.officeEmail
+                email: company.officeEmail!
             });
         }
 
