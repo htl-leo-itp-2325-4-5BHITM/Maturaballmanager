@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {
     NbButtonModule,
-    NbCardModule, NbDialogService,
+    NbCardModule,
+    NbDialogService,
     NbFormFieldModule,
     NbIconModule,
     NbInputModule,
@@ -12,20 +13,6 @@ import {PromService} from "../../services/prom.service";
 import {DayPlanDTO, PromDTO} from "../../model/dtos/prom.dto";
 import {NgForOf, NgIf} from "@angular/common";
 import {ConfirmDialogComponent} from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
-
-interface MaturaballData {
-    motto: string;
-    date: string;
-    time: string;
-    street: string;
-    zip: string;
-    city: string;
-    mainContact: string;
-    teacher1: string;
-    teacher2: string;
-    schedule?: string; // Optional
-}
-
 
 @Component({
     selector: 'app-maturaball',
@@ -45,7 +32,6 @@ interface MaturaballData {
     styleUrl: './maturaball.component.scss'
 })
 export class MaturaballComponent implements OnInit {
-
     formData: PromDTO = {
         motto: '',
         date: '',
@@ -84,16 +70,15 @@ export class MaturaballComponent implements OnInit {
                             return {name: entry.name, time: entry.time};
                         }
                         return {name: '', time: ''};
-                    }).filter((entry: DayPlanDTO) => entry.name || entry.time); // Filtere leere Einträge
+                    }).filter((entry: DayPlanDTO) => entry.name || entry.time);
                 }
 
             } else {
                 this.editingExistingProm = false;
                 this.activePromId = null;
-                this.formData.dayPlan = []; // Stelle sicher, dass dayPlan leer bleibt
+                this.formData.dayPlan = [];
             }
         } catch (err) {
-            console.error('Fehler beim Laden des aktiven Maturaballs', err);
             this.editingExistingProm = false;
         }
     }
@@ -109,7 +94,6 @@ export class MaturaballComponent implements OnInit {
     async submit(): Promise<void> {
         const {motto, date, time, street, houseNumber, zip, city} = this.formData;
 
-        // Überprüfen, ob Pflichtfelder ausgefüllt sind
         if (!motto || !date || !time || !street || !houseNumber || !zip || !city) {
             this.toastrService.show(
                 'Bitte füllen Sie alle Pflichtfelder aus!',
@@ -119,31 +103,19 @@ export class MaturaballComponent implements OnInit {
             return;
         }
 
-        console.log(this.formData);
-
         try {
-            let response;
+            if (this.activePromId) this.formData.dayPlan = this.formData.dayPlan.filter((entry: any) => entry.name && entry.time);
             if (this.activePromId) {
-                // Vorhandenen Maturaball updaten
-                this.formData.dayPlan = this.formData.dayPlan.filter((entry: any) => entry.name && entry.time);
-                response = await this.promService.updateProm(this.activePromId, this.formData);
+                await this.promService.updateProm(this.activePromId, this.formData);
             } else {
-                // Neuen Maturaball erstellen
-                response = await this.promService.createProm(this.formData);
+                await this.promService.createProm(this.formData);
             }
-
-            console.log('Gespeicherte Maturaball-Daten:', response);
-
-            // Erfolgreiche Speicherung
             this.toastrService.show(
                 'Maturaball-Daten wurden erfolgreich gespeichert!',
                 'Erfolg',
                 {status: 'success', duration: 3000}
             );
         } catch (err) {
-            console.error('Fehler beim Speichern der Maturaball-Daten:', err);
-
-            // Fehler bei der Speicherung
             this.toastrService.show(
                 'Fehler beim Speichern der Daten. Bitte versuchen Sie es erneut.',
                 'Speicherfehler',
@@ -165,20 +137,18 @@ export class MaturaballComponent implements OnInit {
 
 
             if (!confirmed) {
-                return; // Abbrechen, wenn der Benutzer nicht bestätigt hat.
+                return;
             }
 
             try {
                 await this.promService.deactivateProm(this.activePromId);
 
-                // Erfolgsmeldung
                 this.toastrService.show(
                     'Der aktuelle Maturaball wurde geschlossen. Nun kann ein neuer erstellt werden.',
                     'Erfolg',
                     { status: 'success', duration: 3000 }
                 );
 
-                // Felder zurücksetzen
                 this.editingExistingProm = false;
                 this.activePromId = null;
                 this.formData = {
@@ -192,9 +162,6 @@ export class MaturaballComponent implements OnInit {
                     dayPlan: []
                 };
             } catch (err) {
-                console.error('Fehler beim Schließen des Maturaballs:', err);
-
-                // Fehlerbenachrichtigung
                 this.toastrService.show(
                     'Fehler beim Schließen. Bitte versuchen Sie es erneut.',
                     'Fehler',
@@ -202,7 +169,6 @@ export class MaturaballComponent implements OnInit {
                 );
             }
         } else {
-            console.log('Kein aktiver Maturaball zum Schließen vorhanden.');
             this.toastrService.show(
                 'Kein aktiver Maturaball zum Schließen vorhanden.',
                 'Info',
@@ -210,5 +176,4 @@ export class MaturaballComponent implements OnInit {
             );
         }
     }
-
 }

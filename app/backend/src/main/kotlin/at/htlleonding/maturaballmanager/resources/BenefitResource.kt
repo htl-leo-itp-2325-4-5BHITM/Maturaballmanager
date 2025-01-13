@@ -12,7 +12,6 @@ import jakarta.validation.Valid
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import net.bytebuddy.pool.TypePool.Resolution.Illegal
 
 @Path("/benefit")
 @Produces(MediaType.APPLICATION_JSON)
@@ -100,9 +99,7 @@ class BenefitResource {
      */
     @PUT
     fun updateBenefit(@Valid updatedBenefitDTO: BenefitDTO): Uni<Response> {
-        println(updatedBenefitDTO)
         val benefitEntity = updatedBenefitDTO.toEntity()
-        println(benefitEntity)
         return benefitRepository.update(benefitEntity)
             .map { mergedBenefit ->
                 Response.ok(mergedBenefit.toDTO()).build()

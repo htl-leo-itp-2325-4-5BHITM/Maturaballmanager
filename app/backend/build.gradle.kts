@@ -16,6 +16,7 @@ val quarkusPlatformVersion: String by project
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest-jsonb")
+    implementation("io.quarkus:quarkus-scheduler")
     implementation("io.quarkus:quarkus-kotlin")
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-hibernate-reactive-panache")

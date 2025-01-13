@@ -15,6 +15,7 @@ import {Company} from '../../../model/companies';
 import {provideNebular} from "../../../nebular.providers";
 import {InvoiceService} from '../../../services/invoice.service';
 import {CompanyService} from "../../../services/company.service";
+import {InvoiceSendCheckResult} from "../../../model/dtos/invoice-send-check-result.dto";
 
 @Component({
     selector: 'app-send-invoice-dialog',
@@ -72,18 +73,17 @@ export class SendInvoiceDialogComponent implements OnInit {
         const company = await this.companyService.getCompanyById(this.invoice.company).toPromise();
         const contactPersons = await this.companyService.getContactPersonsByCompany(company?.id!).toPromise();
 
-        let contactPerson = contactPersons?.find(cp => cp.id! === this.invoice!.contactPerson)!;
+        let contactPerson = contactPersons?.find(cp => cp.id! === this.invoice!.contactPerson);
 
-        // Büro-E-Mail hinzufügen, wenn vorhanden
-        if (company) {
+        if (company && company.officeEmail) {
             this.availableEmailOptions.push({
                 value: 'OFFICE',
                 label: 'Büro-E-Mail',
-                email: company.officeEmail!
+                email: company.officeEmail
             });
         }
 
-        // Kontaktperson-E-Mail hinzufügen, wenn vorhanden
+        // Kontaktperson-E-Mail nur hinzufügen, wenn sie existiert
         if (contactPerson && contactPerson.personalEmail) {
             this.availableEmailOptions.push({
                 value: 'CONTACT_PERSON',
@@ -120,23 +120,50 @@ export class SendInvoiceDialogComponent implements OnInit {
      * Schließt den Dialog und sendet die ausgewählte E-Mail-Zielauswahl zurück.
      */
     sendEmail(): void {
-        if (this.isEmailValid) {
-            const selectedOption = this.availableEmailOptions.find(opt => opt.value === this.form.get('emailTarget')?.value);
-            if (selectedOption) {
-                this.invoiceService.sendInvoice(this.invoice.id!, selectedOption.value).subscribe({
-                    next: () => {
-                        this.toastrService.success('Rechnung erfolgreich versendet.', 'Erfolg');
-                        this.dialogRef.close(true);
-                    },
-                    error: (error) => {
-                        this.toastrService.danger('Fehler beim Versenden der Rechnung.', 'Fehler');
-                        console.error(error);
+        this.invoiceService.checkIfInvoiceIsSendable(this.invoice.id!)
+            .subscribe({
+                next: (checkResult: InvoiceSendCheckResult) => {
+                    if (!checkResult.valid) {
+                        this.toastrService.warning(
+                            `Es fehlen noch Pflichtfelder:\n${checkResult.missingFields?.join('\n')}`,
+                            'Rechnung unvollständig'
+                        );
+                        return;
                     }
-                });
-            }
-        } else {
-            this.toastrService.danger('Bitte überprüfen Sie Ihre Auswahl.', 'Ungültige Auswahl');
-        }
+
+                    if (this.isEmailValid) {
+                        const selectedOption = this.availableEmailOptions
+                            .find(opt => opt.value === this.form.get('emailTarget')?.value);
+
+                        if (selectedOption) {
+                            this.invoiceService.sendInvoice(this.invoice.id!, selectedOption.value).subscribe({
+                                next: () => {
+                                    this.toastrService.success('Rechnung erfolgreich versendet.', 'Erfolg');
+                                    this.dialogRef.close(true);
+                                },
+                                error: (error) => {
+                                    this.toastrService.danger('Fehler beim Versenden der Rechnung.', 'Fehler');
+                                    console.error(error);
+                                }
+                            });
+                        }
+                    } else {
+                        this.toastrService.danger('Bitte überprüfen Sie Ihre Auswahl.', 'Ungültige Auswahl');
+                    }
+                },
+                error: (err) => {
+                    if (err.status === 400 && err.error?.missingFields) {
+                        // Bei 400 BAD_REQUEST bekommen wir i. d. R. das Check-Result im Body:
+                        this.toastrService.warning(
+                            `Es fehlen noch Pflichtfelder:\n${err.error.missingFields.join('\n')}`,
+                            'Rechnung unvollständig'
+                        );
+                    } else {
+                        this.toastrService.danger('Fehler bei der Validierung der Rechnung.', 'Fehler');
+                        console.error(err);
+                    }
+                }
+            });
     }
 
     cancel(): void {

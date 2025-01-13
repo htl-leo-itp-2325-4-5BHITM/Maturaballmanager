@@ -32,7 +32,7 @@ class ContactPerson: PanacheEntityBase() {
 
     @NotNull(message = "Geschlecht ist erforderlich")
     @Pattern(regexp = "M|W|D", message = "Geschlecht muss 'M', 'W' oder 'D' sein")
-    var gender: String? = null // M, W, D
+    var gender: String? = null
 
     @NotBlank(message = "Position ist erforderlich")
     var position: String? = null

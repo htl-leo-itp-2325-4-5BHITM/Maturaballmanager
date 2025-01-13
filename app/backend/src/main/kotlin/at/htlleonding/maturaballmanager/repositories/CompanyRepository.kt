@@ -78,4 +78,15 @@ class CompanyRepository : PanacheRepositoryBase<Company, String> {
             }
         }
     }
+
+    /**
+     * Sucht Unternehmen anhand eines Query-Strings im Namen oder der Branche.
+     */
+    fun searchCompanies(query: String): Uni<List<Company>> {
+        if (query.isBlank()) {
+            return getAllCompanies()
+        }
+        val lowerQuery = "%${query.lowercase()}%"
+        return find("(lower(name) like ?1 OR lower(industry) like ?1)", lowerQuery).list()
+    }
 }

@@ -1,11 +1,10 @@
-// src/app/services/invoice.service.ts
-
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Invoice} from '../model/invoice';
 import {environment} from "../../environments/environment";
 import {InvoiceDTO} from "../model/dtos/invoice.dto";
+import {InvoiceSendCheckResult} from "../model/dtos/invoice-send-check-result.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -75,11 +74,14 @@ export class InvoiceService {
   }
 
   /**
-   * Sendet die Rechnung an eine spezifische E-Mail-Adresse.
+   * Prüft, ob alle erforderlichen Felder für den Versand ausgefüllt sind.
    * @param invoiceId ID der Rechnung
-   * @param email Ziel-E-Mail-Adresse
    */
-  sendInvoiceToEmail(invoiceId: string, email: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${invoiceId}/send`, {});
+  checkIfInvoiceIsSendable(invoiceId: string): Observable<InvoiceSendCheckResult> {
+    return this.http.get<InvoiceSendCheckResult>(`${this.apiUrl}/${invoiceId}/send/check`);
+  }
+
+  markInvoiceAsPaid(invoiceId: string): Observable<Invoice> {
+    return this.http.post<Invoice>(`${this.apiUrl}/${invoiceId}/pay`, {});
   }
 }

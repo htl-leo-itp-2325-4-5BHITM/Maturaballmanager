@@ -1,5 +1,3 @@
-// src/main/kotlin/at/htlleonding/maturaballmanager/model/entities/Invoice.kt
-
 package at.htlleonding.maturaballmanager.model.entities
 
 import at.htlleonding.maturaballmanager.model.Status

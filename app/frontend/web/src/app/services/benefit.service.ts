@@ -1,4 +1,3 @@
-// src/app/services/benefit.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -8,7 +7,7 @@ import { Benefit } from "../model/benefit";
   providedIn: 'root'
 })
 export class BenefitService {
-  private baseUrl = '/api/benefit'; // Proxy wird verwendet, daher kein vollständiger URL
+  private baseUrl = '/api/benefit';
 
   private httpOptions = {
     headers: new HttpHeaders({

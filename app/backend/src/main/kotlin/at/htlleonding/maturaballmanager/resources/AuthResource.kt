@@ -69,15 +69,6 @@ class AuthResource @Inject constructor(private val authService: AuthService) {
     @POST
     @Path("/hasRoles")
     fun hasRoles(roles: List<String>): Response {
-        println("Roles: ${roles}")
-        println("Client roles: ${getClientRoles()}")
-        for (role in roles) {
-            println(role)
-        }
-        for (role in getClientRoles()) {
-            println(role)
-        }
-        println(roles.any { getClientRoles().contains(it) })
         return if (roles.any { getClientRoles().contains(it) }) {
             Response.ok().entity(mapOf("hasRoles" to true)).build()
         } else if(jwt.groups.isEmpty() && roles.isEmpty()) {

@@ -1,29 +1,28 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CommonModule, NgForOf, NgIf} from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     NbButtonModule,
     NbInputModule,
     NbSelectModule,
-    NbIconModule,
     NbFormFieldModule,
     NbCardModule,
-    NbCheckboxModule,
+    NbDatepickerModule,
+    NbRadioModule,
+    NbOptionModule,
     NbToastrService,
-    NbDatepickerModule, NbRadioModule, NbBadgeModule, NbOptionModule
+    NbDialogRef
 } from '@nebular/theme';
-import { CompanyService } from '../../../services/company.service';
-import { BenefitService } from '../../../services/benefit.service';
-import { InvoiceService } from '../../../services/invoice.service';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { of } from 'rxjs';
+import { provideNebular } from '../../../nebular.providers';
+import { InvoiceDTO } from '../../../model/dtos/invoice.dto';
 import { Company } from '../../../model/companies';
 import { ContactPerson } from '../../../model/contactperson';
 import { Benefit } from '../../../model/benefit';
-import { Invoice, Status } from '../../../model/invoice';
-import { NbDialogRef } from '@nebular/theme';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { provideNebular } from "../../../nebular.providers";
-import { InvoiceDTO } from "../../../model/dtos/invoice.dto";
+import { CompanyService } from '../../../services/company.service';
+import { BenefitService } from '../../../services/benefit.service';
+import { InvoiceService } from '../../../services/invoice.service';
+import { Status } from '../../../model/invoice';
 
 @Component({
     selector: 'app-invoice-dialog',
@@ -31,6 +30,7 @@ import { InvoiceDTO } from "../../../model/dtos/invoice.dto";
     styleUrls: ['./invoice-dialog.component.scss'],
     standalone: true,
     imports: [
+        // Nebular & Angular Modules
         NbRadioModule,
         NbCardModule,
         NbButtonModule,
@@ -42,22 +42,14 @@ import { InvoiceDTO } from "../../../model/dtos/invoice.dto";
         NbOptionModule,
         NbSelectModule,
         NgForOf,
-        // ... (Importe bleiben unverändert)
     ],
-    providers: [provideNebular()]
+    providers: [provideNebular()],
 })
 export class InvoiceDialogComponent implements OnInit {
     @Input() title: string = '';
     @Input() invoice: InvoiceDTO = {} as InvoiceDTO;
 
     form: FormGroup;
-
-    sendOptions = [
-        { value: 'immediate', label: 'Direkt versenden' },
-        { value: 'onDate', label: 'Am Rechnungsdatum versenden' }
-    ];
-
-    statusOptions: Status[] = [];
 
     companies: Company[] = [];
     contactPersons: ContactPerson[] = [];
@@ -73,59 +65,47 @@ export class InvoiceDialogComponent implements OnInit {
     ) {
         this.form = this.fb.group({
             company: [null, Validators.required],
-            contactPerson: [null],
+            contactPerson: [null], // optional
             benefits: [[], Validators.required],
             invoiceDate: [new Date(), Validators.required],
-            paymentDeadline: [{ value: null }, Validators.required], // Entfernt 'disabled: true'
+            paymentDeadline: [null, Validators.required],
             sendOption: ['immediate', Validators.required],
-            totalAmount: [{ value: 0.0 }, Validators.required] // Entfernt 'disabled: true'
+            totalAmount: [0.0, Validators.required],
         });
-
-        // Keine zusätzliche Logik für sendOption erforderlich
-    }
-
-    getStatusTag(status: string): string {
-        switch (status) {
-            case 'SENT':
-                return 'info';
-            case 'PAID':
-                return 'success';
-            case 'DRAFT':
-            default:
-                return 'warning'
-        }
     }
 
     ngOnInit(): void {
         this.loadCompanies();
         this.loadBenefits();
-        this.loadContactPersons(this.invoice?.company!);
 
-        this.statusOptions = [Status.DRAFT, Status.SENT, Status.PAID];
-
-        if (this.invoice) {
-            this.form.patchValue({
-                company: this.invoice?.company,
-                contactPerson: this.invoice?.contactPerson ?? undefined,
-                benefits: (this.invoice as InvoiceDTO)?.benefits!,
-                invoiceDate: this.invoice.invoiceDate ? new Date(this.invoice.invoiceDate) : new Date(),
-                paymentDeadline: this.invoice.paymentDeadline ? new Date(this.invoice.paymentDeadline) : null,
-                sendOption: (this.invoice as InvoiceDTO).sendOption === 'onDate' ? 'onDate' : 'immediate',
-                status: this.invoice.status,
-                totalAmount: this.invoice.totalAmount || 0.0 // Initialisierung des Rechnungsbetrags
-            });
-            this.loadContactPersons(this.invoice.company!);
-            this.calculateTotalAmount(this.invoice.benefits ?? []); // Initiale Berechnung
+        // Standard: Wenn im Input-Invoice bereits Firma gesetzt, Kontaktpersonen laden
+        if (this.invoice.company) {
+            this.loadContactPersons(this.invoice.company);
         }
 
-        this.form.get('company')?.valueChanges.subscribe(companyId => {
-            this.loadContactPersons(companyId);
-        });
+        // Falls wir eine existierende Rechnung bearbeiten
+        if (this.invoice) {
+            this.form.patchValue({
+                company: this.invoice.company,
+                contactPerson: this.invoice.contactPerson ?? null,
+                benefits: this.invoice.benefits ?? [],
+                invoiceDate: this.invoice.invoiceDate ? new Date(this.invoice.invoiceDate) : new Date(),
+                paymentDeadline: this.invoice.paymentDeadline ? new Date(this.invoice.paymentDeadline) : null,
+                sendOption: this.invoice.sendOption === 'onDate' ? 'onDate' : 'immediate',
+                totalAmount: this.invoice.totalAmount || 0.0,
+            });
+        }
 
-        this.form.get('benefits')?.valueChanges.subscribe(selectedBenefitIds => {
-            this.calculateTotalAmount(selectedBenefitIds);
-        });
+        // 1) **Zahlungsfrist standardmäßig auf +14 Tage** vom heutigen Tag
+        // nur, wenn noch kein paymentDeadline gesetzt wurde
+        const currentPaymentDeadline = this.form.get('paymentDeadline')?.value;
+        if (!currentPaymentDeadline) {
+            const in14Days = new Date();
+            in14Days.setDate(in14Days.getDate() + 14);
+            this.form.get('paymentDeadline')?.setValue(in14Days);
+        }
 
+        // 2) Wenn user das Rechnungsdatum ändert => Zahlungsfrist = invoiceDate + 14
         this.form.get('invoiceDate')?.valueChanges.subscribe((date: Date) => {
             if (date) {
                 const deadline = new Date(date);
@@ -133,67 +113,106 @@ export class InvoiceDialogComponent implements OnInit {
                 this.form.get('paymentDeadline')?.setValue(deadline);
             }
         });
+
+        // 3) Firma-Change => loadContactPersons
+        this.form.get('company')?.valueChanges.subscribe((companyId) => {
+            this.loadContactPersons(companyId);
+        });
+
+        // 4) Benefits-Change => calculateTotalAmount
+        this.form.get('benefits')?.valueChanges.subscribe((selectedBenefitIds: string[]) => {
+            this.calculateTotalAmount(selectedBenefitIds);
+        });
     }
 
     /**
      * Berechnet den Gesamtbetrag basierend auf den ausgewählten Leistungen.
-     * @param selectedBenefitIds IDs der ausgewählten Leistungen
      */
     calculateTotalAmount(selectedBenefitIds: string[]): void {
-        const selectedBenefits = this.benefits.filter(b => selectedBenefitIds.includes(b.id!));
+        const selectedBenefits = this.benefits.filter((b) => selectedBenefitIds.includes(b.id!));
         const total = selectedBenefits.reduce((sum, benefit) => sum + (benefit.price || 0.0), 0);
         this.form.get('totalAmount')?.setValue(total, { emitEvent: false });
     }
 
-
+    /**
+     * Klick auf "Abbrechen"
+     */
     cancel(): void {
         this.dialogRef.close();
     }
 
     /**
-     * Übergibt die Formulardaten.
+     * Klick auf "Speichern"
      */
     submit(): void {
-        if (this.form.valid) {
-            const formValue = this.form.value;
-
-            const selectedCompany = this.companies.find(c => c.id === formValue.company);
-            const selectedContactPerson = this.contactPersons.find(cp => cp.id === formValue.contactPerson) || null;
-            const selectedBenefits = this.benefits.filter(b => formValue.benefits.includes(b.id));
-
-            // Wenn sendOption 'immediate' ist, wird die Rechnung direkt versendet
-            // Bei 'onDate' wird die Rechnung am invoiceDate versendet
-            const sendOption = formValue.sendOption as 'immediate' | 'onDate';
-
-            this.dialogRef.close({
-                id: this.invoice?.id as string,
-                company: selectedCompany?.id!,
-                contactPerson: selectedContactPerson?.id!,
-                benefits: selectedBenefits.map(b => b.id!),
-                invoiceDate: formValue.invoiceDate as Date,
-                paymentDeadline: formValue.paymentDeadline as Date,
-                status: formValue.status as Status,
-                totalAmount: formValue.totalAmount as number,
-                sendOption: sendOption,
-                // Entfernt: scheduledSendDate
-            });
-        } else {
+        // A) Zuerst: Standard-Formular-Validierung
+        if (this.form.invalid) {
             this.toastrService.danger('Bitte füllen Sie alle erforderlichen Felder aus.', 'Ungültige Eingabe');
+            return;
         }
+
+        // B) Prüfen, ob Kontaktperson gewählt und ob die nötigen Daten existieren
+        const contactPersonId = this.form.get('contactPerson')?.value;
+        if (contactPersonId) {
+            // Finde Kontaktperson
+            const cp = this.contactPersons.find((c) => c.id === contactPersonId);
+            // Beispiel: Wenn du sicherstellen willst, dass die Kontaktperson zumindest eine E-Mail hat
+            if (cp && !cp.personalEmail) {
+                this.toastrService.danger(
+                    'Die gewählte Kontaktperson hat keine E-Mail-Adresse hinterlegt.',
+                    'Ungültige Kontaktperson'
+                );
+                return;
+            }
+        }
+
+        // C) Baue die Daten für das InvoiceDTO
+        const formValue = this.form.value;
+        const selectedCompany = this.companies.find((c) => c.id === formValue.company);
+        const selectedContactPerson = contactPersonId
+            ? this.contactPersons.find((cp) => cp.id === contactPersonId)
+            : null;
+        const selectedBenefits = this.benefits.filter((b) => formValue.benefits.includes(b.id));
+
+        // D) Speichere das, was wir dem Aufrufer zurückgeben wollen
+        // Hier: Schicke es via Dialog-Result an den Parent
+        const sendOption = formValue.sendOption as 'immediate' | 'onDate';
+
+        this.dialogRef.close({
+            id: this.invoice?.id as string,
+            company: selectedCompany?.id!,
+            contactPerson: selectedContactPerson?.id!,
+            benefits: selectedBenefits.map((b) => b.id!),
+            invoiceDate: formValue.invoiceDate as Date,
+            paymentDeadline: formValue.paymentDeadline as Date,
+            totalAmount: formValue.totalAmount as number,
+            // Je nachdem, ob du Status hier änderst:
+            status: this.invoice?.status ?? 'DRAFT',
+            sendOption,
+        });
     }
 
-
+    /**
+     * Lädt mögliche Kontaktpersonen zu einer Firma
+     */
     private loadContactPersons(companyId: string) {
+        if (!companyId) {
+            this.contactPersons = [];
+            return;
+        }
         this.companyService.getContactPersonsByCompany(companyId).subscribe({
             next: (data) => {
                 this.contactPersons = data;
             },
             error: (error) => {
                 console.error('Fehler beim Laden der Ansprechpartner', error);
-            }
+            },
         });
     }
 
+    /**
+     * Lädt alle verfügbaren Leistungen
+     */
     private loadBenefits() {
         this.benefitService.getBenefits().subscribe({
             next: (data) => {
@@ -201,10 +220,13 @@ export class InvoiceDialogComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Fehler beim Laden der Leistungen', error);
-            }
+            },
         });
     }
 
+    /**
+     * Lädt alle Firmen
+     */
     private loadCompanies() {
         this.companyService.getCompanies().subscribe({
             next: (data) => {
@@ -212,7 +234,7 @@ export class InvoiceDialogComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Fehler beim Laden der Unternehmen', error);
-            }
+            },
         });
     }
 }

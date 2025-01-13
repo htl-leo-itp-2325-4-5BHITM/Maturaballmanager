@@ -6,13 +6,13 @@
         <form [formGroup]="form" class="send-invoice-form">
             <!-- Auswahl der E-Mail-Zieladresse -->
             <div class="form-group">
-                <label for="emailOption">E-Mail senden an<span class="text-danger">*</span></label>
-                <nb-select placeholder="E-Mail Ziel auswählen" formControlName="emailOption" required>
+                <label for="emailTarget">E-Mail senden an<span class="text-danger">*</span></label>
+                <nb-select placeholder="E-Mail Ziel auswählen" formControlName="emailTarget" required>
                     <nb-option *ngFor="let option of availableEmailOptions" [value]="option.value">
                         {{ option.label }}
                     </nb-option>
                 </nb-select>
-                <div *ngIf="form.get('emailOption')?.hasError('required') && form.get('emailOption')?.touched" class="error-message">
+                <div *ngIf="form.get('emailTarget')?.hasError('required') && form.get('emailTarget')?.touched" class="error-message">
                     Auswahl der E-Mail-Zieladresse ist erforderlich.
                 </div>
             </div>

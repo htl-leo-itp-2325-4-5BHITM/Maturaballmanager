@@ -1,22 +1,30 @@
 package at.htlleonding.maturaballmanager.services
 
 import EmailTarget
+import InvoiceDTO
 import at.htlleonding.maturaballmanager.configs.toDTO
+import at.htlleonding.maturaballmanager.model.BenefitPdfModel
+import at.htlleonding.maturaballmanager.model.InvoicePdfModel
 import at.htlleonding.maturaballmanager.model.Status
-import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
+import at.htlleonding.maturaballmanager.model.dtos.InvoiceSendCheckResult
 import at.htlleonding.maturaballmanager.model.entities.Benefit
 import at.htlleonding.maturaballmanager.model.entities.Company
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import at.htlleonding.maturaballmanager.model.entities.Invoice
 import at.htlleonding.maturaballmanager.repositories.*
+import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.quarkus.scheduler.Scheduled
+import io.quarkus.scheduler.Scheduled.Schedules
 import io.smallrye.mutiny.Uni
+import io.smallrye.openapi.runtime.io.IoLogging.logger
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
-import jakarta.persistence.EnumType
 import jakarta.ws.rs.NotFoundException
 import java.security.SecureRandom
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @ApplicationScoped
@@ -65,8 +73,81 @@ class InvoiceService {
                     }
             }
             .onFailure().invoke { throwable ->
-                // Optional: Add logging here
-                // logger.error("Failed to create invoice", throwable)
+                logger.error("Failed to create invoice", throwable)
+            }
+    }
+
+    fun checkIfInvoiceIsSendable(id: UUID): Uni<InvoiceSendCheckResult> {
+        return findInvoice(id)
+            .map { invoice ->
+
+                val missingFields = mutableListOf<String>()
+
+                if (invoice.company == null) {
+                    missingFields.add("Firma (company) fehlt.")
+                } else {
+                    if (invoice.company?.name.isNullOrBlank()) {
+                        missingFields.add("Firmenname fehlt.")
+                    }
+                    val address = invoice.company?.address
+                    if (address == null) {
+                        missingFields.add("Firmenadresse fehlt.")
+                    } else {
+                        if (address.street.isNullOrBlank()) missingFields.add("Straße in Firmenadresse fehlt.")
+                        if (address.houseNumber.isNullOrBlank()) missingFields.add("Hausnummer in Firmenadresse fehlt.")
+                        if (address.postalCode.isNullOrBlank()) missingFields.add("PLZ in Firmenadresse fehlt.")
+                        if (address.city.isNullOrBlank()) missingFields.add("Ort in Firmenadresse fehlt.")
+                    }
+
+                    // TODO: Make better email check (only check if officeEmail is used to send)
+                    /*
+                    if (invoice.company?.officeEmail.isNullOrBlank()) {
+                        missingFields.add("Büro-E-Mail fehlt.")
+                    }
+                     */
+                }
+
+                if (invoice.contactPerson != null) {
+                    if (invoice.contactPerson?.firstName.isNullOrBlank()) {
+                        missingFields.add("Vorname der Kontaktperson fehlt.")
+                    }
+                    if (invoice.contactPerson?.lastName.isNullOrBlank()) {
+                        missingFields.add("Nachname der Kontaktperson fehlt.")
+                    }
+                    if (invoice.contactPerson?.personalEmail.isNullOrBlank()) {
+                        missingFields.add("E-Mail der Kontaktperson fehlt.")
+                    }
+                    if (invoice.contactPerson?.gender.isNullOrBlank()) {
+                        missingFields.add("Geschlecht der Kontaktperson fehlt (M|W|D).")
+                    }
+                    if (invoice.contactPerson?.position.isNullOrBlank()) {
+                        missingFields.add("Position der Kontaktperson fehlt.")
+                    }
+                }
+
+                if (invoice.invoiceDate == null) {
+                    missingFields.add("Rechnungsdatum fehlt.")
+                }
+                if (invoice.paymentDeadline == null) {
+                    missingFields.add("Zahlungsfrist fehlt.")
+                }
+
+                if (invoice.totalAmount == null || invoice.totalAmount == 0.0) {
+                    missingFields.add("Rechnungsbetrag (totalAmount) fehlt oder ist 0.")
+                }
+
+                if (missingFields.isEmpty()) {
+                    InvoiceSendCheckResult(
+                        isValid = true,
+                        message = "Alle erforderlichen Felder sind befüllt.",
+                    )
+                } else {
+                    InvoiceSendCheckResult(
+                        isValid = false,
+                        message = "Es fehlen Pflichtfelder zum Versenden der Rechnung.",
+                        missingFields = missingFields
+                    )
+                }
             }
     }
 
@@ -124,10 +205,11 @@ class InvoiceService {
      * Fetches the ContactPerson entity by ID, if provided.
      */
     fun fetchContactPerson(contactPersonId: String?): Uni<ContactPerson?> {
-        return if (contactPersonId == null) {
-            Uni.createFrom().item<ContactPerson?>(null)
-        } else {
+        return if (contactPersonId != null) {
             contactPersonRepository.findById(contactPersonId)
+                .onItem().ifNull().failWith { IllegalArgumentException("ContactPerson not found with ID: $contactPersonId") }
+        } else {
+            Uni.createFrom().nullItem<ContactPerson>()
         }
     }
 
@@ -292,16 +374,126 @@ class InvoiceService {
     }
 
     /**
-     * Generates a PDF for the given invoice.
+     * Generiert ein PDF für eine Rechnung (ID).
+     * Dabei laden wir alle notwendigen DB-Felder in ein eigenes Model (InvoicePdfModel).
+     * Anschließend geben wir das Model an pdfGeneratorService, OHNE weitere DB-Zugriffe.
      */
-    fun generateInvoicePdf(id: UUID, senderName: String): Uni<ByteArray> {
+    @WithSession
+    fun preparePdfModel(id: UUID): Uni<InvoicePdfModel> {
         return findInvoice(id)
-            .flatMap { invoice ->
-                pdfGeneratorService.generateInvoicePdf(invoice, senderName)
-            }
-            .onFailure().invoke { throwable ->
-                // Optional: Log the error
-                // logger.error("Failed to generate PDF for invoice", throwable)
+            .map { invoice ->
+                createInvoicePdfModel(invoice)
             }
     }
+
+    fun generateInvoicePdf(id: UUID, senderName: String): Uni<ByteArray> {
+        return preparePdfModel(id)
+            .flatMap { model ->
+                pdfGeneratorService.generateInvoicePdf(model, senderName)
+            }
+    }
+
+
+    /**
+     * Baut das PDF-Model, damit wir im Worker-Thread nichts mehr aus der DB laden müssen.
+     */
+    private fun createInvoicePdfModel(invoice: Invoice): InvoicePdfModel {
+        val comp = invoice.company
+        val address = comp?.address
+        val contact = invoice.contactPerson
+
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val invoiceDateStr = invoice.invoiceDate?.format(dateFormatter) ?: ""
+        val deadlineStr = invoice.paymentDeadline?.format(dateFormatter) ?: ""
+
+        val benefitsList = invoice.benefits.map { b ->
+            BenefitPdfModel(
+                name = b.name ?: "",
+                description = b.description ?: "",
+                price = b.price ?: 0.0
+            )
+        }
+
+        return InvoicePdfModel(
+            invoiceNumber = invoice.invoiceNumber ?: "",
+            companyName = comp?.name ?: "",
+            companyStreet = address?.street ?: "",
+            companyHouseNumber = address?.houseNumber ?: "",
+            companyPostalCode = address?.postalCode ?: "",
+            companyCity = address?.city ?: "",
+
+            contactPersonName = if (contact != null) "${contact.firstName} ${contact.lastName}" else null,
+            invoiceDate = invoiceDateStr,
+            paymentDeadline = deadlineStr,
+            totalAmount = invoice.totalAmount ?: 0.0,
+            status = invoice.status.name,
+            sendOption = invoice.sendOption,
+            benefits = benefitsList
+        )
+    }
+
+    /**
+     * Führt täglich um Mitternacht die Überprüfung aller Rechnungen durch,
+     * ob deren Rechnungsdatum erreicht ist (invoiceDate <= Heute)
+     * und ob sendOption = 'onDate' ist. Dann versenden wir automatisch die E-Mail.
+        */
+    @Scheduled(cron = "0 0 0 * * ?")
+    fun checkAndSendInvoices() {
+        sendInvoicesWhichAreDue()
+            .subscribe().with(
+                { },
+                {}
+            )
+    }
+
+    @WithTransaction
+    fun sendInvoicesWhichAreDue(): Uni<Void> {
+        val today = OffsetDateTime.now(ZoneOffset.UTC).toLocalDate()
+
+        return invoiceRepository
+            .find("sendOption = ?1", "onDate")
+            .list<Invoice>()
+            .flatMap { allOnDateInvoices ->
+                val dueInvoices = allOnDateInvoices.filter { inv ->
+                    inv.invoiceDate?.toLocalDate()?.isBefore(today.plusDays(1)) == true &&
+                            inv.status == Status.DRAFT
+                }
+
+                if (dueInvoices.isEmpty()) {
+                    Uni.createFrom().voidItem()
+                } else {
+                    val sendUnis = dueInvoices.map { invoice ->
+                        val emailTarget = invoice.company?.officeEmail
+                            ?: invoice.contactPerson?.personalEmail
+                            ?: return@map Uni.createFrom().voidItem()
+
+                        emailService.sendInvoiceEmail(invoice, emailTarget)
+                            .flatMap {
+                                invoice.status = Status.SENT
+                                invoiceRepository.persist(invoice)
+                            }
+                            .replaceWithVoid()
+                    }
+
+                    Uni.join().all(sendUnis)
+                        .andFailFast()
+                        .onItem().transform { _: List<Void> ->
+                        }
+                        .flatMap {
+                            Uni.createFrom().voidItem()
+                        }
+                }
+            }
+    }
+
+    @WithTransaction
+    fun markInvoiceAsPaid(invoiceId: UUID): Uni<InvoiceDTO> {
+        return findInvoice(invoiceId)
+            .flatMap { invoice ->
+                invoice.status = Status.PAID
+                invoiceRepository.persist(invoice)
+            }
+            .map { it.toDTO() }
+    }
+
 }
