@@ -101,7 +101,7 @@ class CompanyResource {
     @PUT
     @Path("/{id}")
     fun updateCompany(@PathParam("id") id: String, @Valid updatedCompany: Company): Uni<Response> {
-        updatedCompany.id = id // Ensure the ID is set correctly
+        updatedCompany.id = id
         return companyRepository.update(updatedCompany)
             .map { mergedCompany ->
                 Response.ok(mergedCompany).build()
@@ -299,6 +299,26 @@ class CompanyResource {
                             .build()
                     }
                 }
+            }
+    }
+
+    /**
+     * GET /company/search
+     * Sucht Unternehmen anhand eines Query-Strings (z. B. Name oder Branche).
+     */
+    @GET
+    @Path("/search")
+    fun searchCompanies(@QueryParam("query") query: String?): Uni<Response> {
+        // Optional: Falls kein query übergeben, könnte man z. B. alle Unternehmen liefern
+        val safeQuery = query?.trim() ?: ""
+        return companyRepository.searchCompanies(safeQuery)
+            .map { companies ->
+                Response.ok(companies).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error searching companies: ${throwable.message}")
+                    .build()
             }
     }
 }

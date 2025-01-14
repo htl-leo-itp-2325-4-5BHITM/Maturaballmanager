@@ -1,22 +1,38 @@
 package at.htlleonding.maturaballmanager.configs
 
+import InvoiceDTO
 import at.htlleonding.maturaballmanager.model.Address
 import at.htlleonding.maturaballmanager.model.dtos.*
 import at.htlleonding.maturaballmanager.model.entities.*
 
 fun Invoice.toDTO(): InvoiceDTO {
+    val cp = this.contactPerson
+    val contactPersonFullName = if (cp != null) {
+        "${cp.firstName} ${cp.lastName}"
+    } else null
+
     return InvoiceDTO(
         id = this.id,
         invoiceNumber = this.invoiceNumber,
+
+        // IDs
         company = this.company?.id,
-        contactPerson = this.contactPerson?.id,
+        contactPerson = cp?.id,
+
+        // NEU
+        companyName = this.company?.name,
+        contactPersonName = contactPersonFullName,
+
+        // Der Rest
         benefits = this.benefits.map { it.id!! },
         invoiceDate = this.invoiceDate,
         paymentDeadline = this.paymentDeadline,
         status = this.status,
-        totalAmount = this.totalAmount
+        totalAmount = this.totalAmount,
+        sendOption = this.sendOption
     )
 }
+
 
 fun InvoiceDTO.toEntity(
     company: Company,

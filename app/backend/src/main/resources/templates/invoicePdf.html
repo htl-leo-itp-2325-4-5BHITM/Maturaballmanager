@@ -2,60 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Rechnung #{invoice.invoiceNumber}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            color: #000;
-        }
-        h1 {
-            text-align: center;
-            text-decoration: underline;
-        }
-        .header, .footer {
-            text-align: center;
-        }
-        .addresses {
-            margin-top: 20px;
-            margin-bottom: 40px;
-        }
-        .addresses .from, .addresses .to {
-            display: inline-block;
-            vertical-align: top;
-            width: 45%;
-        }
-        .addresses .from {
-            text-align: left;
-        }
-        .addresses .to {
-            text-align: right;
-        }
-        .content {
-            margin-bottom: 40px;
-        }
-        .bank-details {
-            margin-bottom: 40px;
-        }
-        .signature {
-            margin-top: 60px;
-        }
-        .signature .name {
-            text-align: left;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #dddddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+    <title>Rechnung #{model.invoiceNumber}</title>
+    <!-- ... style ... -->
 </head>
 <body>
 <div class="header">
@@ -71,21 +19,21 @@
         <p>{senderPostalCode} {senderCity}</p>
     </div>
     <div class="to">
-        <p>{invoice.company.name}</p>
-        <p>z.H. {invoice.contactPerson.firstName} {invoice.contactPerson.lastName}</p>
+        <p>{model.companyName}</p>
+        {#if model.contactPersonName}
+            <p>z.H. {model.contactPersonName}</p>
+        {/if}
         <p>
-            {invoice.company.address.street} {invoice.company.address.houseNumber}
-            {#if invoice.company.address.floor != null}/{invoice.company.address.floor}{/if}
-            {#if invoice.company.address.door != null}-{invoice.company.address.door}{/if}
+            {model.companyStreet} {model.companyHouseNumber}
         </p>
-        <p>{invoice.company.address.postalCode} {invoice.company.address.city}</p>
+        <p>{model.companyPostalCode} {model.companyCity}</p>
     </div>
 </div>
 
 <div class="content">
     <p>
-        <strong>Rechnungsnummer:</strong> {invoice.invoiceNumber},
-        <strong>Rechnungsdatum:</strong> {invoice.invoiceDate}
+        <strong>Rechnungsnummer:</strong> {model.invoiceNumber},
+        <strong>Rechnungsdatum:</strong> {model.invoiceDate}
     </p>
     <h2>Erwerb einer Werbeleistung im Rahmen des Maturaballs 2025 der HTL Leonding</h2>
     <p>Die Leistung umfasst:</p>
@@ -98,19 +46,19 @@
         </tr>
         </thead>
         <tbody>
-        {#for benefit in invoice.benefits}
-        <tr>
-            <td>{benefit.name}</td>
-            <td>{benefit.description}</td>
-            <td>{benefit.price} €</td>
-        </tr>
+        {#for benefit in model.benefits}
+            <tr>
+                <td>{benefit.name}</td>
+                <td>{benefit.description}</td>
+                <td>{benefit.price} €</td>
+            </tr>
         {/for}
         </tbody>
     </table>
-    <p><strong>Gesamtbetrag:</strong> {invoice.totalAmount} €</p>
+    <p><strong>Gesamtbetrag:</strong> {model.totalAmount} €</p>
     <p>
         Bitte überweisen Sie den oben genannten Betrag bis spätestens
-        {invoice.paymentDeadline} auf folgendes Konto:
+        {model.paymentDeadline} auf folgendes Konto:
     </p>
 </div>
 
@@ -119,7 +67,7 @@
     <p><strong>Kontoinhaber:</strong> {bankAccount.accountHolder}</p>
     <p><strong>IBAN:</strong> {bankAccount.iban}</p>
     <p><strong>BIC:</strong> {bankAccount.bic}</p>
-    <p><strong>Verwendungszweck:</strong> "Maturaball - #{invoice.invoiceNumber}"</p>
+    <p><strong>Verwendungszweck:</strong> "Maturaball - #{model.invoiceNumber}"</p>
 </div>
 
 <div class="content">

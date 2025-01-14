@@ -1,5 +1,3 @@
-// src/main/kotlin/at/htlleonding/maturaballmanager/model/entities/Invoice.kt
-
 package at.htlleonding.maturaballmanager.model.entities
 
 import at.htlleonding.maturaballmanager.model.Status
@@ -53,4 +51,7 @@ class Invoice : PanacheEntityBase() {
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "prom_id")
     var prom: Prom? = null
+
+    @Column(name = "send_option")
+    var sendOption: String? = "immediate"
 }

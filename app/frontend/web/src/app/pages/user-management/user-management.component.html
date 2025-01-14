@@ -20,7 +20,13 @@
                     </button>
 
                     <div *ngIf="filterMenuVisible" class="filter-menu">
-                        <button nbButton ghost size="small" *ngFor="let header of headers; let i = index" (click)="onSort(getColumnKey(i))">
+                        <button
+                                nbButton
+                                ghost
+                                size="small"
+                                *ngFor="let header of headers; let i = index"
+                                (click)="onSort(getColumnKey(i))"
+                        >
                             Nach {{ header }} sortieren
                         </button>
                     </div>
@@ -41,33 +47,31 @@
                 <tr>
                     <th *ngFor="let header of headers; let i = index" (click)="onSort(getColumnKey(i))">
                         {{ header }}
-                        <nb-icon *ngIf="sortColumn === getColumnKey(i)"
-                                 [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'">
-                        </nb-icon>
+                        <nb-icon
+                                *ngIf="sortColumn === getColumnKey(i)"
+                                [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
+                        ></nb-icon>
                     </th>
-                    <th></th>
+                    <th></th> <!-- Spalte für Löschen-Button -->
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let member of filteredMembers">
+                <tr *ngFor="let member of filteredMembers" (click)="editMember(member)">
                     <td>{{ member.id }}</td>
                     <td>{{ member.name }}</td>
                     <td>{{ member.email }}</td>
-                    <td>{{ member.role }}</td>
-                    <td>{{ member.lastLogin }}</td>
+                    <!-- Rollen als freundliche Label-Liste -->
+                    <td>{{ getRolesAsLabel(member.roles) }}</td>
+                    <td>{{ member.lastLogin | date: 'HH:mm dd.MM.yyyy' }}</td>
                     <td>
-                        <button nbButton size="small" (click)="toggleDropdown(member)">
-                            <nb-icon icon="more-horizontal-outline"></nb-icon>
+                        <button
+                                nbButton
+                                status="danger"
+                                size="small"
+                                (click)="deleteMember($event, member)"
+                        >
+                            <nb-icon icon="trash-2-outline"></nb-icon>
                         </button>
-
-                        <div *ngIf="selectedMember === member" class="dropdown-menu">
-                            <button nbButton size="small" (click)="editMember(member)">
-                                Mitglied bearbeiten
-                            </button>
-                            <button nbButton status="danger" size="small" (click)="deleteMember(member)">
-                                Mitglied entfernen
-                            </button>
-                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -78,9 +82,11 @@
             <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
             <p class="mt-2">Keine Mitglieder gefunden.</p>
         </div>
+    </nb-card-body>
 
+    <nb-card-footer>
         <div class="member-count mt-4 text-right">
             <p>Mitglieder: {{ totalMembers }}</p>
         </div>
-    </nb-card-body>
+    </nb-card-footer>
 </nb-card>

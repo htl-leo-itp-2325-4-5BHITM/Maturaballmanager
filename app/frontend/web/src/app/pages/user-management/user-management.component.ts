@@ -1,4 +1,11 @@
-import { Component, ChangeDetectorRef, OnChanges, SimpleChanges, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+  HostListener,
+  OnInit,
+} from '@angular/core';
 import {
   NbButtonModule,
   NbCardModule,
@@ -6,27 +13,42 @@ import {
   NbFormFieldModule,
   NbIconModule,
   NbInputModule,
-  NbSelectModule
+  NbSelectModule,
 } from '@nebular/theme';
-import { NgForOf, NgIf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UserManagementDialogComponent } from '../../components/dialogs/user-management-dialog/user-management-dialog.component';
 import { UserManagementService, DetailedTeamMemberDTO } from '../../services/user-management.service';
+import { ConfirmDialogComponent } from '../../components/dialogs/confirm-dialog/confirm-dialog.component';
 
-// Map DetailedTeamMemberDTO to Member for display
+/**
+ * Member-Interface: mehrere Rollen sind möglich (roles: string[]).
+ */
 interface Member {
   id: number;
   keycloakId: string;
-  name: string; // firstName + lastName
+  name: string;
   email: string;
-  role: string;
+  roles: string[];
   lastLogin: string;
 }
+
+/**
+ * Mapping: interne Rollennamen -> Anzeigenamen/Labels
+ * Ergänze hier bei Bedarf weitere Rollen.
+ */
+const ROLE_LABELS: Record<string, string> = {
+  management: 'Maturaballleitung',
+  finance: 'Finanzen',
+  sponsoring: 'Sponsoring',
+  organization: 'Organisation',
+};
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
   imports: [
+    CommonModule,
     NbCardModule,
     NbButtonModule,
     NbIconModule,
@@ -41,12 +63,11 @@ interface Member {
   styleUrls: ['./user-management.component.scss'],
 })
 export class UserManagementComponent implements OnInit, OnChanges {
-  headers: string[] = ['ID', 'Anzeigename', 'Email', 'Rolle', 'Letzter Login'];
+  headers: string[] = ['ID', 'Anzeigename', 'Email', 'Rollen', 'Letzter Login'];
   searchTerm: string = '';
   sortColumn: string | null = null;
   sortDirection: 'asc' | 'desc' = 'asc';
   filterMenuVisible: boolean = false;
-  selectedMember: Member | null = null;
 
   members: Member[] = [];
   filteredMembers: Member[] = [];
@@ -61,28 +82,39 @@ export class UserManagementComponent implements OnInit, OnChanges {
     this.loadMembers();
   }
 
-  loadMembers() {
-    this.userService.getTeamMembers().subscribe(teamMembers => {
-      this.members = teamMembers.map(dto => this.dtoToMember(dto));
-      this.filteredMembers = [...this.members];
-    });
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['members']) {
       this.applyFilters();
     }
   }
 
+  /**
+   * Lädt sämtliche Team-Mitglieder aus dem Backend.
+   */
+  loadMembers() {
+    this.userService.getTeamMembers().subscribe({
+      next: (teamMembers) => {
+        this.members = teamMembers.map((dto) => this.dtoToMember(dto));
+        this.filteredMembers = [...this.members];
+      },
+      error: (err) => {
+        console.error('Fehler beim Laden der Team-Members:', err);
+      },
+    });
+  }
+
+  /**
+   * Wandelt DetailedTeamMemberDTO -> Member um.
+   */
   dtoToMember(dto: DetailedTeamMemberDTO): Member {
     const fullName = [dto.firstName, dto.lastName].filter(Boolean).join(' ');
-    const role = dto.realmRoles && dto.realmRoles.length > 0 ? dto.realmRoles[0] : 'N/A';
+    const roles = dto.realmRoles ?? [];
     return {
       id: dto.id,
       keycloakId: dto.keycloakId,
       name: fullName || dto.username,
       email: dto.email,
-      role: role,
+      roles,
       lastLogin: dto.syncedAt,
     };
   }
@@ -106,13 +138,17 @@ export class UserManagementComponent implements OnInit, OnChanges {
     this.applyFilters();
   }
 
+  /**
+   * Filtert & sortiert die Liste nach Suchbegriff / Sortierspalte.
+   */
   applyFilters(): void {
     let filtered = [...this.members];
 
     if (this.searchTerm) {
-      filtered = filtered.filter((member) =>
-          Object.values(member).some((value) =>
-              value.toString().toLowerCase().includes(this.searchTerm)
+      const term = this.searchTerm;
+      filtered = filtered.filter((m) =>
+          Object.values(m).some((value) =>
+              value.toString().toLowerCase().includes(term)
           )
       );
     }
@@ -121,7 +157,6 @@ export class UserManagementComponent implements OnInit, OnChanges {
       filtered.sort((a, b) => {
         const valA = a[this.sortColumn as keyof Member]?.toString().toLowerCase() || '';
         const valB = b[this.sortColumn as keyof Member]?.toString().toLowerCase() || '';
-
         if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
         if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
         return 0;
@@ -135,97 +170,129 @@ export class UserManagementComponent implements OnInit, OnChanges {
     this.filterMenuVisible = !this.filterMenuVisible;
   }
 
-  toggleDropdown(member: Member): void {
-    this.selectedMember = this.selectedMember === member ? null : member;
-  }
-
-  openAddMemberDialog() {
-    this.dialogService
-        .open(UserManagementDialogComponent)
-        .onClose.subscribe((selectedMember: Member | null) => {
-      if (selectedMember) {
-        // Convert Member back to DTO for saving
-        const dto = this.memberToDTO(selectedMember);
-        this.userService.addTeamMember(dto).subscribe(newDto => {
-          const newMember = this.dtoToMember(newDto);
-          this.members.push(newMember);
-          this.cdRef.detectChanges();
-          this.applyFilters();
-        });
-      }
-    });
-  }
-
-  editMember(member: Member): void {
-    this.dialogService.open(UserManagementDialogComponent, {
-      autoFocus: false,
-      backdropClass: "",
-      closeOnBackdropClick: false,
-      closeOnEsc: false,
-      dialogClass: "",
-      hasBackdrop: false,
-      hasScroll: false,
-      viewContainerRef: undefined,
-      context: { member } }).onClose.subscribe((updatedMember: Member | null) => {
-      if (updatedMember) {
-        const dto = this.memberToDTO(updatedMember);
-        this.userService.updateTeamMember(updatedMember.id, dto).subscribe(updatedDto => {
-          const updated = this.dtoToMember(updatedDto);
-          const index = this.members.findIndex(m => m.id === member.id);
-          if (index !== -1) {
-            this.members[index] = updated;
-            this.cdRef.detectChanges();
-            this.applyFilters();
-          }
-        });
-      }
-    });
-  }
-
-  deleteMember(member: Member): void {
-    this.userService.deleteTeamMember(member.id).subscribe(() => {
-      const index = this.members.findIndex(m => m.id === member.id);
-      if (index !== -1) {
-        this.members.splice(index, 1);
-        this.filteredMembers = [...this.members];
-      }
-    });
-  }
-
-  memberToDTO(member: Member): any {
-    // We need to convert Member back to TeamMemberDTO
-    // Member does not have all fields (like firstName, lastName), so we might need to store them differently.
-    // For simplicity, let's assume we can't perfectly recreate. We'll just guess:
-    // We'll parse the name into firstName and lastName if possible.
-    const nameParts = member.name.split(' ');
-    const firstName = nameParts.length > 0 ? nameParts[0] : undefined;
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : undefined;
-
-    return {
-      keycloakId: member.keycloakId,
-      username: member.name.replace(' ', '.').toLowerCase(), // or some logic to revert it
-      email: member.email,
-      firstName: firstName,
-      lastName: lastName,
-      realmRoles: [member.role],
-      note: null
-    };
-  }
-
-  getColumnKey(index: number): keyof Member {
-    const keys: (keyof Member)[] = ['id', 'name', 'email', 'role', 'lastLogin'];
-
-    if (index < 0 || index >= keys.length) {
-      throw new Error(`Ungültiger Index: ${index}`);
-    }
-    return keys[index];
-  }
-
   @HostListener('document:click', ['$event'])
   onOutsideClick(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.filter-menu') && !target.closest('button')) {
       this.filterMenuVisible = false;
     }
+  }
+
+  /**
+   * Öffnet den Dialog zum Anlegen eines neuen Benutzers.
+   */
+  openAddMemberDialog() {
+    this.dialogService
+        .open(UserManagementDialogComponent)
+        .onClose.subscribe((selectedMember: Member | null) => {
+      if (selectedMember) {
+        const dto = this.memberToDTO(selectedMember);
+
+        this.userService.addTeamMember(dto).subscribe({
+          next: (newDto) => {
+            this.loadMembers(); // Aktualisiere Liste aus dem Backend
+            const newMember = this.dtoToMember(newDto);
+            this.members.push(newMember);
+            this.cdRef.detectChanges();
+            this.applyFilters();
+          },
+          error: (err) => console.error('Fehler beim Anlegen:', err),
+        });
+      }
+    });
+  }
+
+  /**
+   * Öffnet den Dialog zum Bearbeiten eines vorhandenen Benutzers.
+   */
+  editMember(member: Member): void {
+    this.dialogService
+        .open(UserManagementDialogComponent, {
+          autoFocus: false,
+          closeOnBackdropClick: false,
+          closeOnEsc: false,
+          context: { member, isEditing: true },
+        })
+        .onClose.subscribe((updatedMember: Member | null) => {
+      if (updatedMember) {
+        const dto = this.memberToDTO(updatedMember);
+        this.userService.updateTeamMember(updatedMember.id, dto).subscribe({
+          next: (updatedDto) => {
+            const updated = this.dtoToMember(updatedDto);
+            const index = this.members.findIndex((m) => m.id === member.id);
+            if (index !== -1) {
+              this.members[index] = updated;
+              this.cdRef.detectChanges();
+              this.applyFilters();
+            }
+          },
+          error: (err) => console.error('Fehler beim Updaten:', err),
+        });
+      }
+    });
+  }
+
+  /**
+   * Confirmation Dialog -> Löschen des Benutzers
+   */
+  deleteMember(event: MouseEvent, member: Member): void {
+    event.stopPropagation();
+
+    this.dialogService
+        .open(ConfirmDialogComponent, {
+          context: {
+            title: 'Mitglied löschen?',
+            message: `Möchten Sie ${member.name} wirklich löschen?`,
+          },
+        })
+        .onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.userService.deleteTeamMember(member.id).subscribe({
+          next: () => {
+            const index = this.members.findIndex((m) => m.id === member.id);
+            if (index !== -1) {
+              this.members.splice(index, 1);
+              this.filteredMembers = [...this.members];
+            }
+          },
+          error: (err) => console.error('Fehler beim Löschen:', err),
+        });
+      }
+    });
+  }
+
+  /**
+   * Baut das DTO, das ans Backend geschickt werden soll.
+   * Setzt realmRoles = member.roles
+   */
+  memberToDTO(member: Member): any {
+    const nameParts = member.name.split(' ');
+    const firstName = nameParts.length > 0 ? nameParts[0] : '';
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+    return {
+      keycloakId: member.keycloakId,
+      username: member.name.replace(' ', '.').toLowerCase(),
+      email: member.email,
+      firstName: firstName,
+      lastName: lastName,
+      realmRoles: member.roles, // mehrere Rollen!
+      note: null,
+    };
+  }
+
+  /**
+   * Übersetzt die internen Rollennamen in Labels, kommasepariert.
+   * Wird im Template aufgerufen.
+   */
+  getRolesAsLabel(roles: string[]): string {
+    if (!roles || roles.length === 0) {
+      return 'Keine Rollen';
+    }
+    return roles.map((r) => ROLE_LABELS[r] ?? r).join(', ');
+  }
+
+  getColumnKey(i: number) {
+    return this.headers[i].toLowerCase().replace(' ', '_');
   }
 }

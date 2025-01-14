@@ -4,7 +4,7 @@ import at.htlleonding.maturaballmanager.model.Address
 import at.htlleonding.maturaballmanager.model.dtos.PromDTO
 import at.htlleonding.maturaballmanager.model.entities.DayPlan
 import at.htlleonding.maturaballmanager.model.entities.Prom
-import at.htlleonding.maturaballmanager.services.TeamMemberService
+import at.htlleonding.maturaballmanager.services.KeycloakAdminService
 import io.quarkus.hibernate.reactive.panache.PanacheRepository
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
@@ -18,7 +18,10 @@ import java.time.LocalTime
 class PromRepository : PanacheRepository<Prom> {
 
     @Inject
-    lateinit var teamMemberService: TeamMemberService
+    lateinit var keycloakAdminService: KeycloakAdminService
+
+    @Inject
+    lateinit var teamMemberRepository: TeamMemberRepository
 
     fun findLastActiveProm(): Uni<Prom> {
         return find("active = true order by createdAt desc").firstResult()
@@ -91,17 +94,42 @@ class PromRepository : PanacheRepository<Prom> {
     }
 
     @WithTransaction
-    fun deactivateProm(id: String): Uni<Void> {
-        return find("id", id).firstResult<Prom>().flatMap { prom ->
-            if (prom != null) {
-                teamMemberService.removeAllRolesExceptSupervisor()
-                    .flatMap {
-                        delete(prom)
-                    }
-            } else {
-                Uni.createFrom().failure<Void>(NotFoundException("Prom with id $id not found"))
+    fun deactivateProm(id: String): Uni<Prom> {
+        return find("id", id).firstResult<Prom>()
+            .onItem().ifNull().failWith(NotFoundException("Maturaball nicht gefunden"))
+            .flatMap { existingProm ->
+                if (!existingProm.active) {
+                    // Bereits deaktiviert: direkt zurückgeben
+                    Uni.createFrom().item(existingProm)
+                } else {
+                    // Deaktivieren
+                    existingProm.active = false
+
+                    teamMemberRepository.list("prom", existingProm)
+                        .flatMap { teamMembers ->
+                            if (teamMembers.isEmpty()) {
+                                // Keine TeamMember -> einfach nur persistieren
+                                persist(existingProm) // => Uni<Prom>
+                            } else {
+                                // Zu entfernende Rollen
+                                val rolesToRemove = listOf("sponsoring", "finance", "management", "organization")
+
+                                // Liste von Uni<Void> (oder Uni<Any?>), ein Eintrag pro TeamMember
+                                val removeUnis = teamMembers.map { tm ->
+                                    // Aufruf ins KeycloakAdminService -> Uni<Void>
+                                    keycloakAdminService.unassignClientRolesFromUser(tm.keycloakId, rolesToRemove)
+                                }
+
+                                Uni.join().all(removeUnis)
+                                    .andFailFast()
+                                    .onItem().transform { _: List<Void> ->
+                                        existingProm
+                                    }
+                                    .flatMap { prom -> persist(prom) }
+                            }
+                        }
+                }
             }
         }
     }
 
-}

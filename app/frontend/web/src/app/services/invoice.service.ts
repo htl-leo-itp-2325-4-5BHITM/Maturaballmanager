@@ -1,12 +1,10 @@
-// src/app/services/invoice.service.ts
-
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Invoice } from '../model/invoice';
-import { ContactPerson } from '../model/contactperson';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Invoice} from '../model/invoice';
 import {environment} from "../../environments/environment";
 import {InvoiceDTO} from "../model/dtos/invoice.dto";
+import {InvoiceSendCheckResult} from "../model/dtos/invoice-send-check-result.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -57,24 +55,33 @@ export class InvoiceService {
   }
 
   /**
-   * Sendet eine Rechnung per E-Mail.
-   * @param id Rechnungs-ID
+   * Sendet die Rechnung an eine spezifische Zieladresse (OFFICE oder CONTACT_PERSON).
+   * @param invoiceId ID der Rechnung
+   * @param target Ziel der E-Mail (OFFICE oder CONTACT_PERSON)
    */
-  sendInvoice(id: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/send`, {});
+  sendInvoice(invoiceId: string, target: 'OFFICE' | 'CONTACT_PERSON'): Observable<any> {
+    const url = `${this.apiUrl}/${invoiceId}/send`;
+    return this.http.post(url, {target});
   }
 
   /**
    * Lädt das PDF einer Rechnung herunter.
    * @param id Rechnungs-ID
    */
-  downloadInvoicePdf(id: string): Observable<Blob> {
+  generateInvoicePdf(id: string): Observable<Blob> {
     const headers = new HttpHeaders().append('Accept', 'application/pdf');
     return this.http.get(`${this.apiUrl}/${id}/pdf`, { headers, responseType: 'blob' }) as Observable<Blob>;
   }
 
   /**
-   * Ruft Kontaktpersonen für eine spezifische Firma ab.
-   * @param companyId Firmen-ID
+   * Prüft, ob alle erforderlichen Felder für den Versand ausgefüllt sind.
+   * @param invoiceId ID der Rechnung
    */
+  checkIfInvoiceIsSendable(invoiceId: string): Observable<InvoiceSendCheckResult> {
+    return this.http.get<InvoiceSendCheckResult>(`${this.apiUrl}/${invoiceId}/send/check`);
+  }
+
+  markInvoiceAsPaid(invoiceId: string): Observable<Invoice> {
+    return this.http.post<Invoice>(`${this.apiUrl}/${invoiceId}/pay`, {});
+  }
 }

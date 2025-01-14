@@ -1,7 +1,8 @@
 package at.htlleonding.maturaballmanager.resources
 
+import InvoiceDTO
+import SendInvoiceRequest
 import at.htlleonding.maturaballmanager.configs.toDTO
-import at.htlleonding.maturaballmanager.model.dtos.InvoiceDTO
 import at.htlleonding.maturaballmanager.services.InvoiceService
 import jakarta.inject.Inject
 import jakarta.validation.Valid
@@ -100,8 +101,11 @@ class InvoiceResource {
      */
     @POST
     @Path("/{id}/send")
-    fun sendInvoice(@PathParam("id") id: UUID): Uni<Response> {
-        return invoiceService.sendInvoiceByEmail(id)
+    fun sendInvoice(
+        @PathParam("id") id: UUID,
+        @Valid sendInvoiceRequest: SendInvoiceRequest
+    ): Uni<Response> {
+        return invoiceService.sendInvoice(id, sendInvoiceRequest.target)
             .map {
                 Response.ok().entity("Invoice sent successfully").build()
             }
@@ -119,16 +123,47 @@ class InvoiceResource {
     @Path("/{id}/pdf")
     @Produces("application/pdf")
     fun getInvoicePdf(@PathParam("id") id: UUID): Uni<Response> {
-        val senderName = jwt.getClaim<String>("name") ?: "Unknown"
+        val senderName = jwt.getClaim<String>("name").toString()
         return invoiceService.generateInvoicePdf(id, senderName)
             .map { pdfBytes ->
                 Response.ok(pdfBytes)
                     .header("Content-Disposition", "attachment; filename=\"Invoice_${id}.pdf\"")
                     .build()
             }
+    }
+
+
+    /**
+     * Prüft, ob eine Rechnung für den Versand geeignet ist.
+     */
+    @GET
+    @Path("/{id}/send/check")
+    fun checkIfInvoiceIsSendable(@PathParam("id") id: UUID): Uni<Response> {
+        return invoiceService.checkIfInvoiceIsSendable(id)
+            .map { checkResult ->
+                if (checkResult.isValid) {
+                    Response.ok(checkResult).build()
+                } else {
+                    Response.status(Response.Status.BAD_REQUEST).entity(checkResult).build()
+                }
+            }
             .onFailure().recoverWithItem { throwable ->
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Failed to generate PDF: ${throwable.message}")
+                    .entity("Fehler bei der Validierung der Rechnung: ${throwable.message}")
+                    .build()
+            }
+    }
+
+    @POST
+    @Path("/{id}/pay")
+    fun markInvoiceAsPaid(@PathParam("id") id: UUID): Uni<Response> {
+        return invoiceService.markInvoiceAsPaid(id)
+            .map { updatedInvoice ->
+                Response.ok(updatedInvoice).build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failed to mark invoice as paid: ${throwable.message}")
                     .build()
             }
     }

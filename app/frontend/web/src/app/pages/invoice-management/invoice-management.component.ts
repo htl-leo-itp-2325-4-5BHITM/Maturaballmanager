@@ -1,8 +1,7 @@
-// src/app/components/invoice-management/invoice-management.component.ts
-
-import { Component, OnInit } from '@angular/core';
-import { InvoiceService } from '../../services/invoice.service';
+import {Component, OnInit} from '@angular/core';
+import {InvoiceService} from '../../services/invoice.service';
 import {
+  NbBadgeModule,
   NbButtonModule,
   NbCardModule,
   NbDialogService,
@@ -11,19 +10,18 @@ import {
   NbInputModule,
   NbOptionModule,
   NbSelectModule,
-  NbToastrService,
-  NbTooltipModule,
   NbTagModule,
-  NbBadgeModule
+  NbToastrService,
+  NbTooltipModule
 } from '@nebular/theme';
-import { saveAs } from 'file-saver';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { Invoice, Status } from "../../model/invoice";
-import { ConfirmDialogComponent } from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
-import { InvoiceDialogComponent } from "../../components/dialogs/invoice-dialog/invoice-dialog.component";
+import {NgxPaginationModule} from 'ngx-pagination';
+import {Invoice, Status} from "../../model/invoice";
+import {ConfirmDialogComponent} from "../../components/dialogs/confirm-dialog/confirm-dialog.component";
+import {InvoiceDialogComponent} from "../../components/dialogs/invoice-dialog/invoice-dialog.component";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ReportComponent} from "../../components/report/report.component";
 import {InvoiceDTO} from "../../model/dtos/invoice.dto";
+import {SendInvoiceDialogComponent} from "../../components/dialogs/send-invoice-dialog/send-invoice-dialog.component";
 
 @Component({
   selector: 'app-invoice-management',
@@ -56,11 +54,16 @@ export class InvoiceManagementComponent implements OnInit {
 
   columns = [
     { key: 'invoiceNumber', title: 'ID', sortable: true },
-    { key: 'company', title: 'Firma', sortable: true, format: (value: any) => value.name || '—' },
     {
-      key: 'contactPerson',
+      key: 'companyName',
+      title: 'Firma',
+      sortable: true,
+      format: (value: any) => value || '—',
+    },
+    {
+      key: 'contactPersonName',
       title: 'Kontaktperson',
-      format: (value: any) => (value ? `${value.firstName} ${value.lastName}` : '—'),
+      format: (value: any) => value || '—',
     },
     {
       key: 'invoiceDate',
@@ -79,6 +82,12 @@ export class InvoiceManagementComponent implements OnInit {
       format: (value: any) => (value ? `${value.toFixed(2)} €` : '—'),
     },
     {
+      key: 'sendOption',
+      title: 'Sendeoption',
+      sortable: true,
+      format: (value: any) => value === 'immediate' ? 'Direkt versenden' : 'Am Rechnungsdatum versenden',
+    },
+    {
       key: 'status',
       title: 'Status',
       sortable: true,
@@ -92,13 +101,21 @@ export class InvoiceManagementComponent implements OnInit {
       tooltip: 'Rechnung löschen',
       status: 'danger',
       callback: this.confirmDelete.bind(this),
+      disabled: (row: Invoice) => row.status === Status.SENT || row.status === Status.PAID,
     },
     {
-      icon: 'email-outline',
+      icon: 'paper-plane-outline',
       tooltip: 'Rechnung versenden',
-      status: 'success',
-      callback: this.sendInvoice.bind(this),
+      status: 'info',
+      callback: this.openSendInvoiceDialog.bind(this),
       disabled: (row: Invoice) => row.status === Status.SENT || row.status === Status.PAID,
+    },
+    {
+      icon: 'checkmark-outline',
+      tooltip: 'Als bezahlt markieren',
+      status: 'success',
+      callback: this.markAsPaid.bind(this),
+      disabled: (row: Invoice) => row.status !== Status.SENT,
     },
     {
       icon: 'download-outline',
@@ -107,6 +124,31 @@ export class InvoiceManagementComponent implements OnInit {
       callback: this.downloadPdf.bind(this),
     },
   ];
+
+  markAsPaid(invoice: Invoice): void {
+    this.dialogService.open(ConfirmDialogComponent, {
+      context: {
+        title: 'Als bezahlt markieren?',
+        message: `Möchten Sie Rechnung #${invoice.invoiceNumber} wirklich als bezahlt markieren?`,
+      },
+      closeOnBackdropClick: false,
+      closeOnEsc: false,
+    }).onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.invoiceService.markInvoiceAsPaid(invoice.id!).subscribe({
+          next: (updatedInvoice) => {
+            this.toastrService.success(`Rechnung #${updatedInvoice.invoiceNumber} bezahlt`, 'Erfolg');
+            this.loadInvoices();
+          },
+          error: (err) => {
+            this.toastrService.danger('Fehler beim Aktualisieren auf bezahlt.', 'Fehler');
+            console.error(err);
+          }
+        });
+      }
+    });
+  }
+
 
   constructor(
       private invoiceService: InvoiceService,
@@ -144,20 +186,60 @@ export class InvoiceManagementComponent implements OnInit {
         })
         .onClose.subscribe((result: InvoiceDTO | undefined) => {
       if (result) {
-        this.invoiceService.createInvoice(result).subscribe(() => {
-          this.loadInvoices();
-          this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
-        })
+        this.invoiceService.createInvoice(result).subscribe({
+          next: (createdInvoice) => {
+            this.toastrService.success('Rechnung erfolgreich erstellt.', 'Erfolg');
+            this.loadInvoices();
+
+            if (result.sendOption === 'immediate') {
+              this.invoiceService.sendInvoice(createdInvoice.id!, 'OFFICE').subscribe({
+                next: () => {
+                  this.toastrService.success('Rechnung sofort versendet.', 'Erfolg');
+                  this.loadInvoices();
+                },
+                error: (err) => {
+                  this.toastrService.danger('Fehler beim Sofortversand.', 'Fehler');
+                  console.error(err);
+                },
+              });
+            }
+          },
+          error: (error) => {
+            this.toastrService.danger('Fehler beim Erstellen der Rechnung.', 'Fehler');
+            console.error(error);
+          },
+        });
       }
     });
   }
 
-  openEditDialog(invoice: Invoice): void {
+
+  /**
+   * Öffnet den Dialog zum Versenden der Rechnung per E-Mail.
+   * @param invoice Die zu sendende Rechnung
+   */
+  openSendInvoiceDialog(invoice: Invoice): void {
+    this.dialogService
+        .open(SendInvoiceDialogComponent, {
+          context: { invoice },
+          closeOnBackdropClick: false,
+          closeOnEsc: false,
+          autoFocus: true,
+          hasScroll: false,
+          dialogClass: 'fixed-dialog-width',
+        })
+        .onClose.subscribe((result: boolean) => {
+      if (result) {
+        this.loadInvoices();
+      }
+    });
+  }
+
+  openEditDialog(invoice: InvoiceDTO): void {
     if (invoice.status === Status.SENT || invoice.status === Status.PAID) {
       this.toastrService.warning('Versendete oder bezahlte Rechnungen können nicht bearbeitet werden.', 'Warnung');
       return;
     }
-    console.log(invoice)
 
     this.dialogService
         .open(InvoiceDialogComponent, {
@@ -171,10 +253,12 @@ export class InvoiceManagementComponent implements OnInit {
           hasScroll: false,
           dialogClass: 'fixed-dialog-width',
         })
-        .onClose.subscribe((result: Invoice | undefined) => {
+        .onClose.subscribe((result: InvoiceDTO | undefined) => {
       if (result) {
-        this.loadInvoices();
-        this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
+        this.invoiceService.updateInvoice(result.id!, result).subscribe((res) => {
+          this.loadInvoices();
+          this.toastrService.success('Rechnung erfolgreich aktualisiert.', 'Erfolg');
+        })
       }
     });
   }
@@ -207,22 +291,9 @@ export class InvoiceManagementComponent implements OnInit {
     });
   }
 
-  sendInvoice(invoice: Invoice): void {
-    this.invoiceService.sendInvoice(invoice.id!).subscribe({
-      next: () => {
-        this.loadInvoices();
-        this.toastrService.success('Rechnung erfolgreich versendet.', 'Erfolg');
-      },
-      error: (error) => {
-        this.toastrService.danger('Fehler beim Versenden der Rechnung.', 'Fehler');
-        console.error(error);
-      },
-    });
-  }
-
   downloadPdf(invoice: Invoice): void {
-    this.invoiceService.downloadInvoicePdf(invoice.id!).subscribe(
-        (blob) => {
+    this.invoiceService.generateInvoicePdf(invoice.id!).subscribe(
+        (blob: Blob) => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -230,7 +301,7 @@ export class InvoiceManagementComponent implements OnInit {
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        (error) => {
+        (error: Error) => {
           this.toastrService.danger('Fehler beim Herunterladen der PDF.', 'Fehler');
           console.error(error);
         }
