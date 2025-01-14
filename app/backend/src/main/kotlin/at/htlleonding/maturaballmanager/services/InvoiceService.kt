@@ -397,7 +397,7 @@ class InvoiceService {
     /**
      * Baut das PDF-Model, damit wir im Worker-Thread nichts mehr aus der DB laden müssen.
      */
-    private fun createInvoicePdfModel(invoice: Invoice): InvoicePdfModel {
+    fun createInvoicePdfModel(invoice: Invoice): InvoicePdfModel {
         val comp = invoice.company
         val address = comp?.address
         val contact = invoice.contactPerson

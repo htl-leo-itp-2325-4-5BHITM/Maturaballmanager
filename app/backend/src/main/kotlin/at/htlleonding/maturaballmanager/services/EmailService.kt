@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.services
 
+import at.htlleonding.maturaballmanager.model.InvoicePdfModel
 import at.htlleonding.maturaballmanager.model.entities.Invoice
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.reactive.ReactiveMailer
@@ -28,6 +29,9 @@ class EmailService {
     lateinit var invoiceEmail: Template
 
     @Inject
+    lateinit var invoiceService: InvoiceService
+
+    @Inject
     lateinit var pdfGeneratorService: PdfGeneratorService
 
     @Inject
@@ -50,7 +54,9 @@ class EmailService {
             .data("senderName", senderName)
             .render()
 
-        return pdfGeneratorService.generateInvoicePdf(invoice, senderName)
+        val model = invoiceService.createInvoicePdfModel(invoice)
+
+        return pdfGeneratorService.generateInvoicePdf(model, senderName)
             .flatMap { pdfBytes ->
                 val recipient = email
 
