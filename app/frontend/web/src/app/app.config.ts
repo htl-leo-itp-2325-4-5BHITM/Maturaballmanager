@@ -28,6 +28,7 @@ import {
 import { importProvidersFrom } from "@angular/core";
 import {NgxEchartsModule} from "ngx-echarts";
 import {NbEvaIconsModule} from "@nebular/eva-icons";
+import {AppointmentsComponent} from "./pages/appointments/appointments.component";
 
 const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full', data: { roles: [] } },
