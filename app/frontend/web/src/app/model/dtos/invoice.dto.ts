@@ -2,7 +2,6 @@ import {Invoice, Status} from "../invoice";
 
 export interface InvoiceDTO {
     id?: string;
-    invoiceNumber?: string;
     company?: string;
     contactPerson?: string;
     benefits?: string[];

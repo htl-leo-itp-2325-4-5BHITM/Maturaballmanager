@@ -5,18 +5,15 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import java.time.OffsetDateTime
-import java.util.UUID
 
 @Entity
 @Table(name = "invoices")
 class Invoice : PanacheEntityBase() {
 
+    // Primary key: "YYYY####", e.g. "20230001"
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var id: UUID? = null
-
-    @Column(name = "invoice_number", unique = true, nullable = false)
-    var invoiceNumber: String? = null
+    @Column(length = 8)
+    var id: String? = null
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")

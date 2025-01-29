@@ -62,14 +62,14 @@ class EmailService {
 
                 logger.info("Sending invoice to: $recipient")
 
-                val subject = "Ihre Rechnung #${invoice.invoiceNumber}"
+                val subject = "Ihre Rechnung #${invoice.id}"
 
                 val logoBytes: ByteArray = loadLogo("img/htllogo_2022_black_v2-2.png")
                     ?: throw IllegalStateException("Failed to load logo")
 
                 val mail = Mail.withHtml(recipient, subject, emailContent)
                     .addAttachment("logo.png", logoBytes, "image/png", "logo", "inline")
-                    .addAttachment("Invoice_${invoice.invoiceNumber}.pdf", pdfBytes, "application/pdf")
+                    .addAttachment("Invoice_${invoice.id}.pdf", pdfBytes, "application/pdf")
 
                 mailer.send(mail)
             }

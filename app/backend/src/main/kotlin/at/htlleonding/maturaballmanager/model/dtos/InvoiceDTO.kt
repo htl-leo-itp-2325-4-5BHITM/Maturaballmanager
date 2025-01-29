@@ -1,11 +1,8 @@
 import at.htlleonding.maturaballmanager.model.Status
 import java.time.OffsetDateTime
-import java.util.*
 
 data class InvoiceDTO(
-    var id: UUID? = null,
-    var invoiceNumber: String? = null,
-
+    var id: String? = null,
     var company: String? = null,
     var contactPerson: String? = null,
 

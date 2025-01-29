@@ -39,7 +39,8 @@
                 <label for="officeEmail">Büro E-Mail</label>
                 <input nbInput fullWidth id="officeEmail" formControlName="officeEmail" placeholder="Büro E-Mail" />
                 <div *ngIf="form.get('officeEmail')?.invalid && form.get('officeEmail')?.touched" class="error">
-                    Bitte eine gültige E-Mail-Adresse eingeben.
+                    <div *ngIf="form.get('officeEmail')?.errors?.['required']">Büro-E-Mail-Adresse ist erforderlich.</div>
+                    <div *ngIf="form.get('officeEmail')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
                 </div>
             </div>
 

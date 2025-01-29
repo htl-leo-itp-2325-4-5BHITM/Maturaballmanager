@@ -13,7 +13,6 @@ fun Invoice.toDTO(): InvoiceDTO {
 
     return InvoiceDTO(
         id = this.id,
-        invoiceNumber = this.invoiceNumber,
 
         // IDs
         company = this.company?.id,
@@ -41,7 +40,6 @@ fun InvoiceDTO.toEntity(
 ): Invoice {
     val invoice = Invoice()
     invoice.id = this.id
-    invoice.invoiceNumber = this.invoiceNumber
     invoice.company = company
     invoice.contactPerson = contactPerson
     invoice.benefits = benefits.toMutableList()

@@ -4,7 +4,6 @@ import {Benefit} from "./benefit";
 
 export interface Invoice {
     id?: string;
-    invoiceNumber?: string;
     company: string;
     contactPerson?: string;
     invoiceDate: Date;

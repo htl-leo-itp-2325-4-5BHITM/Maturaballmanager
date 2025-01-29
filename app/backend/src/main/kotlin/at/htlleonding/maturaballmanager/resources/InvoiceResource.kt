@@ -53,12 +53,10 @@ class InvoiceResource {
      */
     @GET
     @Path("/{id}")
-    fun getInvoice(@PathParam("id") id: UUID): Uni<Response> {
+    fun getInvoice(@PathParam("id") id: String): Uni<Response> {
         return invoiceService.findInvoice(id)
             .map { it.toDTO() }
-            .map { invoiceDTO ->
-                Response.ok(invoiceDTO).build()
-            }
+            .map { invoiceDTO -> Response.ok(invoiceDTO).build() }
     }
 
     /**
@@ -66,7 +64,7 @@ class InvoiceResource {
      */
     @PUT
     @Path("/{id}")
-    fun updateInvoice(@PathParam("id") id: UUID, @Valid invoiceDTO: InvoiceDTO): Uni<Response> {
+    fun updateInvoice(@PathParam("id") id: String, @Valid invoiceDTO: InvoiceDTO): Uni<Response> {
         return invoiceService.updateInvoice(id, invoiceDTO)
             .map { updatedInvoiceDTO: InvoiceDTO ->
                 Response.ok(updatedInvoiceDTO).build()
@@ -78,7 +76,7 @@ class InvoiceResource {
      */
     @DELETE
     @Path("/{id}")
-    fun deleteInvoice(@PathParam("id") id: UUID): Uni<Response> {
+    fun deleteInvoice(@PathParam("id") id: String): Uni<Response> {
         return invoiceService.deleteInvoice(id)
             .map { deleted ->
                 if (deleted) {
@@ -102,12 +100,12 @@ class InvoiceResource {
     @POST
     @Path("/{id}/send")
     fun sendInvoice(
-        @PathParam("id") id: UUID,
+        @PathParam("id") id: String,
         @Valid sendInvoiceRequest: SendInvoiceRequest
     ): Uni<Response> {
         return invoiceService.sendInvoice(id, sendInvoiceRequest.target)
             .map {
-                Response.ok().entity("Invoice sent successfully").build()
+                Response.ok().build()
             }
             .onFailure().recoverWithItem { throwable ->
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -122,7 +120,7 @@ class InvoiceResource {
     @GET
     @Path("/{id}/pdf")
     @Produces("application/pdf")
-    fun getInvoicePdf(@PathParam("id") id: UUID): Uni<Response> {
+    fun getInvoicePdf(@PathParam("id") id: String): Uni<Response> {
         val senderName = jwt.getClaim<String>("name").toString()
         return invoiceService.generateInvoicePdf(id, senderName)
             .map { pdfBytes ->
@@ -138,7 +136,7 @@ class InvoiceResource {
      */
     @GET
     @Path("/{id}/send/check")
-    fun checkIfInvoiceIsSendable(@PathParam("id") id: UUID): Uni<Response> {
+    fun checkIfInvoiceIsSendable(@PathParam("id") id: String): Uni<Response> {
         return invoiceService.checkIfInvoiceIsSendable(id)
             .map { checkResult ->
                 if (checkResult.isValid) {
@@ -156,7 +154,7 @@ class InvoiceResource {
 
     @POST
     @Path("/{id}/pay")
-    fun markInvoiceAsPaid(@PathParam("id") id: UUID): Uni<Response> {
+    fun markInvoiceAsPaid(@PathParam("id") id: String): Uni<Response> {
         return invoiceService.markInvoiceAsPaid(id)
             .map { updatedInvoice ->
                 Response.ok(updatedInvoice).build()
