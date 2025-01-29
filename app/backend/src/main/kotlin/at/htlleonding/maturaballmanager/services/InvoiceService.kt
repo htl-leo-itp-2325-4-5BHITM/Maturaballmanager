@@ -15,9 +15,7 @@ import at.htlleonding.maturaballmanager.repositories.*
 import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.scheduler.Scheduled
-import io.quarkus.scheduler.Scheduled.Schedules
 import io.smallrye.mutiny.Uni
-import io.smallrye.openapi.runtime.io.IoLogging.logger
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.NotFoundException
@@ -52,32 +50,40 @@ class InvoiceService {
     lateinit var promRepository: PromRepository
 
     /**
-     * Creates a new invoice.
+     * Erstellt eine neue Rechnung mit einer benutzerdefinierten ID im Format YYYY####.
      */
     @WithTransaction
     fun createInvoice(invoiceDTO: InvoiceDTO): Uni<InvoiceDTO> {
-        return generateUniqueInvoiceNumber()
-            .flatMap { uniqueNumber ->
+        return invoiceRepository.getNextManualInvoiceId()
+            .flatMap { generatedId ->
                 fetchCompany(invoiceDTO.company)
                     .flatMap { company ->
                         fetchContactPerson(invoiceDTO.contactPerson)
-                            .map { contactPerson ->
-                                Triple(uniqueNumber, company, contactPerson)
+                            .flatMap { contactPerson ->
+                                fetchBenefits(invoiceDTO.benefits)
+                                    .flatMap { benefits ->
+                                        val invoiceEntity = Invoice().apply {
+                                            id = generatedId
+                                            this.company = company
+                                            this.contactPerson = contactPerson
+                                            this.benefits = benefits.toMutableList()
+                                            invoiceDate = invoiceDTO.invoiceDate ?: OffsetDateTime.now()
+                                            paymentDeadline = invoiceDTO.paymentDeadline
+                                                ?: invoiceDate?.plusDays(14)
+                                            status = invoiceDTO.status
+                                            totalAmount = benefits.sumOf { it.price }
+                                            prom = company.prom
+                                        }
+
+                                        invoiceRepository.persist(invoiceEntity)
+                                            .map { it.toDTO() }
+                                    }
                             }
                     }
             }
-            .flatMap { (uniqueNumber, company, contactPerson) ->
-                fetchBenefits(invoiceDTO.benefits)
-                    .flatMap { benefits ->
-                        createAndPersistInvoice(invoiceDTO, uniqueNumber, company, contactPerson, benefits)
-                    }
-            }
-            .onFailure().invoke { throwable ->
-                logger.error("Failed to create invoice", throwable)
-            }
     }
 
-    fun checkIfInvoiceIsSendable(id: UUID): Uni<InvoiceSendCheckResult> {
+    fun checkIfInvoiceIsSendable(id: String): Uni<InvoiceSendCheckResult> {
         return findInvoice(id)
             .map { invoice ->
 
@@ -156,7 +162,7 @@ class InvoiceService {
      * Updates an existing invoice.
      */
     @WithTransaction
-    fun updateInvoice(id: UUID, invoiceDTO: InvoiceDTO): Uni<InvoiceDTO> {
+    fun updateInvoice(id: String, invoiceDTO: InvoiceDTO): Uni<InvoiceDTO> {
         return findInvoice(id)
             .flatMap { existingInvoice ->
                 fetchCompany(invoiceDTO.company)
@@ -241,13 +247,13 @@ class InvoiceService {
      */
     fun createAndPersistInvoice(
         invoiceDTO: InvoiceDTO,
-        uniqueNumber: String,
+        uniqueId: String,
         company: Company,
         contactPerson: ContactPerson?,
         benefits: List<Benefit>,
     ): Uni<InvoiceDTO> {
         val invoice = Invoice().apply {
-            invoiceNumber = uniqueNumber
+            id = uniqueId
             this.company = company
             this.contactPerson = contactPerson
             this.benefits = benefits.toMutableList()
@@ -290,21 +296,21 @@ class InvoiceService {
             .joinToString("")
 
         return invoiceRepository.existsByInvoiceNumber(invoiceNumber)
-            .flatMap { exists ->
+            ?.flatMap { exists ->
                 if (exists) {
                     generateUniqueInvoiceNumberRecursive(random, attempts + 1)
                 } else {
                     Uni.createFrom().item(invoiceNumber)
                 }
-            }
+            } ?: Uni.createFrom().failure(IllegalStateException("Failed to check if invoice number exists"))
     }
 
     /**
      * Deletes an invoice by ID.
      */
     @WithTransaction
-    fun deleteInvoice(id: UUID): Uni<Boolean> {
-        return invoiceRepository.deleteById(id)
+    fun deleteInvoice(id: String): Uni<Boolean> {
+        return invoiceRepository.delete("id", id).map { it > 0 }
     }
 
     /**
@@ -325,9 +331,14 @@ class InvoiceService {
     /**
      * Finds an invoice by ID.
      */
-    fun findInvoice(id: UUID): Uni<Invoice> {
-        return invoiceRepository.find("id", id).singleResult()
-            ?: Uni.createFrom().failure(NotFoundException("Invoice not found"))
+    fun findInvoice(id: String): Uni<Invoice> {
+        return invoiceRepository.find("id", id).singleResult<Invoice>().flatMap {
+            if (it == null) {
+                Uni.createFrom().failure(NotFoundException("Invoice not found with ID: $id"))
+            } else {
+                Uni.createFrom().item(it)
+            }
+        }
     }
 
     /**
@@ -336,7 +347,7 @@ class InvoiceService {
      * @param target Ziel der E-Mail (OFFICE oder CONTACT_PERSON)
      */
     @WithTransaction
-    fun sendInvoice(id: UUID, target: EmailTarget): Uni<Void> {
+    fun sendInvoice(id: String, target: EmailTarget): Uni<Void> {
         return findInvoice(id)
             .flatMap { invoice ->
                 val recipient = when (target) {
@@ -379,14 +390,14 @@ class InvoiceService {
      * Anschließend geben wir das Model an pdfGeneratorService, OHNE weitere DB-Zugriffe.
      */
     @WithSession
-    fun preparePdfModel(id: UUID): Uni<InvoicePdfModel> {
+    fun preparePdfModel(id: String): Uni<InvoicePdfModel> {
         return findInvoice(id)
             .map { invoice ->
                 createInvoicePdfModel(invoice)
             }
     }
 
-    fun generateInvoicePdf(id: UUID, senderName: String): Uni<ByteArray> {
+    fun generateInvoicePdf(id: String, senderName: String): Uni<ByteArray> {
         return preparePdfModel(id)
             .flatMap { model ->
                 pdfGeneratorService.generateInvoicePdf(model, senderName)
@@ -415,7 +426,7 @@ class InvoiceService {
         }
 
         return InvoicePdfModel(
-            invoiceNumber = invoice.invoiceNumber ?: "",
+            invoiceNumber = invoice.id ?: "",
             companyName = comp?.name ?: "",
             companyStreet = address?.street ?: "",
             companyHouseNumber = address?.houseNumber ?: "",
@@ -436,7 +447,7 @@ class InvoiceService {
      * Führt täglich um Mitternacht die Überprüfung aller Rechnungen durch,
      * ob deren Rechnungsdatum erreicht ist (invoiceDate <= Heute)
      * und ob sendOption = 'onDate' ist. Dann versenden wir automatisch die E-Mail.
-        */
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     fun checkAndSendInvoices() {
         sendInvoicesWhichAreDue()
@@ -487,7 +498,7 @@ class InvoiceService {
     }
 
     @WithTransaction
-    fun markInvoiceAsPaid(invoiceId: UUID): Uni<InvoiceDTO> {
+    fun markInvoiceAsPaid(invoiceId: String): Uni<InvoiceDTO> {
         return findInvoice(invoiceId)
             .flatMap { invoice ->
                 invoice.status = Status.PAID

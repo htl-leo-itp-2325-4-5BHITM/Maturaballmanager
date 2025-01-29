@@ -53,7 +53,7 @@ export class InvoiceManagementComponent implements OnInit {
   invoices: Invoice[] = [];
 
   columns = [
-    { key: 'invoiceNumber', title: 'ID', sortable: true },
+    { key: 'id', title: 'ID', sortable: true },
     {
       key: 'companyName',
       title: 'Firma',
@@ -129,7 +129,7 @@ export class InvoiceManagementComponent implements OnInit {
     this.dialogService.open(ConfirmDialogComponent, {
       context: {
         title: 'Als bezahlt markieren?',
-        message: `Möchten Sie Rechnung #${invoice.invoiceNumber} wirklich als bezahlt markieren?`,
+        message: `Möchten Sie Rechnung #${invoice.id} wirklich als bezahlt markieren?`,
       },
       closeOnBackdropClick: false,
       closeOnEsc: false,
@@ -137,7 +137,7 @@ export class InvoiceManagementComponent implements OnInit {
       if (confirmed) {
         this.invoiceService.markInvoiceAsPaid(invoice.id!).subscribe({
           next: (updatedInvoice) => {
-            this.toastrService.success(`Rechnung #${updatedInvoice.invoiceNumber} bezahlt`, 'Erfolg');
+            this.toastrService.success(`Rechnung #${updatedInvoice.id} bezahlt`, 'Erfolg');
             this.loadInvoices();
           },
           error: (err) => {
@@ -268,7 +268,7 @@ export class InvoiceManagementComponent implements OnInit {
         .open(ConfirmDialogComponent, {
           context: {
             title: 'Löschen bestätigen',
-            message: `Möchten Sie Rechnung #${invoice.invoiceNumber} wirklich löschen?`,
+            message: `Möchten Sie Rechnung #${invoice.id} wirklich löschen?`,
           },
           closeOnBackdropClick: false,
           closeOnEsc: false,
@@ -297,7 +297,7 @@ export class InvoiceManagementComponent implements OnInit {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `Invoice_${invoice.invoiceNumber}.pdf`;
+          a.download = `Invoice_${invoice.id}.pdf`;
           a.click();
           window.URL.revokeObjectURL(url);
         },

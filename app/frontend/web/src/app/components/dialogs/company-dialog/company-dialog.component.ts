@@ -59,11 +59,11 @@ export class CompanyDialogComponent implements OnInit {
 
     this.form = this.fb.group({
       id: [this.company?.id],
-      name: [this.company?.name || '', [Validators.required, Validators.maxLength(100)]],
-      industry: [this.company?.industry || '', [Validators.required, Validators.maxLength(100)]],
+      name: [this.company?.name || '', [Validators.required, Validators.maxLength(50)]],
+      industry: [this.company?.industry || '', [Validators.required, Validators.maxLength(20)]],
       website: [this.company?.website || '', [Validators.pattern(urlPattern)]],
       officePhone: [this.company?.officePhone || '', [Validators.pattern(phonePattern)]],
-      officeEmail: [this.company?.officeEmail || '', [Validators.email]],
+      officeEmail: [this.company?.officeEmail || '', [Validators.email, Validators.required, Validators.maxLength(50)]],
       includeAddress: [!!this.company?.address],
       address: this.fb.group({
         street: [this.company?.address?.street || '', [Validators.required]],
