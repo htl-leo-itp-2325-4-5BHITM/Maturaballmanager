@@ -33,6 +33,13 @@ class PdfGeneratorService {
             val logoBytes = logoStream.use { it.readAllBytes() }
             val base64Logo = Base64.getEncoder().encodeToString(logoBytes)
 
+            val leoBallLogoStream: InputStream = Thread.currentThread().contextClassLoader
+                .getResourceAsStream("img/LeoBall.png")
+                ?: throw IllegalArgumentException("LeoBall Logo nicht gefunden")
+            val leoBallLogoBytes = leoBallLogoStream.use { it.readAllBytes() }
+            val base64LeoBallLogo = Base64.getEncoder().encodeToString(leoBallLogoBytes)
+
+
             val bankAccount = BankAccount(
                 iban = "AT55 2022 2023 2024 2025",
                 bic = "ASPKAT2LXXX",
@@ -43,6 +50,7 @@ class PdfGeneratorService {
             val htmlContent = invoicePdf
                 .data("model", model)
                 .data("base64Logo", base64Logo)
+                .data("base64LeoBallLogo", base64LeoBallLogo)
                 .data("senderName", senderName)
                 .data("senderStreet", "Limesstraße")
                 .data("senderHouseNumber", "12-14a")

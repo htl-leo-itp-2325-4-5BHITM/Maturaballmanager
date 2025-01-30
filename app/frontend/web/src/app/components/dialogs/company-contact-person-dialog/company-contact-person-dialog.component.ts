@@ -51,7 +51,7 @@ export class CompanyContactPersonDialogComponent implements OnInit {
     suffixTitle: [''],
     gender: ['', Validators.required],
     position: ['',Validators.required],
-    personalEmail: ['', [Validators.email]],
+    personalEmail: ['', [Validators.email, Validators.required]],
     personalPhone: ['']
   });
 

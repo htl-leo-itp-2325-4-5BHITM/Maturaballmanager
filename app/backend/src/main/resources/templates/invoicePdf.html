@@ -6,27 +6,34 @@
     <!-- ... style ... -->
 </head>
 <body>
-<div class="header">
-    <img src="data:image/png;base64,{base64Logo}" alt="Schullogo" style="max-width: 200px;">
-    <h1>Rechnung</h1>
+<div class="header" style="width: 100%">
+    <div style="height: 10%; display: flex; align-items: center; margin-bottom: 2%">
+        <img src="data:image/png;base64,{base64Logo}" alt="Schullogo" style="max-width: 120px;">
+        <img src="data:image/png;base64,{base64LeoBallLogo}" alt="LeoBall-Logo" style="max-width: 120px;">
+    </div>
+
+    <div style="margin-bottom: 30px; margin-top: 30px">
+        <h1 style="margin: 0; font-size: 2em; text-align: center;">Rechnung</h1>
+    </div>
 </div>
 
-<div class="addresses">
-    <div class="from">
-        <p>{senderName}</p>
-        <p>Maturaballkomitee der HTL Leonding</p>
-        <p>{senderStreet} {senderHouseNumber}</p>
-        <p>{senderPostalCode} {senderCity}</p>
-    </div>
-    <div class="to">
-        <p>{model.companyName}</p>
-        {#if model.contactPersonName}
-            <p>z.H. {model.contactPersonName}</p>
+
+
+<div class="addresses" style="display: flex; width:100%; height: 10%;font-size: 12px;align-items: flex-start;">
+
+    <div class="to" style="width: 70%;">
+        <p style="margin: 1px; padding: 0;">{model.companyName}</p>
+        {#if model.contactPersonName}<p>z.H. {model.contactPersonName}</p>
         {/if}
-        <p>
-            {model.companyStreet} {model.companyHouseNumber}
-        </p>
-        <p>{model.companyPostalCode} {model.companyCity}</p>
+        <p style="margin: 1px; padding: 0;">{model.companyStreet} {model.companyHouseNumber}</p>
+        <p style="margin: 1px; padding: 0;">{model.companyPostalCode} {model.companyCity}</p>
+    </div>
+
+    <div class="from" style="width: 30%;">
+        <p style="margin: 1px; padding: 0;">{senderName}</p>
+        <p style="margin: 1px; padding: 0;">Maturaballkomitee der HTL Leonding</p>
+        <p style="margin: 1px; padding: 0;">{senderStreet} {senderHouseNumber}</p>
+        <p style="margin: 1px; padding: 0;">{senderPostalCode} {senderCity}</p>
     </div>
 </div>
 
