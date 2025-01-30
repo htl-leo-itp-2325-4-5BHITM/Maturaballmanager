@@ -1,3 +1,6 @@
+########################################
+# QUARKUS DEPLOYMENT + SERVICE
+########################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,13 +26,12 @@ spec:
             - |
               set -e
               apk add --no-cache netcat-openbsd
-              
               echo "Warte auf PostgreSQL..."
               while ! nc -z postgres-service 5432; do
                 echo "PostgreSQL ist noch nicht verfügbar. Warte 5 Sekunden..."
                 sleep 5
               done
-              echo "PostgreSQL ist verfügbar."         
+              echo "PostgreSQL ist verfügbar."
       containers:
         - name: quarkus
           image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-quarkus-backend:latest

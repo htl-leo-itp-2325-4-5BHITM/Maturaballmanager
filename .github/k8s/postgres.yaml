@@ -1,8 +1,10 @@
+########################################
+# POSTGRES DEPLOYMENT + SERVICE
+########################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: student-it200285
 spec:
   replicas: 1
   selector:
