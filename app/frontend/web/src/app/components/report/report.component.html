@@ -50,12 +50,13 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let row of filteredData | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }"
-                        (click)="editCallback(row)">
+                    [class.disabled-row]="isRowDisabled(row)" (click)="editCallback(row)">
 
                     <td *ngFor="let col of columns">
-                      <span *ngIf="col.key === 'website'" [innerHTML]="col.format ? col.format(row[col.key]) : row[col.key]"
+                      <span *ngIf="col.key === 'website'"
+                            [innerHTML]="col.format ? col.format(row[col.key]) : row[col.key]"
                             (click)="$event.stopPropagation()"></span>
-                                            <span *ngIf="col.key !== 'website'" (click)="$event.stopPropagation()">
+                        <span *ngIf="col.key !== 'website'" (click)="$event.stopPropagation()">
                         {{ col.format ? col.format(row[col.key]) : row[col.key] }}
                       </span>
                     </td>

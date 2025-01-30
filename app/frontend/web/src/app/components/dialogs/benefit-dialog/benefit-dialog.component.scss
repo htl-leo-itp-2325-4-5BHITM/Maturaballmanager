@@ -7,11 +7,15 @@ nb-card{
   width: 100%;
 }
 #cancelButton{
-  background-color: #d8d9da;
-  border-color: #d8d9da;
-  margin-right: 2%;
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+  margin-left: 1rem;
 }
 
 #cancelButton:hover{
-  background-color: #b5b8b8;
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
 }

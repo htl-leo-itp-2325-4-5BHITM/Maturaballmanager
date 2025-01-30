@@ -35,7 +35,7 @@
         </form>
     </nb-card-body>
     <nb-card-footer class="footer-actions">
-        <button nbButton status="basic" id="cancelButton" (click)="cancel()">Abbrechen</button>
         <button nbButton status="success" (click)="submit()" [disabled]="!form.valid">Speichern</button>
+        <span id="cancelButton" (click)="cancel()">Abbrechen</span>
     </nb-card-footer>
 </nb-card>

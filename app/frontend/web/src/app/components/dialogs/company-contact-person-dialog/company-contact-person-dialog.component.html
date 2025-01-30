@@ -123,8 +123,11 @@
                         </div>
 
                         <div class="form-actions">
-                            <button nbButton status="success" (click)="saveContact()">Speichern</button>
-                            <button nbButton status="basic" (click)="resetNewContactForm()">Abbrechen</button>
+                            <button nbButton status="success" [disabled]="!this.newContactForm.valid" (click)="saveContact()">Speichern</button>
+                            <!--<button nbButton status="basic" (click)="resetNewContactForm()">Abbrechen</button>-->
+                            <span id="cancelButton" (click)="resetNewContactForm()">
+                                Abbrechen
+                            </span>
                         </div>
                     </form>
                 </div>

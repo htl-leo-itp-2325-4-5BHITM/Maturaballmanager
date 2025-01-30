@@ -93,10 +93,15 @@ nb-layout nb-datepicker-container {
 
 
 #cancelButton{
-  background-color: #bdc3c7;
-  border-color: #bdc3c7;
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+  margin-left: 1rem;
 }
 
 #cancelButton:hover{
-  background-color: #a2a5a5;
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
 }

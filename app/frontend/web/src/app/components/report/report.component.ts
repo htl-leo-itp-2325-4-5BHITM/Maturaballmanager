@@ -11,6 +11,7 @@ import {
 } from '@nebular/theme';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgForOf, NgIf } from '@angular/common';
+import {Invoice} from "../../model/invoice";
 
 interface ColumnConfig {
   key: string;
@@ -178,6 +179,10 @@ export class ReportComponent implements OnInit {
 
   getLinkHTML(url: string): string {
     return `<a href="${url}" target="_blank">${url}</a>`;
+  }
+
+  isRowDisabled(row: Invoice): boolean {
+    return this.actions.every(action => action.disabled ? action.disabled(row) : false);
   }
 
 
