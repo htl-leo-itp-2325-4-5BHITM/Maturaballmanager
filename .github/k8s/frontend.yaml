@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: angular-frontend
+  name: angular
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: angular-frontend
+      app: angular
   template:
     metadata:
       labels:
-        app: angular-frontend
+        app: angular
     spec:
       containers:
-      - name: angular-frontend
+      - name: angular
         imagePullPolicy: Always
         image: ghcr.io/htl-leo-itp-2325-4-5bhitm/leoball-angular-frontend:latest
         ports:
@@ -22,11 +22,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: angular-frontend-service
+  name: frontend-service
 spec:
   ports:
     - port: 80
       targetPort: 80
       protocol: TCP
   selector:
-    app: angular-frontend
+    app: angular

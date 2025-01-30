@@ -133,12 +133,12 @@ jobs:
       # Verify Quarkus Backend Deployment
       - name: Verify Quarkus Backend Deployment
         if: matrix.service == 'backend' && success()
-        run: kubectl get pods -l app=quarkus-backend
+        run: kubectl get pods -l app=quarkus
 
       # Verify Angular Frontend Deployment
       - name: Verify Angular Frontend Deployment
         if: matrix.service == 'frontend' && success()
-        run: kubectl get pods -l app=angular-frontend
+        run: kubectl get pods -l app=angular
 
   restart_pods:
     needs: build_and_deploy
