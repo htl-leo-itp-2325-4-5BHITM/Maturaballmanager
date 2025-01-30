@@ -132,10 +132,10 @@ class InvoiceResource {
     @Produces("application/pdf")
     fun getInvoicePdf(@PathParam("id") id: String): Uni<Response> {
         val senderName = jwt.getClaim<String>("name").toString()
-        return invoiceService.generateInvoicePdf(id, senderName)
+        return invoiceService.generateInvoicePdf(id, senderName, isCopy = true)
             .map { pdfBytes ->
                 Response.ok(pdfBytes)
-                    .header("Content-Disposition", "attachment; filename=\"Invoice_${id}.pdf\"")
+                    .header("Content-Disposition", "attachment; filename=\"Rechnung_${id}.pdf\"")
                     .build()
             }
     }

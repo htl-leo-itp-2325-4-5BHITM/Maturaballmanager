@@ -400,10 +400,10 @@ class InvoiceService {
             }
     }
 
-    fun generateInvoicePdf(id: String, senderName: String): Uni<ByteArray> {
+    fun generateInvoicePdf(id: String, senderName: String, isCopy: Boolean = false): Uni<ByteArray> {
         return preparePdfModel(id)
             .flatMap { model ->
-                pdfGeneratorService.generateInvoicePdf(model, senderName)
+                pdfGeneratorService.generateInvoicePdf(model, senderName, isCopy)
             }
     }
 

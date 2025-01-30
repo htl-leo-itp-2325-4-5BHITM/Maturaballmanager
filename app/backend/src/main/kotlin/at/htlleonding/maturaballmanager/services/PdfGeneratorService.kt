@@ -25,7 +25,7 @@ class PdfGeneratorService {
      * Erzeugt das PDF im Worker-Thread (blockierend),
      * ohne dass wir weitere DB-Zugriffe ausführen müssen.
      */
-    fun generateInvoicePdf(model: InvoicePdfModel, senderName: String): Uni<ByteArray> {
+    fun generateInvoicePdf(model: InvoicePdfModel, senderName: String, isCopy: Boolean): Uni<ByteArray> {
         return Uni.createFrom().item {
             val logoStream: InputStream = Thread.currentThread().contextClassLoader
                 .getResourceAsStream("img/htllogo_2022_black_v2-2.png")
@@ -49,6 +49,7 @@ class PdfGeneratorService {
                 .data("senderPostalCode", "4060")
                 .data("senderCity", "Leonding")
                 .data("bankAccount", bankAccount)
+                .data("isCopy", isCopy)
                 .render()
 
             val pdfStream = ByteArrayOutputStream()
