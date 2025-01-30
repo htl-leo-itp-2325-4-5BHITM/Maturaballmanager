@@ -14,6 +14,10 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
     @Inject
     lateinit var promRepository: PromRepository
 
+    @Inject
+    lateinit var invoiceRepository: InvoiceRepository
+
+
     /**
      * Retrieves all benefits.
      */
@@ -68,19 +72,30 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
      * Deletes a benefit by ID.
      */
     @WithTransaction
-    fun delete(id: String): Uni<Void?>? {
-        return delete("id", id)
-            .onItem().ifNotNull().transform { null } // Transform successful deletion into Void
-            .onFailure().transform { throwable ->
-                if (throwable.message?.contains("violates foreign key constraint") == true) {
-                    IllegalStateException(
-                        "Cannot delete benefit with ID $id because it is referenced in other records.",
-                        throwable
+    fun delete(id: String): Uni<Void> {
+        return isBenefitUsedInInvoice(id)
+            .flatMap { used ->
+                if (used) {
+                    return@flatMap Uni.createFrom().failure(
+                        jakarta.ws.rs.WebApplicationException("Benefit is still used in an invoice", 409)
                     )
+
                 } else {
-                    throwable
+                    return@flatMap deleteById(id)
+                        .flatMap { deleted ->
+                            if (deleted) {
+                                Uni.createFrom().voidItem()
+                            } else {
+                                Uni.createFrom().failure(EntityNotFoundException("Benefit not found"))
+                            }
+                        }
                 }
             }
+    }
+
+    private fun isBenefitUsedInInvoice(benefitId: String): Uni<Boolean> {
+        return invoiceRepository.findByBenefitId(benefitId)
+            .map { invoices -> invoices.isNotEmpty() }
     }
 
     fun findAllByIds(ids: List<String>): Uni<List<Benefit>> {

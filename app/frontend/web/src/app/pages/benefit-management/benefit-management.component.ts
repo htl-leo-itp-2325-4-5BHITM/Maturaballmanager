@@ -140,8 +140,8 @@ export class BenefitManagementComponent implements OnInit {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error.status)
-            if(error.status === 400) {
-                this.toastrService.danger('Die Gegenleistung kann nicht gelöscht werden, da sie in einer anderen Entität verwendet wird.', 'Fehler');
+            if(error.status === 409) {
+                this.toastrService.danger('Die Gegenleistung kann nicht gelöscht werden, da sie in einer Rechnung verwendet wird.', 'Fehler');
             } else {
               this.toastrService.danger('Fehler beim Löschen der Gegenleistung.', 'Fehler');
             }

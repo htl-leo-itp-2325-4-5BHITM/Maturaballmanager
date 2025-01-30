@@ -71,4 +71,8 @@ class InvoiceRepository : PanacheRepository<Invoice> {
     fun findByContactPersonId(contactPersonId: String): Uni<List<Invoice>> {
         return list("contactPerson.id", contactPersonId)
     }
+
+    fun findByBenefitId(benefitId: String): Uni<List<Invoice>> {
+        return find("SELECT i FROM Invoice i JOIN i.benefits b WHERE b.id = ?1", benefitId).list()
+    }
 }

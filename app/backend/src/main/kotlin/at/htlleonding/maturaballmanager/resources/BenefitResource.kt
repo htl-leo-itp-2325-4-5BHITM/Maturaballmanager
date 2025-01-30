@@ -132,29 +132,25 @@ class BenefitResource {
      */
     @DELETE
     @Path("/{id}")
-    fun deleteBenefit(@PathParam("id") id: String): Uni<Response>? {
+    fun deleteBenefit(@PathParam("id") id: String): Uni<Response> {
         return benefitRepository.delete(id)
-            ?.map {
+            .map {
                 Response.noContent().build()
             }
-            ?.onFailure()?.recoverWithItem { throwable ->
-                when (throwable) {
-                    is EntityNotFoundException -> {
-                        Response.status(Response.Status.NOT_FOUND)
-                            .entity("Benefit not found")
-                            .build()
-                    }
-                    is IllegalStateException -> {
-                        Response.status(Response.Status.BAD_REQUEST)
-                            .entity(throwable.message)
-                            .build()
-                    }
-                    else -> {
-                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity("Error deleting benefit: ${throwable.message}")
-                            .build()
-                    }
-                }
+            .onFailure(EntityNotFoundException::class.java).recoverWithItem { enfe ->
+                Response.status(Response.Status.NOT_FOUND)
+                    .entity(enfe.message)
+                    .build()
+            }
+            .onFailure(WebApplicationException::class.java).recoverWithItem { wae ->
+                Response.status(Response.Status.CONFLICT)
+                    .entity(wae.message)
+                    .build()
+            }
+            .onFailure().recoverWithItem { throwable ->
+                Response.serverError()
+                    .entity(throwable.message)
+                    .build()
             }
     }
 }
