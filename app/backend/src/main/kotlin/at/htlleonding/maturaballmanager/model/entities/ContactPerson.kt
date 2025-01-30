@@ -48,7 +48,7 @@ class ContactPerson: PanacheEntityBase() {
     @Column(name = "personal_phone")
     var personalPhone: String? = null
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     @JsonbTransient
     var company: Company? = null

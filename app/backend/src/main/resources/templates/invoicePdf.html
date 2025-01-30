@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Rechnung #{model.invoiceNumber}</title>
+    <title>Rechnung #{model.id}</title>
     <!-- ... style ... -->
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div class="content">
     <p>
-        <strong>Rechnungsnummer:</strong> {model.invoiceNumber},
+        <strong>Rechnungsnummer:</strong> {model.id},
         <strong>Rechnungsdatum:</strong> {model.invoiceDate}
     </p>
     <h2>Erwerb einer Werbeleistung im Rahmen des Maturaballs 2025 der HTL Leonding</h2>
@@ -67,7 +67,7 @@
     <p><strong>Kontoinhaber:</strong> {bankAccount.accountHolder}</p>
     <p><strong>IBAN:</strong> {bankAccount.iban}</p>
     <p><strong>BIC:</strong> {bankAccount.bic}</p>
-    <p><strong>Verwendungszweck:</strong> "Maturaball - #{model.invoiceNumber}"</p>
+    <p><strong>Verwendungszweck:</strong> "Maturaball - #{model.id}"</p>
 </div>
 
 <div class="content">

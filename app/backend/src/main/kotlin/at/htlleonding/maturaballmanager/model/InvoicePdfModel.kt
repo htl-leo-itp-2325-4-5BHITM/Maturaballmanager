@@ -1,7 +1,7 @@
 package at.htlleonding.maturaballmanager.model
 
 data class InvoicePdfModel(
-    val invoiceNumber: String,
+    val id: String,
     val companyName: String,
     val companyStreet: String,
     val companyHouseNumber: String,

@@ -10,7 +10,6 @@ import java.time.OffsetDateTime
 @Table(name = "invoices")
 class Invoice : PanacheEntityBase() {
 
-    // Primary key: "YYYY####", e.g. "20230001"
     @Id
     @Column(length = 8)
     var id: String? = null

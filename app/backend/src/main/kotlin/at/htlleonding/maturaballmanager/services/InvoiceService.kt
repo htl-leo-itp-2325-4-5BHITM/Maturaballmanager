@@ -350,6 +350,9 @@ class InvoiceService {
     fun sendInvoice(id: String, target: EmailTarget): Uni<Void> {
         return findInvoice(id)
             .flatMap { invoice ->
+                println("Debug: invoice.contactPerson = ${invoice.contactPerson}")
+                println("Debug: invoice.contactPerson?.personalEmail = ${invoice.contactPerson?.personalEmail}")
+
                 val recipient = when (target) {
                     EmailTarget.OFFICE -> invoice.company?.officeEmail
                     EmailTarget.CONTACT_PERSON -> invoice.contactPerson?.personalEmail
@@ -426,7 +429,7 @@ class InvoiceService {
         }
 
         return InvoicePdfModel(
-            invoiceNumber = invoice.id ?: "",
+            id = invoice.id ?: "",
             companyName = comp?.name ?: "",
             companyStreet = address?.street ?: "",
             companyHouseNumber = address?.houseNumber ?: "",

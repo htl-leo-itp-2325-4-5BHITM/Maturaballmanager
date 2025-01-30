@@ -173,10 +173,21 @@ export class CompanyManagementComponent implements OnInit {
                         this.loadCompanies();
                         this.toastrService.success('Unternehmen erfolgreich gelöscht.', 'Erfolg');
                     },
-                    error: (err: Error) => {
-                        this.toastrService.danger('Fehler beim Löschen des Unternehmens', 'Fehler');
+                    error: (err: any) => {
+                        if (err.status === 409) {
+                             this.toastrService.danger(
+                                err.error || 'Unternehmen kann nicht gelöscht werden, da noch Rechnungen vorhanden sind.',
+                                'Fehler'
+                            );
+                        } else {
+                            this.toastrService.danger(
+                                err.error || 'Fehler beim Löschen des Unternehmens.',
+                                'Fehler'
+                            );
+                        }
                         console.error(err);
                     },
+
                 });
             }
         });
@@ -187,77 +198,6 @@ export class CompanyManagementComponent implements OnInit {
         this.dialogService.open(CompanyContactPersonDialogComponent, {
             context: {
                 companyId: company.id
-            }
-        });
-    }
-
-    openAddContactPersonDialog(company: Company): void {
-        this.dialogService
-            .open(ContactPersonDialogComponent, {
-                context: {
-                    title: 'Kontaktperson hinzufügen',
-                    company: company,
-                },
-                closeOnBackdropClick: false,
-                closeOnEsc: false,
-                autoFocus: true,
-                hasScroll: false,
-                dialogClass: 'fixed-dialog-width',
-            })
-            .onClose.subscribe((result: ContactPerson | undefined) => {
-            if (result) {
-                this.loadCompanies();
-                this.toastrService.success('Kontaktperson erfolgreich hinzugefügt.', 'Erfolg');
-            }
-        });
-    }
-
-    openEditContactPersonDialog(company: Company, contactPerson: ContactPerson): void {
-        this.dialogService
-            .open(ContactPersonDialogComponent, {
-                context: {
-                    title: 'Kontaktperson bearbeiten',
-                    company: company,
-                    contactPerson: {...contactPerson},
-                },
-                closeOnBackdropClick: false,
-                closeOnEsc: false,
-                autoFocus: true,
-                hasScroll: false,
-                dialogClass: 'fixed-dialog-width',
-            })
-            .onClose.subscribe((result: ContactPerson | undefined) => {
-            if (result) {
-                this.loadCompanies();
-                this.toastrService.success('Kontaktperson erfolgreich aktualisiert.', 'Erfolg');
-            }
-        });
-    }
-
-    confirmDeleteContactPerson(company: Company, contactPerson: ContactPerson): void {
-        this.dialogService
-            .open(ConfirmDialogComponent, {
-                context: {
-                    title: 'Löschen bestätigen',
-                    message: `Möchten Sie die Kontaktperson "${contactPerson.firstName} ${contactPerson.lastName}" wirklich löschen?`,
-                },
-                closeOnBackdropClick: false,
-                closeOnEsc: false,
-                autoFocus: true,
-                hasScroll: false,
-            })
-            .onClose.subscribe((confirmed: boolean) => {
-            if (confirmed) {
-                this.companyService.deleteContactPerson(contactPerson.id!).subscribe({
-                    next: () => {
-                        this.loadCompanies();
-                        this.toastrService.success('Kontaktperson erfolgreich gelöscht.', 'Erfolg');
-                    },
-                    error: (err: Error) => {
-                        this.toastrService.danger('Fehler beim Löschen der Kontaktperson', 'Fehler');
-                        console.error(err);
-                    },
-                });
             }
         });
     }

@@ -1,10 +1,20 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NbButtonModule, NbCardModule, NbDialogRef, NbIconModule, NbInputModule, NbRadioModule} from "@nebular/theme";
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {
+  NbButtonModule,
+  NbCardModule,
+  NbDialogRef,
+  NbDialogService,
+  NbIconModule,
+  NbInputModule,
+  NbRadioModule, NbToastrService
+} from "@nebular/theme";
 import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CompanyService} from "../../../services/company.service";
 import {ContactPerson} from "../../../model/contactperson";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-company-contact-person-dialog',
@@ -32,7 +42,6 @@ export class CompanyContactPersonDialogComponent implements OnInit {
   updateContact: boolean = false;
   contactDataId: string | undefined;
 
-  // Formularsteuerung
   showNewContactForm = false;
   newContactForm: FormGroup = this.fb.group({
     id: [null],
@@ -48,7 +57,9 @@ export class CompanyContactPersonDialogComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               protected ref: NbDialogRef<CompanyContactPersonDialogComponent>,
-              private companyService: CompanyService,)
+              private companyService: CompanyService,
+              private dialogService: NbDialogService,
+              private toastrService: NbToastrService)
   {}
 
   ngOnInit(): void {
@@ -119,10 +130,42 @@ export class CompanyContactPersonDialogComponent implements OnInit {
     event.stopPropagation();
     const contactPersonId = this.contacts[index].id;
     if (contactPersonId) {
-      this.companyService.deleteContactPerson(contactPersonId).subscribe(
-          () => this.contacts.splice(index, 1),
-          error => console.error('Error deleting contact person', error)
-      );
+
+      this.dialogService
+          .open(ConfirmDialogComponent, {
+            context: {
+              title: 'Löschen bestätigen',
+              message: `Möchten Sie die Kontaktperson "${this.contacts[index].firstName} ${this.contacts[index].lastName}" wirklich löschen?`,
+            },
+            closeOnBackdropClick: false,
+            closeOnEsc: false,
+            autoFocus: true,
+            hasScroll: false,
+          })
+          .onClose.subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.companyService.deleteContactPerson(contactPersonId).subscribe({
+            next: () => {
+              this.toastrService.success('Kontaktperson erfolgreich gelöscht.', 'Erfolg');
+            },
+            error: (err: any) => {
+              if (err.status === 409) {
+                this.toastrService.danger(
+                    err.error || 'Kontaktperson kann nicht gelöscht werden, da sie noch in Rechnungen verwendet wird.',
+                    'Fehler'
+                );
+              } else {
+                this.toastrService.danger(
+                    err.error || 'Fehler beim Löschen der Kontaktperson.',
+                    'Fehler'
+                );
+              }
+              console.error(err);
+            },
+
+          });
+        }
+      });
     }
   }
 

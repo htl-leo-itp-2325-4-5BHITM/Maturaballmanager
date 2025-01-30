@@ -3,13 +3,16 @@ package at.htlleonding.maturaballmanager.repositories
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
-import jakarta.enterprise.context.ApplicationScoped
-import jakarta.persistence.EntityNotFoundException
-import jakarta.transaction.Transactional
 import io.smallrye.mutiny.Uni
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.persistence.EntityNotFoundException
 
 @ApplicationScoped
 class ContactPersonRepository : PanacheRepositoryBase<ContactPerson, String> {
+
+    @Inject
+    lateinit var invoiceRepository: InvoiceRepository
 
     /**
      * Retrieves all contact persons for a specific company.
@@ -63,6 +66,20 @@ class ContactPersonRepository : PanacheRepositoryBase<ContactPerson, String> {
             .flatMap { deleted ->
                 if (deleted) Uni.createFrom().voidItem()
                 else Uni.createFrom().failure(EntityNotFoundException("ContactPerson not found"))
+            }
+    }
+
+    @WithTransaction
+    override fun deleteById(contactPersonId: String): Uni<Boolean> {
+        return invoiceRepository.findByContactPersonId(contactPersonId)
+            .flatMap { invoices ->
+                if (invoices.isNotEmpty()) {
+                    Uni.createFrom().failure(
+                        IllegalStateException("Cannot delete contact person; it is referenced by one or more invoices.")
+                    )
+                } else {
+                    super.deleteById(contactPersonId)
+                }
             }
     }
 }

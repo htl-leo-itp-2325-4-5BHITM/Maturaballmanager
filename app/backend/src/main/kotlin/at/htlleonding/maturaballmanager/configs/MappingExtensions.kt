@@ -14,15 +14,12 @@ fun Invoice.toDTO(): InvoiceDTO {
     return InvoiceDTO(
         id = this.id,
 
-        // IDs
         company = this.company?.id,
         contactPerson = cp?.id,
 
-        // NEU
         companyName = this.company?.name,
         contactPersonName = contactPersonFullName,
 
-        // Der Rest
         benefits = this.benefits.map { it.id!! },
         invoiceDate = this.invoiceDate,
         paymentDeadline = this.paymentDeadline,
@@ -50,7 +47,6 @@ fun InvoiceDTO.toEntity(
     return invoice
 }
 
-// Company Mapping
 fun Company.toDTO(): CompanyDTO {
     return CompanyDTO(
         id = this.id,
@@ -75,7 +71,6 @@ fun CompanyDTO.toEntity(): Company {
     return company
 }
 
-// ContactPerson Mapping
 fun ContactPerson.toDTO(): ContactPersonDTO {
     return ContactPersonDTO(
         id = this.id,
@@ -114,7 +109,6 @@ fun BenefitDTO.toEntity(): Benefit {
     return benefit
 }
 
-// Address Mapping
 fun Address.toDTO(): AddressDTO {
     return AddressDTO(
         street = this.street,

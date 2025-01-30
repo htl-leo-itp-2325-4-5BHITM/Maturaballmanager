@@ -39,7 +39,6 @@ class InvoiceRepository : PanacheRepository<Invoice> {
     fun getNextManualInvoiceId(): Uni<String> {
         val currentYear = OffsetDateTime.now().year.toString()
 
-        // Sort descending by "id", pick the first
         return find("id like ?1", sort("id", descending = true), "$currentYear%")
             .firstResult<Invoice>()
             .map { latestInvoiceOrNull ->
@@ -67,5 +66,9 @@ class InvoiceRepository : PanacheRepository<Invoice> {
                 Uni.createFrom().item(false)
             }
         }
+    }
+
+    fun findByContactPersonId(contactPersonId: String): Uni<List<Invoice>> {
+        return list("contactPerson.id", contactPersonId)
     }
 }

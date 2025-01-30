@@ -108,12 +108,22 @@ class InvoiceResource {
                 Response.ok().build()
             }
             .onFailure().recoverWithItem { throwable ->
+                val rootCause = getRootCause(throwable)
+                val message = rootCause.message ?: rootCause.javaClass.simpleName
+
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Failed to send invoice: ${throwable.message}")
+                    .entity("Failed to send invoice: $message")
                     .build()
             }
     }
 
+    private fun getRootCause(t: Throwable?): Throwable {
+        var result = t
+        while (result?.cause != null && result.cause != result) {
+            result = result.cause
+        }
+        return result ?: RuntimeException("No root cause found")
+    }
     /**
      * Downloads the PDF of an invoice.
      */

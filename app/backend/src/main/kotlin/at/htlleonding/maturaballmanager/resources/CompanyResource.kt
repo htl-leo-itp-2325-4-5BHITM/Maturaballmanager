@@ -137,6 +137,7 @@ class CompanyResource {
     fun deleteCompany(@PathParam("id") id: String): Uni<Response> {
         return companyRepository.delete(id)
             .map {
+                // If delete is successful, return 204 No Content
                 Response.noContent().build()
             }
             .onFailure().recoverWithItem { throwable ->
@@ -147,14 +148,28 @@ class CompanyResource {
                             .build()
                     }
                     else -> {
-                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity("Error deleting company: ${throwable.message}")
-                            .build()
+                        val rootCause = getRootCause(throwable)
+                        if (rootCause is java.sql.SQLException && rootCause.sqlState == "23503") {
+                            Response.status(Response.Status.CONFLICT)
+                                .entity("Unternehmen kann nicht gelöscht werden, da noch Rechnungen vorhanden sind.")
+                                .build()
+                        } else {
+                            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                                .entity("Error deleting company: ${rootCause.message ?: throwable.message}")
+                                .build()
+                        }
                     }
                 }
             }
     }
 
+    private fun getRootCause(t: Throwable?): Throwable {
+        var result = t
+        while (result?.cause != null && result.cause != result) {
+            result = result.cause
+        }
+        return result ?: RuntimeException("No root cause found")
+    }
 
     /**
      * GET /company/{id}/contact-persons
@@ -282,7 +297,7 @@ class CompanyResource {
     @DELETE
     @Path("/contact-person/{id}")
     fun deleteContactPerson(@PathParam("id") contactPersonId: String): Uni<Response> {
-        return contactPersonRepository.delete(contactPersonId)
+        return contactPersonRepository.deleteById(contactPersonId)
             .map {
                 Response.noContent().build()
             }
@@ -290,17 +305,27 @@ class CompanyResource {
                 when (throwable) {
                     is EntityNotFoundException -> {
                         Response.status(Response.Status.NOT_FOUND)
-                            .entity("Contact person not found")
+                            .entity(throwable.message)
                             .build()
                     }
                     else -> {
-                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity("Error deleting contact person: ${throwable.message}")
-                            .build()
+                        val rootCause = getRootCause(throwable)
+                        if (rootCause is IllegalStateException &&
+                            rootCause.message?.contains("referenced by one or more invoices") == true
+                        ) {
+                            Response.status(Response.Status.CONFLICT)
+                                .entity("Kontaktperson kann nicht gelöscht werden, da sie in einer Rechnung verwendet wird.")
+                                .build()
+                        } else {
+                            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                                .entity("Error deleting ContactPerson: ${throwable.message}")
+                                .build()
+                        }
                     }
                 }
             }
     }
+
 
     /**
      * GET /company/search
@@ -309,7 +334,6 @@ class CompanyResource {
     @GET
     @Path("/search")
     fun searchCompanies(@QueryParam("query") query: String?): Uni<Response> {
-        // Optional: Falls kein query übergeben, könnte man z. B. alle Unternehmen liefern
         val safeQuery = query?.trim() ?: ""
         return companyRepository.searchCompanies(safeQuery)
             .map { companies ->
