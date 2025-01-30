@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.quarkus.panache.common.Sort
 import io.smallrye.mutiny.Uni
 import jakarta.inject.Inject
 
@@ -72,7 +73,7 @@ class CompanyRepository : PanacheRepositoryBase<Company, String> {
     fun getAllCompanies(): Uni<List<Company>> {
         return promRepository.findLastActiveProm().flatMap { prom ->
             if (prom != null) {
-                list("prom", prom)
+                find("prom = ?1", Sort.by("name"), prom).list()
             } else {
                 Uni.createFrom().item(emptyList())
             }

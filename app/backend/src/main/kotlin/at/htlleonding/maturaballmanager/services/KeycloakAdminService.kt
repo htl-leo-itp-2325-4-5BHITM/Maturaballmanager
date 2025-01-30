@@ -1,4 +1,4 @@
-package at.htlleonding.maturaballmanager.services;
+package at.htlleonding.maturaballmanager.services
 
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped

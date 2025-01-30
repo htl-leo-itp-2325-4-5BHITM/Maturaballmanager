@@ -14,5 +14,4 @@ data class PromDTO(
     var zip: String? = null,
     var city: String? = null,
     var dayPlan: List<DayPlanDTO>? = null
-) {
-}
+)

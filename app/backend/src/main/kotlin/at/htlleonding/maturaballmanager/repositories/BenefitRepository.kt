@@ -70,7 +70,7 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
     @WithTransaction
     fun delete(id: String): Uni<Void?>? {
         return delete("id", id)
-            .onItem().ifNotNull().transform { null as Void? } // Transform successful deletion into Void
+            .onItem().ifNotNull().transform { null } // Transform successful deletion into Void
             .onFailure().transform { throwable ->
                 if (throwable.message?.contains("violates foreign key constraint") == true) {
                     IllegalStateException(

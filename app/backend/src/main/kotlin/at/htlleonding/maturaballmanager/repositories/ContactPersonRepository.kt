@@ -3,6 +3,7 @@ package at.htlleonding.maturaballmanager.repositories
 import at.htlleonding.maturaballmanager.model.entities.ContactPerson
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.quarkus.panache.common.Sort
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -18,7 +19,8 @@ class ContactPersonRepository : PanacheRepositoryBase<ContactPerson, String> {
      * Retrieves all contact persons for a specific company.
      */
     fun getByCompanyId(companyId: String): Uni<List<ContactPerson>> {
-        return find("company.id", companyId).list()
+        return find("company.id = ?1", Sort.by("lastName", "firstName", "position"), companyId)
+            .list()
     }
 
     /**

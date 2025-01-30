@@ -179,7 +179,7 @@ class InvoiceService {
                                         existingInvoice.paymentDeadline =
                                             invoiceDTO.paymentDeadline ?: existingInvoice.invoiceDate?.plusDays(14)
                                         existingInvoice.status = invoiceDTO.status
-                                        existingInvoice.totalAmount = benefits.sumOf { it.price ?: 0.0 }
+                                        existingInvoice.totalAmount = benefits.sumOf { it.price }
 
                                         existingInvoice.sendOption = invoiceDTO.sendOption ?: existingInvoice.sendOption
                                         invoiceRepository.persist(existingInvoice)
@@ -260,7 +260,7 @@ class InvoiceService {
             invoiceDate = invoiceDTO.invoiceDate ?: OffsetDateTime.now()
             paymentDeadline = invoiceDTO.paymentDeadline ?: invoiceDate?.plusDays(14)
             status = invoiceDTO.status
-            totalAmount = benefits.sumOf { it.price ?: 0.0 }
+            totalAmount = benefits.sumOf { it.price }
             prom = company.prom
             sendOption = invoiceDTO.sendOption ?: "immediate"
         }
@@ -424,7 +424,7 @@ class InvoiceService {
             BenefitPdfModel(
                 name = b.name ?: "",
                 description = b.description ?: "",
-                price = b.price ?: 0.0
+                price = b.price
             )
         }
 
