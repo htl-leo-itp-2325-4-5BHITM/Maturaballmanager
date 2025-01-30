@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: student-it200274
 spec:
   replicas: 1
   selector:
@@ -13,20 +14,23 @@ spec:
         app: postgres
     spec:
       containers:
-      - name: postgres
-        image: postgres:13
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_DB
-          value: "maturaballmanager"
-        - name: POSTGRES_USER
-          value: "maturaballmanager"
-        - name: POSTGRES_PASSWORD
-          value: "maturaballmanager"
-        volumeMounts:
-          - name: postgres-storage
-            mountPath: /var/lib/postgresql/data
+        - name: postgres
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
