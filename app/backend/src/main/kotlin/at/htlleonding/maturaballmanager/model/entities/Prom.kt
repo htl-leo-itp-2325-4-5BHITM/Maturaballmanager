@@ -35,20 +35,8 @@ class Prom: PanacheEntityBase() {
         name = "prom_tagesablauf",
         joinColumns = [JoinColumn(name = "prom_id")]
     )
-    @OrderColumn(name = "position")
+    @OrderBy("time ASC")
     var dayPlan: MutableList<DayPlan> = mutableListOf()
-
-   /*@OneToMany(mappedBy = "prom", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = Benefit::class, orphanRemoval = true)
-    var benefits: List<Benefit> = mutableListOf()
-
-    @OneToMany(mappedBy = "prom", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = Invoice::class, orphanRemoval = true)
-    var invoices: List<Invoice> = mutableListOf()
-
-    @OneToMany(mappedBy = "prom", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = TeamMember::class, orphanRemoval = true)
-    var teamMembers: List<TeamMember> = mutableListOf()
-
-    @OneToMany(mappedBy = "prom", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = Company::class, orphanRemoval = true)
-    var companies: List<Company> = mutableListOf()*/
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

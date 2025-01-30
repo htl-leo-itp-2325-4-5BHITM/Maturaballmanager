@@ -110,6 +110,9 @@ export class MaturaballComponent implements OnInit {
             } else {
                 await this.promService.createProm(this.formData);
             }
+
+            this.formData.dayPlan = this.formData.dayPlan.sort((a: any, b: any) => a.time.localeCompare(b.time));
+
             this.toastrService.show(
                 'Maturaball-Daten wurden erfolgreich gespeichert!',
                 'Erfolg',
