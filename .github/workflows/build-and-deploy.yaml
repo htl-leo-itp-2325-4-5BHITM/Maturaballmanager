@@ -115,13 +115,13 @@ jobs:
       - name: Deploy Quarkus Backend to Kubernetes
         if: matrix.service == 'backend' && success()
         run: |
-          kubectl apply -f .github/k8s/quarkus-backend.yaml
+          kubectl apply -f .github/k8s/backend.yaml
 
       # Apply Kubernetes Resources for frontend
       - name: Deploy Angular Frontend to Kubernetes
         if: matrix.service == 'frontend' && success()
         run: |
-          kubectl apply -f .github/k8s/angular-frontend.yaml
+          kubectl apply -f .github/k8s/frontend.yaml
 
       # Apply Postgres and Ingress resources
       - name: Apply Postgres and Ingress Resources
