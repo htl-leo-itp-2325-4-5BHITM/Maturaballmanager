@@ -56,7 +56,7 @@ class EmailService {
 
         val model = invoiceService.createInvoicePdfModel(invoice)
 
-        return pdfGeneratorService.generateInvoicePdf(model, senderName)
+        return pdfGeneratorService.generateInvoicePdf(model, senderName,false)
             .flatMap { pdfBytes ->
                 val recipient = email
 
