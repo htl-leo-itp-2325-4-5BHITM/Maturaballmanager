@@ -7,7 +7,7 @@ import {
   NbInputModule,
   NbSelectModule
 } from '@nebular/theme';
-import { NgForOf, NgIf } from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetailedTeamMemberDTO, UserManagementService } from '../../../services/user-management.service';
 
@@ -43,6 +43,8 @@ interface RoleOption {
     NgIf,
     NgForOf,
     FormsModule,
+    NgClass,
+    NgStyle,
   ],
   templateUrl: './user-management-dialog.component.html',
   styleUrls: ['./user-management-dialog.component.scss'],

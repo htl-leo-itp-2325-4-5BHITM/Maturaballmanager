@@ -1,4 +1,4 @@
-<nb-card class="umd-card">
+<nb-card class="umd-card" [ngStyle]="{'height': member ? '55vh' : '35vh'}">
     <nb-card-header>
         <h6>{{ isEditing ? 'Mitglied bearbeiten' : 'Mitglied hinzufügen' }}</h6>
     </nb-card-header>
@@ -20,10 +20,10 @@
             </ul>
         </div>
 
-        <div *ngIf="member" class="member-section">
+        <div class="member-section" *ngIf="member">
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input nbInput id="name" [(ngModel)]="member.name" readonly />
+                <input nbInput id="name" [(ngModel)]="member.name" readonly placeholder="Name"/>
             </div>
 
             <div class="form-group">
