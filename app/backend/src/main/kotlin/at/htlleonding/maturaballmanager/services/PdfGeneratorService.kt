@@ -12,7 +12,8 @@ import jakarta.inject.Named
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.util.Base64
+import java.text.SimpleDateFormat
+import java.util.*
 
 @ApplicationScoped
 class PdfGeneratorService {
@@ -21,12 +22,17 @@ class PdfGeneratorService {
     @Named("invoicePdf")
     lateinit var invoicePdf: Template
 
-    /**
-     * Erzeugt das PDF im Worker-Thread (blockierend),
-     * ohne dass wir weitere DB-Zugriffe ausführen müssen.
-     */
     fun generateInvoicePdf(model: InvoicePdfModel, senderName: String, isCopy: Boolean): Uni<ByteArray> {
         return Uni.createFrom().item {
+            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd") // Originalformat der Daten
+            val outputDateFormat = SimpleDateFormat("dd.MM.yyyy") // Zielformat
+
+            val parsedPaymentDeadline = inputDateFormat.parse(model.paymentDeadline)
+            val formattedPaymentDeadline = outputDateFormat.format(parsedPaymentDeadline)
+
+            val parsedInvoiceDate = inputDateFormat.parse(model.invoiceDate)
+            val formattedInvoiceDate = outputDateFormat.format(parsedInvoiceDate)
+
             val logoStream: InputStream = Thread.currentThread().contextClassLoader
                 .getResourceAsStream("img/htllogo_2022_black_v2-2.png")
                 ?: throw IllegalArgumentException("Logo nicht gefunden")
@@ -38,7 +44,6 @@ class PdfGeneratorService {
                 ?: throw IllegalArgumentException("LeoBall Logo nicht gefunden")
             val leoBallLogoBytes = leoBallLogoStream.use { it.readAllBytes() }
             val base64LeoBallLogo = Base64.getEncoder().encodeToString(leoBallLogoBytes)
-
 
             val bankAccount = BankAccount(
                 iban = "AT55 2022 2023 2024 2025",
@@ -56,9 +61,12 @@ class PdfGeneratorService {
                 .data("senderHouseNumber", "12-14a")
                 .data("senderPostalCode", "4060")
                 .data("senderCity", "Leonding")
+                .data("formattedPaymentDeadline", formattedPaymentDeadline)  // Hinzufügen
+                .data("formattedInvoiceDate", formattedInvoiceDate)          // Hinzufügen
                 .data("bankAccount", bankAccount)
                 .data("isCopy", isCopy)
                 .render()
+
 
             val pdfStream = ByteArrayOutputStream()
             HtmlConverter.convertToPdf(
