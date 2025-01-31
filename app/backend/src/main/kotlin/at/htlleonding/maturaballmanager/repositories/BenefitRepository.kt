@@ -3,6 +3,7 @@ package at.htlleonding.maturaballmanager.repositories
 import at.htlleonding.maturaballmanager.model.entities.Benefit
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.quarkus.panache.common.Sort
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -24,7 +25,7 @@ class BenefitRepository : PanacheRepositoryBase<Benefit, String> {
     fun getAll(): Uni<List<Benefit>> {
         return promRepository.findLastActiveProm().flatMap { prom ->
             if (prom != null) {
-                list("prom", prom)
+                list("prom = ?1", Sort.by("name"), prom)
             } else {
                 Uni.createFrom().item(emptyList())
             }
