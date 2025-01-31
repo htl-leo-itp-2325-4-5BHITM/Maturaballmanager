@@ -97,7 +97,6 @@ export class InvoiceDialogComponent implements OnInit {
         }
 
         // 1) **Zahlungsfrist standardmäßig auf +14 Tage** vom heutigen Tag
-        // nur, wenn noch kein paymentDeadline gesetzt wurde
         const currentPaymentDeadline = this.form.get('paymentDeadline')?.value;
         if (!currentPaymentDeadline) {
             const in14Days = new Date();
@@ -123,6 +122,10 @@ export class InvoiceDialogComponent implements OnInit {
         this.form.get('benefits')?.valueChanges.subscribe((selectedBenefitIds: string[]) => {
             this.calculateTotalAmount(selectedBenefitIds);
         });
+
+        // 5) Beobachte Änderungen an den Feldern 'invoiceDate' und 'paymentDeadline' für die Validierung
+        this.form.get('invoiceDate')?.valueChanges.subscribe(() => this.validatePaymentDeadline());
+        this.form.get('paymentDeadline')?.valueChanges.subscribe(() => this.validatePaymentDeadline());
     }
 
     /**
@@ -133,6 +136,21 @@ export class InvoiceDialogComponent implements OnInit {
         const total = selectedBenefits.reduce((sum, benefit) => sum + (benefit.price || 0.0), 0);
         this.form.get('totalAmount')?.setValue(total, { emitEvent: false });
     }
+
+    /**
+     * Validiert, dass die Zahlungsfrist nicht vor dem Rechnungsdatum liegt.
+     */
+    validatePaymentDeadline(): void {
+        const invoiceDate = this.form.get('invoiceDate')?.value;
+        const paymentDeadline = this.form.get('paymentDeadline')?.value;
+
+        if (!invoiceDate || (paymentDeadline && new Date(paymentDeadline) < new Date(invoiceDate))) {
+            this.form.get('paymentDeadline')?.setErrors({ invalidDeadline: true });
+        } else {
+            this.form.get('paymentDeadline')?.setErrors(null);
+        }
+    }
+
 
     /**
      * Klick auf "Abbrechen"
@@ -154,9 +172,7 @@ export class InvoiceDialogComponent implements OnInit {
         // B) Prüfen, ob Kontaktperson gewählt und ob die nötigen Daten existieren
         const contactPersonId = this.form.get('contactPerson')?.value;
         if (contactPersonId) {
-            // Finde Kontaktperson
             const cp = this.contactPersons.find((c) => c.id === contactPersonId);
-            // Beispiel: Wenn du sicherstellen willst, dass die Kontaktperson zumindest eine E-Mail hat
             if (cp && !cp.personalEmail) {
                 this.toastrService.danger(
                     'Die gewählte Kontaktperson hat keine E-Mail-Adresse hinterlegt.',
@@ -175,7 +191,6 @@ export class InvoiceDialogComponent implements OnInit {
         const selectedBenefits = this.benefits.filter((b) => formValue.benefits.includes(b.id));
 
         // D) Speichere das, was wir dem Aufrufer zurückgeben wollen
-        // Hier: Schicke es via Dialog-Result an den Parent
         const sendOption = formValue.sendOption as 'immediate' | 'onDate';
 
         this.dialogRef.close({
@@ -186,7 +201,6 @@ export class InvoiceDialogComponent implements OnInit {
             invoiceDate: formValue.invoiceDate as Date,
             paymentDeadline: formValue.paymentDeadline as Date,
             totalAmount: formValue.totalAmount as number,
-            // Je nachdem, ob du Status hier änderst:
             status: this.invoice?.status ?? 'DRAFT',
             sendOption,
         });

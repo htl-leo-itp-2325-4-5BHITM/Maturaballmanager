@@ -182,8 +182,10 @@ export class ReportComponent implements OnInit {
   }
 
   isRowDisabled(row: Invoice): boolean {
-    return this.actions.every(action => action.disabled ? action.disabled(row) : false);
+    const sendAction = this.actions.find(action => action.tooltip === 'Rechnung versenden');
+    return sendAction?.disabled ? sendAction.disabled(row) : false;
   }
+
 
 
 }

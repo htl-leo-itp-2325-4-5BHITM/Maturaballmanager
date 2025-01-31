@@ -65,14 +65,18 @@
                         <input placeholder="Zahlungsfrist auswählen"
                                [nbDatepicker]="paymentDeadlinePicker"
                                formControlName="paymentDeadline"
-                               nbInput
-                               readonly>
+                               nbInput>
                         <nb-datepicker #paymentDeadlinePicker></nb-datepicker>
                     </nb-form-field>
+                    <!-- Fehlermeldung, wenn die Zahlungsfrist vor dem Rechnungsdatum liegt -->
+                    <div *ngIf="form.get('paymentDeadline')?.hasError('invalidDeadline') && form.get('paymentDeadline')?.touched" class="error-message">
+                        Die Zahlungsfrist darf nicht vor dem Rechnungsdatum liegen.
+                    </div>
                     <div *ngIf="form.get('paymentDeadline')?.hasError('required') && form.get('paymentDeadline')?.touched" class="error-message">
                         Zahlungsfrist ist erforderlich.
                     </div>
                 </div>
+
 
                 <!-- Gesamtbetrag -->
                 <div class="form-group">
