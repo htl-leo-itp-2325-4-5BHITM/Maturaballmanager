@@ -30,19 +30,22 @@ export class NavigationBarComponent implements OnInit {
     private filterMenuItems(items: NbMenuItem[], userRoles: string[]): NbMenuItem[] {
         return items
             .map(item => {
+                // Zuerst die Kinder filtern
                 const filteredChildren = item.children ? this.filterMenuItems(item.children, userRoles) : [];
-                const requiredRoles = (item as any).roles as string[] | undefined;
-                console.log(requiredRoles)
-                console.log(userRoles)
-                const hasAccess = !requiredRoles || requiredRoles.some(r => userRoles.includes(r));
 
-                console.log('hasAccess', hasAccess, item.title);
+                // Prüfe, ob der aktuelle Menüpunkt über eigene Rollen zugänglich ist
+                const requiredRoles = (item as any).roles as string[] | undefined;
+                const hasAccessToParent = !requiredRoles || requiredRoles.some(r => userRoles.includes(r));
+
+                // Zeige den Parent an, wenn er selbst zugänglich ist oder mindestens ein Kind zugänglich ist
+                const hasAccess = hasAccessToParent || filteredChildren.length > 0;
 
                 if (!hasAccess) {
                     return null;
                 }
 
-                const result: NbMenuItem = {...item};
+                // Erstelle den Menüpunkt, setze ggf. die Kinder
+                const result: NbMenuItem = { ...item };
                 if (filteredChildren.length > 0) {
                     result.children = filteredChildren;
                 } else {
@@ -52,5 +55,6 @@ export class NavigationBarComponent implements OnInit {
             })
             .filter(item => !!item) as NbMenuItem[];
     }
+
 
 }
