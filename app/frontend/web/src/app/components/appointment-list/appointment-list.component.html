@@ -1,0 +1,33 @@
+<nb-card>
+    <div class="appointment-card" *ngFor="let event of filteredAppointments">
+        <!-- Event Details -->
+        <nb-card-body>
+            <h3 id="title">{{ event.title }}</h3>
+            <div class="event-details">
+                <div>
+                    <p><strong>Datum:</strong> {{ event.date }}</p>
+                </div>
+                <div>
+                    <p><strong>Startzeit:</strong> {{ event.startTime }} - <strong>Endzeit:</strong> {{ event.endTime }}</p>
+                    <p *ngIf="event.allDay"><strong>Ganztägig</strong></p>
+                </div>
+            </div>
+
+            <!-- Teilnehmer List mit Accordion -->
+            <nb-accordion *ngIf="event.filteredMembers.length != 0">
+                <nb-accordion-item>
+                    <nb-accordion-item-header>
+                        <strong>Teilnehmer</strong>
+                    </nb-accordion-item-header>
+                    <nb-accordion-item-body>
+                        <ul>
+                            <li *ngFor="let member of event.filteredMembers">
+                                <strong>{{ member.name }}</strong>
+                            </li>
+                        </ul>
+                    </nb-accordion-item-body>
+                </nb-accordion-item>
+            </nb-accordion>
+        </nb-card-body>
+    </div>
+</nb-card>

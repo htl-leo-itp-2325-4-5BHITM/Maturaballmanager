@@ -1,0 +1,67 @@
+nb-card {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  height: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Stil für die appointment-card innerhalb der Karte */
+.appointment-card {
+  padding: 0 20px 0 20px;
+  border-bottom: lightgray solid 1px;
+}
+
+/* Titel der Veranstaltung */
+#title {
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  color: #6cb6dd;
+}
+
+/* Flexbox für die Eventdetails */
+.event-details {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 0;
+  margin:0;
+}
+
+.event-details div {
+  flex: 1;
+}
+
+.event-details p {
+  font-size: 1rem;
+  color: #606060;
+}
+
+/* Stil für die Accordion-Liste der Teilnehmer */
+nb-accordion-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+nb-accordion-item-header {
+  background-color: #6cb6dd;
+  color: white;
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+nb-accordion-item-body {
+  background-color: #f1f3f6;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+ul li {
+  font-size: 0.8rem;
+  color: #838383;
+}
