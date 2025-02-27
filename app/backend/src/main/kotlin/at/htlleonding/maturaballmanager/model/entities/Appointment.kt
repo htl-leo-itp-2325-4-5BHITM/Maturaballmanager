@@ -18,8 +18,7 @@ data class Appointment(
     @Column(nullable = false)
     var date: LocalDate,
 
-    @Column(nullable = false)
-    var startTime: LocalTime,
+    var startTime: LocalTime? = null,
 
     var endTime: LocalTime? = null,
 
@@ -37,7 +36,7 @@ data class Appointment(
     constructor() : this(
         name = "",
         date = LocalDate.now(),
-        startTime = LocalTime.now(),
+        startTime = null,
         creator = TeamMember()
     )
 }

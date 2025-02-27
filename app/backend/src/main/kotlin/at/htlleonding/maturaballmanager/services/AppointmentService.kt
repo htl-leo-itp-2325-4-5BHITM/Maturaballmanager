@@ -23,6 +23,20 @@ class AppointmentService {
         }
     }
 
+    fun getAppointmentsForDate(keycloakId: String, date: LocalDate, roles: List<String>): Uni<List<Appointment>> {
+        return appointmentRepository.list("date", date).onItem().transform { appointments ->
+            if (roles.contains("supervisor") || roles.contains("management")) {
+                appointments
+            } else {
+                appointments.filter { appointment ->
+                    appointment.members.isEmpty() ||
+                            appointment.members.any { it.keycloakId == keycloakId } ||
+                            appointment.creator.keycloakId == keycloakId
+                }
+            }
+        }
+    }
+
     fun createAppointment(appointment: Appointment): Uni<Appointment> {
         return appointmentRepository.persist(appointment)
     }
@@ -42,19 +56,5 @@ class AppointmentService {
 
     fun deleteAppointment(appointment: Appointment): Uni<Void> {
         return appointmentRepository.delete(appointment)
-    }
-
-    fun getAppointmentsForDate(keycloakId: String, date: LocalDate, roles: List<String>): Uni<List<Appointment>> {
-        return appointmentRepository.list("date", date).onItem().transform { appointments ->
-            if (roles.contains("supervisor") || roles.contains("management")) {
-                appointments
-            } else {
-                appointments.filter { appointment ->
-                    appointment.members.isEmpty() ||
-                            appointment.members.any { it.keycloakId == keycloakId } ||
-                            appointment.creator.keycloakId == keycloakId
-                }
-            }
-        }
     }
 }

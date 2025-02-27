@@ -5,8 +5,8 @@ import at.htlleonding.maturaballmanager.model.Address
 import at.htlleonding.maturaballmanager.model.dtos.*
 import at.htlleonding.maturaballmanager.model.entities.*
 
-fun Appointment.toDTO(): AppointmentDTO {
-    return AppointmentDTO(
+fun Appointment.toDTO(): AppointmentResponse {
+    return AppointmentResponse(
         id = this.id,
         name = this.name,
         date = this.date,

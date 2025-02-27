@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {ContactPerson} from "../model/contactperson";
 import {environment} from "../../environments/environment";
-import {Appointment} from "../model/appointment";
+import {AppointmentRequest, AppointmentResponse} from "../model/appointment";
 
 @Injectable({
     providedIn: 'root'
@@ -21,28 +21,28 @@ export class AppointmentService {
     constructor(private http: HttpClient) {
     }
 
-    getAppointments(): Observable<Appointment[]> {
-        return this.http.get<Appointment[]>(`${this.baseUrl}`);
+    getAppointments(): Observable<AppointmentResponse[]> {
+        return this.http.get<AppointmentResponse[]>(`${this.baseUrl}`);
     }
 
-    getAppointmentsForDate(date: string, keycloakId: string, roles: string[]): Observable<Appointment[]> {
+    getAppointmentsForDate(date: string, keycloakId: string, roles: string[]): Observable<AppointmentResponse[]> {
         const params = new HttpParams()
             .set('date', date)
             .set('keycloakId', keycloakId)
             .set('roles', roles.join(','));
 
-        return this.http.get<Appointment[]>(`${this.baseUrl}/byDate`, {
+        return this.http.get<AppointmentResponse[]>(`${this.baseUrl}/byDate`, {
             ...this.httpOptions,
             params: params
         });
     }
 
-    createAppointment(appointment: Appointment): Observable<Appointment> {
-        return this.http.post<Appointment>(`${this.baseUrl}`, appointment, this.httpOptions);
+    createAppointment(appointment: AppointmentRequest): Observable<AppointmentRequest> {
+        return this.http.post<AppointmentRequest>(`${this.baseUrl}`, appointment, this.httpOptions);
     }
 
-    updateAppointment(id: number, updatedAppointment: Appointment): Observable<Appointment> {
-        return this.http.put<Appointment>(`${this.baseUrl}/${id}`, updatedAppointment, this.httpOptions);
+    updateAppointment(id: number, updatedAppointment: AppointmentRequest): Observable<AppointmentRequest> {
+        return this.http.put<AppointmentRequest>(`${this.baseUrl}/${id}`, updatedAppointment, this.httpOptions);
     }
 
     deleteAppointment(id: number): Observable<void> {

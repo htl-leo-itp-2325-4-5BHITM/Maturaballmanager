@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     NbButtonModule,
     NbCardModule,
@@ -9,8 +11,8 @@ import {
     NbInputModule,
 } from '@nebular/theme';
 import { DetailedTeamMemberDTO, UserManagementService } from '../../services/user-management.service';
-import {Appointment} from "../../model/appointment";
-import {AppointmentService} from "../../services/appointment.service";
+import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentRequest } from '../../model/appointment';
 
 interface Member {
     id: number;
@@ -27,6 +29,7 @@ interface Member {
     imports: [
         DatePipe,
         FormsModule,
+        ReactiveFormsModule,
         NbButtonModule,
         NbCardModule,
         NbFormFieldModule,
@@ -41,21 +44,21 @@ interface Member {
 export class AppointmentFormComponent implements OnInit, OnChanges {
     @Input() date: Date = new Date();
 
-    eventTitle: string = '';
-    eventDate: string = '';
-    startTime: string = '';
-    endTime: string = '';
-    allDay: boolean = false;
+    appointmentForm!: FormGroup;
     filteredMembers: Member[] = [];
-    selectedMembers: Member[] = []; // Hier speichern wir die ausgewählten Mitglieder
-
-    timeError: boolean = false;
+    selectedMembers: Member[] = [];
     searchQuery: string = '';
+    timeError: boolean = false;
 
-    constructor(private userService: UserManagementService, private appointmentService: AppointmentService
+    constructor(
+        private fb: FormBuilder,
+        private userService: UserManagementService,
+        private appointmentService: AppointmentService,
+        private router: Router
     ) {}
 
     ngOnInit() {
+        this.initForm();
         this.updateEventDate();
     }
 
@@ -65,9 +68,20 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
         }
     }
 
+    private initForm() {
+        this.appointmentForm = this.fb.group({
+            title: ['', Validators.required],
+            date: [''],
+            allDay: [false],
+            startTime: [''],
+            endTime: ['']
+        });
+    }
+
     private updateEventDate() {
         const localDate = new Date(this.date);
-        this.eventDate = localDate.toLocaleDateString('en-CA');
+        const formatted = localDate.toLocaleDateString('en-CA');
+        this.appointmentForm.get('date')?.setValue(formatted);
     }
 
     filterMembers(query: string) {
@@ -81,10 +95,11 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     onSelect(member: Member) {
-        this.selectedMembers.push(member); // Füge das Mitglied zu den ausgewählten Mitgliedern hinzu
-        this.searchQuery = ''; // Leere das Suchfeld nach Auswahl
-        this.filteredMembers = []; // Leere die Filterergebnisse
-        console.log(this.selectedMembers);
+        if (!this.selectedMembers.some(m => m.id === member.id)) {
+            this.selectedMembers.push(member);
+        }
+        this.searchQuery = '';
+        this.filteredMembers = [];
     }
 
     dtoToMember(dto: DetailedTeamMemberDTO): Member {
@@ -108,29 +123,35 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     addEvent() {
-        if (this.endTime && new Date(this.endTime) < new Date(this.startTime)) {
-            this.timeError = true;
-            return;
+        const formValue = this.appointmentForm.value;
+        if (!formValue.allDay && formValue.startTime && formValue.endTime) {
+            if (new Date(`1970-01-01T${formValue.endTime}:00`) < new Date(`1970-01-01T${formValue.startTime}:00`)) {
+                this.timeError = true;
+                return;
+            }
         }
         this.timeError = false;
 
-        const newAppointment: Appointment = {
-            name: this.eventTitle,
-            date: this.eventDate,
-            startTime: this.startTime,
-            endTime: this.endTime,
-            creator: { keycloakId: 'example-keycloak-id' },
-            members: this.selectedMembers.map(member => ({ keycloakId: member.keycloakId }))
+        const start = formValue.allDay ? null : formValue.startTime;
+        const end = formValue.allDay ? null : formValue.endTime;
+
+        const newAppointment: AppointmentRequest = {
+            name: formValue.title,
+            date: formValue.date,
+            startTime: start,
+            endTime: end,
+            creator: { id: -1 },
+            members: this.selectedMembers.map(member => ({ id: member.id }))
         };
 
         this.appointmentService.createAppointment(newAppointment).subscribe(
             (createdAppointment) => {
                 console.log('Termin erfolgreich gespeichert:', createdAppointment);
+                this.router.navigate(['/appointments']);
             },
             (error) => {
                 console.error('Fehler beim Speichern des Termins:', error);
             }
         );
     }
-
 }

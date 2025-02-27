@@ -1,19 +1,31 @@
-export interface Appointment {
-    id: number;
+export interface AppointmentRequest {
+    id?: number;
+    name: string;
+    date: string;
+    startTime?: string;
+    endTime?: string;
+    creator: {
+        id: number
+    };
+    members: {
+        id: number
+    }[];
+}
+
+export interface AppointmentResponse {
+    id?: number;
     name: string;
     date: string;
     startTime: string;
-    endTime?: string | null;
-    creator: TeamMemberDTO;
-    members: TeamMemberDTO[];
-}
-
-export interface TeamMemberDTO {
-    keycloakId: string;
-    username: string;
-    email: string;
-    firstName?: string;
-    lastName?: string;
-    realmRoles: string[];
-    note?: string;
+    endTime: string;
+    creator: {
+        id: number,
+        firstName: string,
+        lastName: string
+    };
+    members: {
+        id: number,
+        firstName: string,
+        lastName: string
+    }[];
 }
