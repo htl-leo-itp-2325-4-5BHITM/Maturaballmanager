@@ -33,9 +33,7 @@ data class Appointment(
         inverseJoinColumns = [JoinColumn(name = "team_member_id")]
     )
     var members: MutableList<TeamMember> = mutableListOf()
-
 ) : PanacheEntityBase() {
-    // No-Args Konstruktor für JPA
     constructor() : this(
         name = "",
         date = LocalDate.now(),

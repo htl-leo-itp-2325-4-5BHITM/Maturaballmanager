@@ -17,11 +17,11 @@ fun Appointment.toDTO(): AppointmentDTO {
             firstName = this.creator.firstName,
             lastName = this.creator.lastName
         ),
-        members = this.members.map { member ->
+        members = this.members.map {
             SmallTeamMemberDTO(
-                id = member.id,
-                firstName = member.firstName,
-                lastName = member.lastName
+                id = it.id,
+                firstName = it.firstName,
+                lastName = it.lastName
             )
         }
     )
