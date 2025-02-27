@@ -9,6 +9,8 @@ import {
     NbInputModule,
 } from '@nebular/theme';
 import { DetailedTeamMemberDTO, UserManagementService } from '../../services/user-management.service';
+import {Appointment} from "../../model/appointment";
+import {AppointmentService} from "../../services/appointment.service";
 
 interface Member {
     id: number;
@@ -45,14 +47,15 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     endTime: string = '';
     allDay: boolean = false;
     filteredMembers: Member[] = [];
+    selectedMembers: Member[] = []; // Hier speichern wir die ausgewählten Mitglieder
 
     timeError: boolean = false;
     searchQuery: string = '';
 
-    constructor(private userService: UserManagementService) {}
+    constructor(private userService: UserManagementService, private appointmentService: AppointmentService
+    ) {}
 
     ngOnInit() {
-        // Setzt initial das Datum
         this.updateEventDate();
     }
 
@@ -63,8 +66,8 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     private updateEventDate() {
-            const localDate = new Date(this.date);
-            this.eventDate = localDate.toLocaleDateString('en-CA');
+        const localDate = new Date(this.date);
+        this.eventDate = localDate.toLocaleDateString('en-CA');
     }
 
     filterMembers(query: string) {
@@ -78,8 +81,10 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     onSelect(member: Member) {
-        this.searchQuery = member.name;
-        this.filteredMembers = [];
+        this.selectedMembers.push(member); // Füge das Mitglied zu den ausgewählten Mitgliedern hinzu
+        this.searchQuery = ''; // Leere das Suchfeld nach Auswahl
+        this.filteredMembers = []; // Leere die Filterergebnisse
+        console.log(this.selectedMembers);
     }
 
     dtoToMember(dto: DetailedTeamMemberDTO): Member {
@@ -95,7 +100,37 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
         };
     }
 
-    addEvent() {
-        // Logik zum Speichern des Termins
+    removeMember(member: Member) {
+        const index = this.selectedMembers.indexOf(member);
+        if (index !== -1) {
+            this.selectedMembers.splice(index, 1);
+        }
     }
+
+    addEvent() {
+        if (this.endTime && new Date(this.endTime) < new Date(this.startTime)) {
+            this.timeError = true;
+            return;
+        }
+        this.timeError = false;
+
+        const newAppointment: Appointment = {
+            name: this.eventTitle,
+            date: this.eventDate,
+            startTime: this.startTime,
+            endTime: this.endTime,
+            creator: { keycloakId: 'example-keycloak-id' },
+            members: this.selectedMembers.map(member => ({ keycloakId: member.keycloakId }))
+        };
+
+        this.appointmentService.createAppointment(newAppointment).subscribe(
+            (createdAppointment) => {
+                console.log('Termin erfolgreich gespeichert:', createdAppointment);
+            },
+            (error) => {
+                console.error('Fehler beim Speichern des Termins:', error);
+            }
+        );
+    }
+
 }
