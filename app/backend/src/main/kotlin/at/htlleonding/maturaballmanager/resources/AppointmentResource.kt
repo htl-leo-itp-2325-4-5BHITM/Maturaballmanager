@@ -47,7 +47,7 @@ class AppointmentResource {
         @Context securityContext: SecurityContext,
         @Context jwt: JsonWebToken
     ): Uni<List<AppointmentDTO>> {
-        val keycloakId = securityContext.userPrincipal?.name
+        val keycloakId = jwt.subject
             ?: throw NotAuthorizedException("Kein gültiger Nutzer")
         val parsedDate = try {
             LocalDate.parse(date)
@@ -60,7 +60,7 @@ class AppointmentResource {
                 appointments.map { it.toDTO() }
             }
     }
-    
+
     /**
      * POST: Erstellt einen neuen Termin.
      * Validiert, dass falls eine Endzeit gesetzt wurde, diese nicht vor der Startzeit liegt.
@@ -68,9 +68,10 @@ class AppointmentResource {
     @POST
     fun createAppointment(
         appointmentDTO: AppointmentDTO,
-        @Context securityContext: SecurityContext
+        @Context securityContext: SecurityContext,
+        @Context jwt: JsonWebToken
     ): Uni<Response> {
-        val keycloakId = securityContext.userPrincipal?.name
+        val keycloakId = jwt.subject
             ?: throw NotAuthorizedException("Kein gültiger Nutzer")
 
         return teamMemberRepository.find("keycloakId", keycloakId).firstResult<TeamMember>()
@@ -115,7 +116,7 @@ class AppointmentResource {
         @Context securityContext: SecurityContext,
         @Context jwt: JsonWebToken
     ): Uni<Response> {
-        val keycloakId = securityContext.userPrincipal?.name
+        val keycloakId = jwt.subject
             ?: throw NotAuthorizedException("Kein gültiger Nutzer")
         return appointmentService.findById(id)
             .onItem().ifNull().failWith {
