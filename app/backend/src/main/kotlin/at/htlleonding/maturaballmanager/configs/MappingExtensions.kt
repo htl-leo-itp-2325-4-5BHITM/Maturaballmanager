@@ -5,6 +5,28 @@ import at.htlleonding.maturaballmanager.model.Address
 import at.htlleonding.maturaballmanager.model.dtos.*
 import at.htlleonding.maturaballmanager.model.entities.*
 
+fun Appointment.toDTO(): AppointmentDTO {
+    return AppointmentDTO(
+        id = this.id,
+        name = this.name,
+        date = this.date,
+        startTime = this.startTime,
+        endTime = this.endTime,
+        creator = SmallTeamMemberDTO(
+            id = this.creator.id,
+            firstName = this.creator.firstName,
+            lastName = this.creator.lastName
+        ),
+        members = this.members.map { member ->
+            SmallTeamMemberDTO(
+                id = member.id,
+                firstName = member.firstName,
+                lastName = member.lastName
+            )
+        }
+    )
+}
+
 fun Invoice.toDTO(): InvoiceDTO {
     val cp = this.contactPerson
     val contactPersonFullName = if (cp != null) {
