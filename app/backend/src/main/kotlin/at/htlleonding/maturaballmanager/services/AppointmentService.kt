@@ -5,6 +5,7 @@ import at.htlleonding.maturaballmanager.repositories.AppointmentRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import java.time.LocalDate
 
 @ApplicationScoped
 class AppointmentService {
@@ -42,4 +43,15 @@ class AppointmentService {
     fun deleteAppointment(appointment: Appointment): Uni<Void> {
         return appointmentRepository.delete(appointment)
     }
+
+    fun getAppointmentsForDate(keycloakId: String, date: LocalDate): Uni<List<Appointment>> {
+        return appointmentRepository.list("date", date).onItem().transform { appointments ->
+            appointments.filter { appointment ->
+                appointment.members.isEmpty() ||
+                        appointment.members.any { it.keycloakId == keycloakId } ||
+                        appointment.creator.keycloakId == keycloakId
+            }
+        }
+    }
+
 }

@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.SecurityContext
 import org.eclipse.microprofile.jwt.Claim
+import java.time.LocalDate
 
 @Path("/appointments")
 @Authenticated
@@ -41,6 +42,26 @@ class AppointmentResource {
                 appointments.map { it.toDTO() }
             }
     }
+
+    @GET
+    @Path("/byDate")
+    fun getAppointmentsForDate(
+        @QueryParam("date") date: String,
+        @Context securityContext: SecurityContext
+    ): Uni<List<AppointmentDTO>> {
+        val keycloakId = securityContext.userPrincipal?.name
+            ?: throw NotAuthorizedException("Kein gültiger Nutzer")
+        val parsedDate = try {
+            LocalDate.parse(date)
+        } catch (e: Exception) {
+            throw BadRequestException("Ungültiges Datumsformat. Erwartet wird yyyy-MM-dd")
+        }
+        return appointmentService.getAppointmentsForDate(keycloakId, parsedDate)
+            .onItem().transform { appointments ->
+                appointments.map { it.toDTO() }
+            }
+    }
+
 
     /**
      * POST: Erstellt einen neuen Termin.
