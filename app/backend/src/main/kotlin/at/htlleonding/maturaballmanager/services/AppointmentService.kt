@@ -44,14 +44,17 @@ class AppointmentService {
         return appointmentRepository.delete(appointment)
     }
 
-    fun getAppointmentsForDate(keycloakId: String, date: LocalDate): Uni<List<Appointment>> {
+    fun getAppointmentsForDate(keycloakId: String, date: LocalDate, roles: List<String>): Uni<List<Appointment>> {
         return appointmentRepository.list("date", date).onItem().transform { appointments ->
-            appointments.filter { appointment ->
-                appointment.members.isEmpty() ||
-                        appointment.members.any { it.keycloakId == keycloakId } ||
-                        appointment.creator.keycloakId == keycloakId
+            if (roles.contains("supervisor") || roles.contains("management")) {
+                appointments
+            } else {
+                appointments.filter { appointment ->
+                    appointment.members.isEmpty() ||
+                            appointment.members.any { it.keycloakId == keycloakId } ||
+                            appointment.creator.keycloakId == keycloakId
+                }
             }
         }
     }
-
 }

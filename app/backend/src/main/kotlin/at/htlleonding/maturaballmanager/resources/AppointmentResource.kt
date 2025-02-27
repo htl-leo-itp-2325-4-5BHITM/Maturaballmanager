@@ -47,20 +47,37 @@ class AppointmentResource {
     @Path("/byDate")
     fun getAppointmentsForDate(
         @QueryParam("date") date: String,
-        @Context securityContext: SecurityContext
+        @Context securityContext: SecurityContext,
+        @Context jwt: JsonWebToken
     ): Uni<List<AppointmentDTO>> {
         val keycloakId = securityContext.userPrincipal?.name
             ?: throw NotAuthorizedException("Kein gültiger Nutzer")
+
         val parsedDate = try {
             LocalDate.parse(date)
         } catch (e: Exception) {
             throw BadRequestException("Ungültiges Datumsformat. Erwartet wird yyyy-MM-dd")
         }
-        return appointmentService.getAppointmentsForDate(keycloakId, parsedDate)
+
+        val roles = extractClientRoles(jwt)
+
+        return appointmentService.getAppointmentsForDate(keycloakId, parsedDate, roles)
             .onItem().transform { appointments ->
                 appointments.map { it.toDTO() }
             }
     }
+
+    /**
+     * Extrahiert die Client Roles aus dem JWT.
+     * Erwartet den Claim "resource_access" mit einem Objekt, das für den Client "leoball" die Rollen enthält.
+     */
+    private fun extractClientRoles(jwt: JsonWebToken): List<String> {
+        val resourceAccess = jwt.claim<Claim>("resource_access")?.get() as? Map<*, *>
+        val leoballAccess = resourceAccess?.get("leoball") as? Map<*, *>
+        val roles = leoballAccess?.get("roles") as? List<*> ?: emptyList<Any>()
+        return roles.filterIsInstance<String>()
+    }
+
 
 
     /**
