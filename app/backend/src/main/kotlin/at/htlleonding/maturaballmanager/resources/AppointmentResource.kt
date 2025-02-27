@@ -61,6 +61,15 @@ class AppointmentResource {
             }
     }
 
+<<<<<<< HEAD
+=======
+
+
+    /**
+     * POST: Erstellt einen neuen Termin.
+     * Validiert, dass falls eine Endzeit gesetzt wurde, diese nicht vor der Startzeit liegt.
+     */
+>>>>>>> 9fbc17db (chane)
     @POST
     fun createAppointment(
         appointmentDTO: AppointmentDTO,
