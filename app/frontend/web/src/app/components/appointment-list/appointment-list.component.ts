@@ -1,8 +1,6 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
-import { NbAccordionModule, NbCardModule } from '@nebular/theme';
-import {AppointmentService} from "../../services/appointment.service";
-import {AppointmentRequest, AppointmentResponse} from "../../model/appointment";
+import { Component, Input, OnInit } from '@angular/core';
+import { NgForOf, NgIf } from "@angular/common";
+import { NbAccordionModule, NbCardModule } from "@nebular/theme";
 
 interface Member {
   id: number;
@@ -11,6 +9,15 @@ interface Member {
   email: string;
   roles: string[];
   lastLogin: string;
+}
+
+interface Appointment {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  allDay: boolean;
+  filteredMembers: Member[];
 }
 
 @Component({
@@ -25,33 +32,95 @@ interface Member {
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.scss']
 })
-export class AppointmentListComponent implements OnInit, OnChanges {
+export class AppointmentListComponent implements OnInit {
   @Input() date!: Date;
 
-  appointmentList: AppointmentResponse[] = [];
+  members: Member[] = [
+    {
+      id: 1,
+      keycloakId: 'user1',
+      name: 'Max Mustermann',
+      email: 'max.mustermann@example.com',
+      roles: ['Admin', 'Manager'],
+      lastLogin: '2025-02-25T10:30:00Z'
+    },
+    {
+      id: 2,
+      keycloakId: 'user2',
+      name: 'Erika Mustermann',
+      email: 'erika.mustermann@example.com',
+      roles: ['User'],
+      lastLogin: '2025-02-24T14:00:00Z'
+    },
+    {
+      id: 3,
+      keycloakId: 'user3',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      roles: ['User', 'Manager'],
+      lastLogin: '2025-02-26T08:00:00Z'
+    },
+    {
+      id: 4,
+      keycloakId: 'user4',
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      roles: ['Admin'],
+      lastLogin: '2025-02-27T09:45:00Z'
+    }
+  ];
 
-  filteredAppointments: AppointmentResponse[] = [];
+  // Beispiel Termine
+  terminListe: Appointment[] = [
+    {
+      title: 'Team Meeting',
+      date: '2025-02-27',
+      startTime: '09:00',
+      endTime: '10:00',
+      allDay: false,
+      filteredMembers: []
+    },
+    {
+      title: 'Project Presentation',
+      date: '2025-02-12',
+      startTime: '14:00',
+      endTime: '15:00',
+      allDay: false,
+      filteredMembers: [this.members[2], this.members[3]]
+    },
+    {
+      title: 'All Day Workshop',
+      date: '2025-03-15',
+      startTime: '',
+      endTime: '',
+      allDay: true,
+      filteredMembers: [this.members[0], this.members[2]]
+    }
+  ];
 
-  constructor(private appointmentService: AppointmentService) {
-  }
+  filteredAppointments: Appointment[] = [];
 
   ngOnInit() {
     this.filterAppointmentsByDate();
-    this.appointmentService.getAppointments().subscribe(appointments => {
-        this.appointmentList = appointments;
-        this.filterAppointmentsByDate();
-    })
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['date']) {
-      this.filterAppointmentsByDate();
-    }
+  ngOnChanges() {
+    this.filterAppointmentsByDate();
   }
 
   private filterAppointmentsByDate() {
-    const localDate = new Date(this.date);
-    const selectedDate = localDate.toLocaleDateString('en-CA');
-    this.filteredAppointments = this.appointmentList.filter(appointment => appointment.date === selectedDate);
+    const selectedDate = this.getDateWithoutTime(this.date);
+
+    this.filteredAppointments = this.terminListe.filter(appointment => {
+      const appointmentDate = this.getDateWithoutTime(new Date(appointment.date));
+      return selectedDate === appointmentDate;
+    });
+  }
+
+  private getDateWithoutTime(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

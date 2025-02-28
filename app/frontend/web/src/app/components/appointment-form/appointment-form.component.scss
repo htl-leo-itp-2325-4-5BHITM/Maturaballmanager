@@ -17,11 +17,12 @@ nb-card {
 .selected-members {
   border: 1px solid #6cb6dd;
   padding: 5px;
-  height: 20vh;
+  max-height: 15vh;
+  margin-bottom: 0.8em;
   overflow-y: scroll;
 }
 
-#member-box{
+.selected-members{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -37,7 +38,7 @@ nb-card {
 }
 
 .selected-members .member-name {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .selected-members button {
@@ -48,7 +49,7 @@ nb-card {
 }
 
 #search-group{
-  height: 4em;
+  height: 3em;
 }
 
 nb-card-body {
