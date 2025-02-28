@@ -72,6 +72,13 @@ class AppointmentResource {
             }
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * POST: Erstellt einen neuen Termin.
+     * Validiert, dass falls eine Endzeit gesetzt wurde, diese nicht vor der Startzeit liegt.
+     */
+>>>>>>> a6ee574f (changes)
     @POST
     fun createAppointment(
         appointmentRequest: AppointmentRequest,
