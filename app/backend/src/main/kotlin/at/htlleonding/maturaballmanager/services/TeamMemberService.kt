@@ -31,6 +31,14 @@ class TeamMemberService {
     @Inject
     lateinit var repository: TeamMemberRepository
 
+    fun findById(id: String): Uni<TeamMember> {
+        return repository.find("keycloakId", id).firstResult()
+    }
+
+    fun findById(id: Long): Uni<TeamMember> {
+        return repository.find("id", id).firstResult()
+    }
+
     /**
      * Adds an existing TeamMember by assigning roles in Keycloak and creating a local entity.
      */

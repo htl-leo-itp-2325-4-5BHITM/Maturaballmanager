@@ -1,123 +1,42 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgForOf, NgIf } from "@angular/common";
-import { NbAccordionModule, NbCardModule } from "@nebular/theme";
-
-interface Member {
-  id: number;
-  keycloakId: string;
-  name: string;
-  email: string;
-  roles: string[];
-  lastLogin: string;
-}
-
-interface Appointment {
-  title: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  allDay: boolean;
-  filteredMembers: Member[];
-}
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { NgForOf, NgIf } from '@angular/common';
+import { NbCardModule, NbAccordionModule } from '@nebular/theme';
+import { AppointmentResponse } from '../../model/appointment';
 
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [
-    NgForOf,
-    NgIf,
-    NbCardModule,
-    NbAccordionModule
-  ],
+  imports: [NgForOf, NgIf, NbCardModule, NbAccordionModule],
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.scss']
 })
-export class AppointmentListComponent implements OnInit {
+export class AppointmentListComponent implements OnInit, OnChanges {
+  @Input() appointments: AppointmentResponse[] = [];
   @Input() date!: Date;
 
-  members: Member[] = [
-    {
-      id: 1,
-      keycloakId: 'user1',
-      name: 'Max Mustermann',
-      email: 'max.mustermann@example.com',
-      roles: ['Admin', 'Manager'],
-      lastLogin: '2025-02-25T10:30:00Z'
-    },
-    {
-      id: 2,
-      keycloakId: 'user2',
-      name: 'Erika Mustermann',
-      email: 'erika.mustermann@example.com',
-      roles: ['User'],
-      lastLogin: '2025-02-24T14:00:00Z'
-    },
-    {
-      id: 3,
-      keycloakId: 'user3',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      roles: ['User', 'Manager'],
-      lastLogin: '2025-02-26T08:00:00Z'
-    },
-    {
-      id: 4,
-      keycloakId: 'user4',
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      roles: ['Admin'],
-      lastLogin: '2025-02-27T09:45:00Z'
-    }
-  ];
-
-  // Beispiel Termine
-  terminListe: Appointment[] = [
-    {
-      title: 'Team Meeting',
-      date: '2025-02-27',
-      startTime: '09:00',
-      endTime: '10:00',
-      allDay: false,
-      filteredMembers: []
-    },
-    {
-      title: 'Project Presentation',
-      date: '2025-02-12',
-      startTime: '14:00',
-      endTime: '15:00',
-      allDay: false,
-      filteredMembers: [this.members[2], this.members[3]]
-    },
-    {
-      title: 'All Day Workshop',
-      date: '2025-03-15',
-      startTime: '',
-      endTime: '',
-      allDay: true,
-      filteredMembers: [this.members[0], this.members[2]]
-    }
-  ];
-
-  filteredAppointments: Appointment[] = [];
+  filteredAppointments: AppointmentResponse[] = [];
 
   ngOnInit() {
-    this.filterAppointmentsByDate();
+    this.filterAppointments();
   }
 
-  ngOnChanges() {
-    this.filterAppointmentsByDate();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['appointments'] || changes['date']) {
+      this.filterAppointments();
+    }
   }
 
-  private filterAppointmentsByDate() {
-    const selectedDate = this.getDateWithoutTime(this.date);
-
-    this.filteredAppointments = this.terminListe.filter(appointment => {
-      const appointmentDate = this.getDateWithoutTime(new Date(appointment.date));
-      return selectedDate === appointmentDate;
-    });
+  private filterAppointments() {
+    if (!this.appointments || !this.date) {
+      this.filteredAppointments = [];
+      return;
+    }
+    const selectedDateStr = this.getDateString(this.date);
+    this.filteredAppointments = this.appointments.filter(appointment => appointment.date === selectedDateStr);
   }
 
-  private getDateWithoutTime(date: Date): string {
+  private getDateString(date: Date): string {
+    // Format yyyy-MM-dd
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');

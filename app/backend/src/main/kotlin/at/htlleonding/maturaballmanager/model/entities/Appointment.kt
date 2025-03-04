@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.model.entities
 
+import at.htlleonding.maturaballmanager.model.dtos.AppointmentResponse
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.LocalDate

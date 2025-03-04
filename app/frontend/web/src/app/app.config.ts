@@ -34,10 +34,6 @@ const routes: Route[] = [
   { path: '', redirectTo: '/login', pathMatch: 'full', data: { roles: [] } },
   { path: 'login', component: LoginComponent, data: { roles: [] } },
   { path: 'dashboard', component: DashboardViewComponent, canActivate: [authGuard], data: { roles: [] } },
-  { path: 'organisation', data: {roles: ["management", "supervisor","organization"]}, children: [
-      { path: 'todo', component: DashboardViewComponent, canActivate: [authGuard] },
-      { path: 'appointments', component: AppointmentsComponent, canActivate: [authGuard] }
-    ]},
   { path: 'sponsoring', data: {roles: ["supervisor", "sponsoring", "management", "organization"]},children: [
       { path: 'companies', component: CompanyManagementComponent, canActivate: [authGuard] },
       { path: 'benefits', component: BenefitManagementComponent, canActivate: [authGuard] },
@@ -49,6 +45,13 @@ const routes: Route[] = [
     ]},
   //{ path: '**', redirectTo: '/dashboard' },
 ];
+
+/*
+{ path: 'organisation', data: {roles: ["management", "supervisor","organization"]}, children: [
+      { path: 'todo', component: DashboardViewComponent, canActivate: [authGuard] },
+      { path: 'appointments', component: AppointmentsComponent, canActivate: [authGuard] }
+    ]},
+ */
 
 export const appConfig: ApplicationConfig = {
   providers: [

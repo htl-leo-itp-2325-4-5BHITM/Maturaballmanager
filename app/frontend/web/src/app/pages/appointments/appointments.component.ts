@@ -1,30 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   NbButtonModule,
   NbCalendarModule,
-  NbCardModule, NbCheckboxModule, NbDialogRef, NbDialogService,
+  NbCardModule,
+  NbCheckboxModule,
+  NbDialogService,
   NbFormFieldModule,
   NbIconModule,
   NbInputModule
 } from "@nebular/theme";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {AppointmentFormComponent} from "../../components/appointment-form/appointment-form.component";
-import {
-  UserManagementDialogComponent
-} from "../../components/dialogs/user-management-dialog/user-management-dialog.component";
-import {UserManagementService} from "../../services/user-management.service";
-import {AppointmentListComponent} from "../../components/appointment-list/appointment-list.component";
-
-interface Member {
-  id: number;
-  keycloakId: string;
-  name: string;
-  email: string;
-  roles: string[];
-  lastLogin: string;
-}
-
+import { DatePipe, NgForOf, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AppointmentFormComponent } from "../../components/appointment-form/appointment-form.component";
+import { AppointmentListComponent } from "../../components/appointment-list/appointment-list.component";
+import { AppointmentResponse } from '../../model/appointment';
+import { AppointmentService } from '../../services/appointment.service';
 
 @Component({
   selector: 'app-appointments',
@@ -45,40 +35,43 @@ interface Member {
     AppointmentListComponent
   ],
   templateUrl: './appointments.component.html',
-  styleUrl: './appointments.component.scss'
+  styleUrls: ['./appointments.component.scss']
 })
-export class AppointmentsComponent {
+export class AppointmentsComponent implements OnInit {
   date: Date = new Date();
+  eventDate: string = this.date.toISOString().split('T')[0]; // yyyy-MM-dd
 
-  eventTitle: string = '';
-  eventDate: string = this.date.toISOString().split('T')[0]; // Initialwert für Datum
-  startTime: string = '';
-  endTime: string = '';
-  allDay: boolean = false;
-  filteredMembers: Member[] = [];
-
-  timeError: boolean = false;
   openForm: boolean = false;
+  appointments: AppointmentResponse[] = [];
 
   constructor(
-      private dialogService: NbDialogService,
+      private appointmentService: AppointmentService,
+      private dialogService: NbDialogService
   ) {}
 
-  setOpenForm(){
-    this.openForm = true;
-  }
-
-  addEvent() {
-    this.eventTitle = '';
-    this.startTime = '';
-    this.endTime = '';
+  ngOnInit() {
+    this.loadAppointments();
   }
 
   onDateChange(newDate: Date) {
     this.date = newDate;
     this.eventDate = newDate.toISOString().split('T')[0];
-    console.log(this.date);
+    this.loadAppointments();
   }
 
-  protected readonly open = open;
+  setOpenForm() {
+    this.openForm = true;
+  }
+
+  private loadAppointments() {
+    this.appointmentService.getAppointmentsForDate(this.eventDate)
+        .subscribe({
+          next: (appointments) => {
+            this.appointments = appointments;
+          },
+          error: (error) => {
+            console.error('Fehler beim Laden der Termine', error);
+          }
+        });
+  }
 }

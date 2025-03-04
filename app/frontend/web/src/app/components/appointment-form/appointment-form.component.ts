@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { DatePipe, NgForOf, NgIf } from '@angular/common';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     NbButtonModule,
@@ -8,7 +8,9 @@ import {
     NbIconModule,
     NbInputModule,
 } from '@nebular/theme';
-import { DetailedTeamMemberDTO, UserManagementService } from '../../services/user-management.service';
+import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentRequest } from '../../model/appointment';
+import { UserManagementService, DetailedTeamMemberDTO } from '../../services/user-management.service';
 
 interface Member {
     id: number;
@@ -30,8 +32,8 @@ interface Member {
         NbFormFieldModule,
         NbIconModule,
         NbInputModule,
-        NgIf,
         NgForOf,
+        NgIf,
     ],
     styleUrls: ['./appointment-form.component.scss'],
     templateUrl: './appointment-form.component.html',
@@ -45,12 +47,15 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     endTime: string = '';
     allDay: boolean = false;
     filteredMembers: Member[] = [];
-    selectedMembers: Member[] = []; // Hier speichern wir die ausgewählten Mitglieder
+    selectedMembers: Member[] = [];
 
-    timeError: boolean = false;
     searchQuery: string = '';
+    timeError: boolean = false; // Neu hinzugefügt, um den Fehler im Template zu beheben
 
-    constructor(private userService: UserManagementService) {}
+    constructor(
+        private userService: UserManagementService,
+        private appointmentService: AppointmentService
+    ) {}
 
     ngOnInit() {
         this.updateEventDate();
@@ -64,6 +69,7 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
 
     private updateEventDate() {
         const localDate = new Date(this.date);
+        // Format yyyy-MM-dd (z. B. "2025-03-04")
         this.eventDate = localDate.toLocaleDateString('en-CA');
     }
 
@@ -78,10 +84,9 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     onSelect(member: Member) {
-        this.selectedMembers.push(member); // Füge das Mitglied zu den ausgewählten Mitgliedern hinzu
-        this.searchQuery = ''; // Leere das Suchfeld nach Auswahl
-        this.filteredMembers = []; // Leere die Filterergebnisse
-        console.log(this.selectedMembers);
+        this.selectedMembers.push(member);
+        this.searchQuery = '';
+        this.filteredMembers = [];
     }
 
     dtoToMember(dto: DetailedTeamMemberDTO): Member {
@@ -98,7 +103,6 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     removeMember(member: Member) {
-        // Entferne das Mitglied aus der Liste der ausgewählten Mitglieder
         const index = this.selectedMembers.indexOf(member);
         if (index !== -1) {
             this.selectedMembers.splice(index, 1);
@@ -106,6 +110,29 @@ export class AppointmentFormComponent implements OnInit, OnChanges {
     }
 
     addEvent() {
-        // Logik zum Speichern des Termins
+        if (!this.allDay && this.startTime && this.endTime && this.startTime >= this.endTime) {
+            this.timeError = true;
+            return;
+        }
+        this.timeError = false;
+
+        const appointment: AppointmentRequest = {
+            name: this.eventTitle,
+            date: this.eventDate, // Format: yyyy-MM-dd
+            startTime: this.allDay ? undefined : this.startTime,
+            endTime: this.allDay ? undefined : this.endTime,
+            creatorId: 123,
+            memberIds: this.selectedMembers.map(member => member.id)
+        };
+
+        this.appointmentService.createAppointment(appointment).subscribe({
+            next: (response) => {
+                console.log('Termin erstellt:', response);
+                // Optional: Formular zurücksetzen oder Liste aktualisieren
+            },
+            error: (error) => {
+                console.error('Fehler beim Erstellen des Termins', error);
+            }
+        });
     }
 }

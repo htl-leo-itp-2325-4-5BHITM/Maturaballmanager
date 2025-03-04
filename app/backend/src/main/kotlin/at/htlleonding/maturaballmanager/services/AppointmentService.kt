@@ -1,60 +1,105 @@
 package at.htlleonding.maturaballmanager.services
 
+import at.htlleonding.maturaballmanager.model.dtos.AppointmentRequest
+import at.htlleonding.maturaballmanager.model.dtos.AppointmentResponse
 import at.htlleonding.maturaballmanager.model.entities.Appointment
+import at.htlleonding.maturaballmanager.model.entities.TeamMember
 import at.htlleonding.maturaballmanager.repositories.AppointmentRepository
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.inject.Inject
-import java.time.LocalDate
+import jakarta.transaction.Transactional
 
 @ApplicationScoped
-class AppointmentService {
+class AppointmentService(
+    private val appointmentRepository: AppointmentRepository,
+    private val teamMemberService: TeamMemberService // Reaktiver Service für TeamMember
+) {
 
-    @Inject
-    lateinit var appointmentRepository: AppointmentRepository
-
-    fun getAppointments(keycloakId: String): Uni<List<Appointment>> {
+    fun getAllAppointments(): Uni<List<AppointmentResponse>> {
         return appointmentRepository.listAll().onItem().transform { appointments ->
-            appointments.filter { appointment ->
-                appointment.members.isEmpty() ||
-                        appointment.members.any { it.keycloakId == keycloakId } ||
-                        appointment.creator.keycloakId == keycloakId
-            }
+            appointments.map { it.toResponse() }
         }
     }
 
-    fun getAppointmentsForDate(keycloakId: String, date: LocalDate, roles: List<String>): Uni<List<Appointment>> {
-        return appointmentRepository.list("date", date).onItem().transform { appointments ->
-            if (roles.contains("supervisor") || roles.contains("management")) {
-                appointments
-            } else {
-                appointments.filter { appointment ->
-                    appointment.members.isEmpty() ||
-                            appointment.members.any { it.keycloakId == keycloakId } ||
-                            appointment.creator.keycloakId == keycloakId
-                }
-            }
+    @WithTransaction
+    fun getAppointmentsByDate(date: String): Uni<List<AppointmentResponse>> {
+        val localDate = java.time.LocalDate.parse(date)
+        return appointmentRepository.list("date", localDate).onItem().transform { appointments ->
+            appointments.map { it.toResponse() }
         }
     }
 
-    fun createAppointment(appointment: Appointment): Uni<Appointment> {
-        return appointmentRepository.persist(appointment)
+    @WithTransaction
+    fun createAppointment(request: AppointmentRequest): Uni<AppointmentResponse> {
+        return teamMemberService.findById( request.creatorId)
+            .onItem().transformToUni { creator: TeamMember ->
+                val appointment = Appointment(
+                    name = request.name,
+                    date = request.date,
+                    startTime = request.startTime,
+                    endTime = request.endTime,
+                    creator = creator
+                )
+
+                (
+                        if (request.memberIds.isNotEmpty())
+                            Multi.createFrom().iterable(request.memberIds)
+                                .onItem().transformToUni { teamMemberService.findById(it) }
+                                .concatenate()
+                                .collect().asList()
+                        else
+                            Uni.createFrom().item(emptyList<TeamMember>())
+                        )
+                    .onItem().transformToUni { members: List<TeamMember> ->
+                        appointment.members.addAll(members)
+                        appointmentRepository.persist(appointment)
+                            .onItem().transform { appointment.toResponse() }
+                    }
+            }
     }
 
-    fun findById(id: Long): Uni<Appointment?> {
+    @WithTransaction
+    fun updateAppointment(id: Long, request: AppointmentRequest): Uni<AppointmentResponse> {
         return appointmentRepository.findById(id)
+            .onItem().ifNotNull().transformToUni { appointment ->
+                appointment.name = request.name
+                appointment.date = request.date
+                appointment.startTime = request.startTime
+                appointment.endTime = request.endTime
+                teamMemberService.findById(request.creatorId)
+                    .onItem().transformToUni { creator: TeamMember ->
+                        appointment.creator = creator
+                        Multi.createFrom().iterable(request.memberIds)
+                            .onItem().transformToUni { memberId -> teamMemberService.findById(memberId) }
+                            .concatenate()
+                            .collect().asList()
+                            .onItem().transformToUni { members: List<TeamMember> ->
+                                appointment.members.clear()
+                                appointment.members.addAll(members)
+                                appointmentRepository.persist(appointment)
+                                    .onItem().transform { appointment.toResponse() }
+                            }
+                    }
+            }
     }
 
-    fun updateAppointment(existing: Appointment, updated: Appointment): Uni<Appointment> {
-        existing.name = updated.name
-        existing.date = updated.date
-        existing.startTime = updated.startTime
-        existing.endTime = updated.endTime
-        existing.members = updated.members
-        return appointmentRepository.persist(existing)
+    @WithTransaction
+    fun deleteAppointment(id: Long): Uni<Void> {
+        return appointmentRepository.deleteById(id)
+            .onItem().transform { null }
     }
 
-    fun deleteAppointment(appointment: Appointment): Uni<Void> {
-        return appointmentRepository.delete(appointment)
+    private fun Appointment.toResponse(): AppointmentResponse {
+        return AppointmentResponse(
+            id = this.id,
+            name = this.name,
+            date = this.date,
+            startTime = this.startTime,
+            endTime = this.endTime,
+            creator = this.creator.toSmallDTO(),
+            members = this.members.map { it.toSmallDTO() }
+        )
     }
 }

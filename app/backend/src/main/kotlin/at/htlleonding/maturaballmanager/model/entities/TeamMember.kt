@@ -1,5 +1,6 @@
 package at.htlleonding.maturaballmanager.model.entities
 
+import at.htlleonding.maturaballmanager.model.dtos.SmallTeamMemberDTO
 import at.htlleonding.maturaballmanager.repositories.PromRepository
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
 import jakarta.persistence.*
@@ -45,4 +46,12 @@ data class TeamMember(
         var prom: Prom?= null
 ) : PanacheEntityBase() {
         constructor() : this(-1, "", "", "", "", "", mutableListOf(), "", LocalDateTime.now(), LocalDateTime.now())
+
+        fun toSmallDTO(): SmallTeamMemberDTO {
+                return SmallTeamMemberDTO(
+                        id = id,
+                        firstName = firstName,
+                        lastName = lastName
+                )
+        }
 }
