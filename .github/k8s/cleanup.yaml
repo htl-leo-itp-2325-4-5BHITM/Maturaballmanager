@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cleanup
+spec:
+  restartPolicy: Never
+  containers:
+    - name: cleanup
+      image: busybox
+      command: [ "sh", "-c", "rm -rf /data/* && rm -rf /data/.* 2>/dev/null || true" ]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: postgres-pvc

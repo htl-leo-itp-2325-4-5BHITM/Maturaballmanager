@@ -53,7 +53,6 @@ export class UserManagementDialogComponent implements OnInit {
   /** Liste aller möglichen Rollen */
   roles: RoleOption[] = [
     { value: 'management', label: 'Maturaballleitung' },
-    { value: 'finance', label: 'Finanzen' },
     { value: 'sponsoring', label: 'Sponsoring' },
     // ggf. erweitern ...
   ];

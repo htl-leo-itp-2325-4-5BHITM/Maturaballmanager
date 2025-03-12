@@ -85,7 +85,7 @@ export const config = {
         icon: 'home-outline',
         link: '/dashboard'
       },
-      {
+      /*{
         title: 'Organisation',
         icon: 'people-outline',
         link: '/organisation',
@@ -139,7 +139,7 @@ export const config = {
             link: '/tables'
           }
         ]
-      },
+      },*/
       {
         title: 'Sponsoring',
         icon: 'award-outline',

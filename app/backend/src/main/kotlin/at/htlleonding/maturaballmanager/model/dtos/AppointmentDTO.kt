@@ -23,5 +23,5 @@ data class AppointmentResponse(
     val creator: SmallTeamMemberDTO,
     val members: List<SmallTeamMemberDTO>
 ) {
-    constructor() : this(-1, "", LocalDate.now(), null, null, SmallTeamMemberDTO("", "", ""), emptyList())
+    constructor() : this(-1, "", LocalDate.now(), null, null, SmallTeamMemberDTO(-1, "", ""), emptyList())
 }
