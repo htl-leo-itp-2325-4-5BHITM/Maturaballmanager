@@ -43,6 +43,10 @@ const routes: Route[] = [
       { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
       { path: 'appointment', component: MaturaballComponent, canActivate: [authGuard] }
     ]},
+    /*{ path: 'organisation', data: {roles: ["management", "supervisor","organization"]}, children: [
+      { path: 'todo', component: DashboardViewComponent, canActivate: [authGuard] },
+      { path: 'appointments', component: AppointmentsComponent, canActivate: [authGuard] }
+    ]},*/
   //{ path: '**', redirectTo: '/dashboard' },
 ];
 

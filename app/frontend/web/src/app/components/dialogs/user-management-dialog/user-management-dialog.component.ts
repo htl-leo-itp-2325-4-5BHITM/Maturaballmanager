@@ -43,7 +43,6 @@ interface RoleOption {
     NgIf,
     NgForOf,
     FormsModule,
-    NgClass,
     NgStyle,
   ],
   templateUrl: './user-management-dialog.component.html',

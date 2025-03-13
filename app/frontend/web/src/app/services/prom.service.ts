@@ -10,8 +10,8 @@ export class PromService {
 
   constructor(private http: HttpClient) { }
 
-  getActiveProm(): Promise<any> {
-    return this.http.get(`${environment.apiUrl}/prom`).toPromise();
+  getActiveProm() {
+    return this.http.get<PromDTO>(`${environment.apiUrl}/prom`)
   }
 
   createProm(promData: PromDTO) {
