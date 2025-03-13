@@ -96,7 +96,7 @@ export class MaturaballComponent implements OnInit {
 
         if (!motto || !date || !time || !street || !houseNumber || !zip || !city) {
             this.toastrService.show(
-                'Bitte füllen Sie alle Pflichtfelder aus!',
+                'Bitte füllen Sie alle Pflichtfelder aus.',
                 'Fehlende Angaben',
                 {status: 'warning', duration: 3000}
             );
