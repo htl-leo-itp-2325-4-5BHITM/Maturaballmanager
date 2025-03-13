@@ -57,7 +57,7 @@ export class DashboardViewComponent implements OnInit {
     }
 
     getEventDate() {
-        this.promService.getActiveProm().subscribe((prom: PromDTO) => {
+        this.promService.getActiveProm().then((prom: PromDTO | undefined) => {
             if (prom) {
                 const combinedDateTime = `${prom.date}T${prom.time}`;
                 console.log(prom.date);
@@ -71,7 +71,7 @@ export class DashboardViewComponent implements OnInit {
     }
 
     getProm() {
-        this.promService.getActiveProm().subscribe((prom: PromDTO) => {
+        this.promService.getActiveProm().then((prom: PromDTO | undefined) => {
             this.activeProm = prom;
         })
     }

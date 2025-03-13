@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {PromDTO} from "../model/dtos/prom.dto";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
@@ -10,8 +10,8 @@ export class PromService {
 
   constructor(private http: HttpClient) { }
 
-  getActiveProm() {
-    return this.http.get<PromDTO>(`${environment.apiUrl}/prom`)
+  getActiveProm(): Promise<PromDTO | undefined> {
+    return this.http.get<PromDTO>(`${environment.apiUrl}/prom`).toPromise()
   }
 
   createProm(promData: PromDTO) {
