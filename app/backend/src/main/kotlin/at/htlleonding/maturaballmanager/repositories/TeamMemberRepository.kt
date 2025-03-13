@@ -7,7 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import io.smallrye.mutiny.Uni
 
 @ApplicationScoped
-class dTeamMemberRepository : PanacheRepositoryBase<TeamMember, Long> {
+class TeamMemberRepository : PanacheRepositoryBase<TeamMember, Long> {
 
     fun findByKeycloakId(keycloakId: String): Uni<TeamMember?> {
         return find("keycloakId", keycloakId).firstResult()
