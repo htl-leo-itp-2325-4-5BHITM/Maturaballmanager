@@ -1,0 +1,104 @@
+<nb-card>
+    <nb-card-header>
+        <h2>{{ title }}</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form" class="invoice-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="company">Firma<span class="text-danger">*</span></label>
+                    <nb-select placeholder="Firma auswählen" formControlName="company" required>
+                        <nb-option *ngFor="let company of companies" [value]="company.id">{{ company.name }}</nb-option>
+                    </nb-select>
+                    <div *ngIf="form.get('company')?.hasError('required') && form.get('company')?.touched" class="error-message">
+                        Firma ist erforderlich.
+                    </div>
+                </div>
+
+                <!-- Kontaktperson Auswahl -->
+                <div class="form-group" *ngIf="contactPersons.length > 0">
+                    <label for="contactPerson">Kontaktperson</label>
+                    <nb-select placeholder="Kontaktperson auswählen (Optional)" formControlName="contactPerson">
+                        <nb-option [value]="null">Keine</nb-option>
+                        <nb-option *ngFor="let contact of contactPersons" [value]="contact.id">
+                            {{ contact.firstName }} {{ contact.lastName }}
+                        </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+
+            <!-- Leistungen und Rechnungsdaten -->
+            <div class="form-row">
+                <!-- Leistungen Auswahl -->
+                <div class="form-group">
+                    <label for="benefits">Leistungen<span class="text-danger">*</span></label>
+                    <nb-select placeholder="Leistungen auswählen" formControlName="benefits" multiple required>
+                        <nb-option *ngFor="let benefit of benefits" [value]="benefit.id">{{ benefit.name }}</nb-option>
+                    </nb-select>
+                    <div *ngIf="form.get('benefits')?.hasError('required') && form.get('benefits')?.touched" class="error-message">
+                        Mindestens eine Leistung ist erforderlich.
+                    </div>
+                </div>
+
+                <!-- Rechnungsdatum -->
+                <div class="form-group">
+                    <label for="invoiceDate">Rechnungsdatum<span class="text-danger">*</span></label>
+                    <nb-form-field>
+                        <input placeholder="Rechnungsdatum auswählen"
+                               [nbDatepicker]="invoiceDatePicker"
+                               formControlName="invoiceDate"
+                               nbInput>
+                        <nb-datepicker #invoiceDatePicker></nb-datepicker>
+                    </nb-form-field>
+                    <div *ngIf="form.get('invoiceDate')?.hasError('required') && form.get('invoiceDate')?.touched" class="error-message">
+                        Rechnungsdatum ist erforderlich.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zahlungsfrist und Gesamtbetrag -->
+            <div class="form-row">
+                <!-- Zahlungsfrist -->
+                <div class="form-group">
+                    <label for="paymentDeadline">Zahlungsfrist<span class="text-danger">*</span></label>
+                    <nb-form-field>
+                        <input placeholder="Zahlungsfrist auswählen"
+                               [nbDatepicker]="paymentDeadlinePicker"
+                               formControlName="paymentDeadline"
+                               nbInput>
+                        <nb-datepicker #paymentDeadlinePicker></nb-datepicker>
+                    </nb-form-field>
+                    <!-- Fehlermeldung, wenn die Zahlungsfrist vor dem Rechnungsdatum liegt -->
+                    <div *ngIf="form.get('paymentDeadline')?.hasError('invalidDeadline') && form.get('paymentDeadline')?.touched" class="error-message">
+                        Die Zahlungsfrist darf nicht vor dem Rechnungsdatum liegen.
+                    </div>
+                    <div *ngIf="form.get('paymentDeadline')?.hasError('required') && form.get('paymentDeadline')?.touched" class="error-message">
+                        Zahlungsfrist ist erforderlich.
+                    </div>
+                </div>
+
+
+                <!-- Gesamtbetrag -->
+                <div class="form-group">
+                    <label for="totalAmount">Gesamtbetrag</label>
+                    <input nbInput placeholder="Gesamtbetrag" formControlName="totalAmount" readonly />
+                </div>
+
+            </div>
+
+            <!-- Sendeoptionen -->
+            <div class="form-group">
+                <label>Rechnung versenden<span class="text-danger">*</span></label>
+                <nb-radio-group formControlName="sendOption">
+                    <nb-radio value="immediate">Direkt versenden</nb-radio>
+                    <nb-radio value="onDate">Am Rechnungsdatum versenden</nb-radio>
+                </nb-radio-group>
+
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="form-footer">
+        <button nbButton status="success" (click)="submit()" [disabled]="form.invalid">Speichern</button>
+        <span id="cancelButton" (click)="cancel()">Abbrechen</span>
+    </nb-card-footer>
+</nb-card>

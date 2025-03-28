@@ -1,0 +1,41 @@
+<!-- src/app/components/benefit-dialog/benefit-dialog.component.html -->
+<nb-card>
+    <nb-card-header>
+        <h2>{{ title }}</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form">
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="full-width">
+                    <nb-icon nbPrefix icon="pricetags-outline"></nb-icon>
+                    <input nbInput placeholder="Name der Leistung" formControlName="name" />
+                    <span *ngIf="submitted && form.get('name')?.hasError('required')">
+                        Name ist erforderlich.
+                    </span>
+                </nb-form-field>
+            </div>
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="full-width">
+                    <nb-icon nbPrefix icon="file-text-outline"></nb-icon>
+                    <textarea nbInput placeholder="Beschreibung" formControlName="description"></textarea>
+                </nb-form-field>
+            </div>
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="full-width">
+                    <nb-icon nbPrefix icon="credit-card-outline"></nb-icon>
+                    <input nbInput type="number" placeholder="Preis (€)" formControlName="price" />
+                    <span *ngIf="submitted && form.get('price')?.hasError('required')">
+                        Preis ist erforderlich.
+                    </span>
+                    <span *ngIf="submitted && form.get('price')?.hasError('min')">
+                        Preis muss positiv oder null sein.
+                    </span>
+                </nb-form-field>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="footer-actions">
+        <button nbButton status="success" (click)="submit()" [disabled]="!form.valid">Speichern</button>
+        <span id="cancelButton" (click)="cancel()">Abbrechen</span>
+    </nb-card-footer>
+</nb-card>

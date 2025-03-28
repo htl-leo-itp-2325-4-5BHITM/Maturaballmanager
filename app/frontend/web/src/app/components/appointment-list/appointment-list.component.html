@@ -1,0 +1,26 @@
+<nb-card *ngFor="let appointment of filteredAppointments">
+    <nb-card-header>
+        <h3>{{ appointment.name }}</h3>
+    </nb-card-header>
+    <nb-card-body>
+        <p><strong>Datum:</strong> {{ appointment.date }}</p>
+        <p>
+            <strong>Startzeit:</strong> {{ appointment.startTime || '-' }} &nbsp;
+            <strong>Endzeit:</strong> {{ appointment.endTime || '-' }}
+        </p>
+        <nb-accordion *ngIf="appointment.members && appointment.members.length > 0">
+            <nb-accordion-item>
+                <nb-accordion-item-header>
+                    <strong>Teilnehmer</strong>
+                </nb-accordion-item-header>
+                <nb-accordion-item-body>
+                    <ul>
+                        <li *ngFor="let member of appointment.members">
+                            {{ member.firstName }} {{ member.lastName }}
+                        </li>
+                    </ul>
+                </nb-accordion-item-body>
+            </nb-accordion-item>
+        </nb-accordion>
+    </nb-card-body>
+</nb-card>

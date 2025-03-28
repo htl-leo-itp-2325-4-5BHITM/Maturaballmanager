@@ -1,0 +1,109 @@
+<nb-card>
+    <nb-card-header>
+        <h2 class="h5">Termin erstellen/bearbeiten</h2>
+    </nb-card-header>
+    <nb-card-body>
+        <form (ngSubmit)="addEvent()">
+            <div class="form-group">
+                <label for="title">Titel</label><br>
+                <input
+                        nbInput
+                        id="title"
+                        [(ngModel)]="eventTitle"
+                        name="title"
+                        placeholder="Titel des Termins"
+                        required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="date">Datum</label>
+                <nb-form-field>
+                    <nb-icon nbPrefix icon="calendar-outline"></nb-icon>
+                    <input
+                            nbInput
+                            id="date"
+                            type="date"
+                            [(ngModel)]="eventDate"
+                            name="date"
+                            [value]="eventDate | date:'yyyy-MM-dd'"
+                            disabled
+                            required
+                    />
+                </nb-form-field>
+            </div>
+
+            <div>
+                <label>
+                    <input
+                            type="checkbox"
+                            [(ngModel)]="allDay"
+                            name="allDay"
+                    />
+                    Ganzer Tag
+                </label>
+            </div>
+
+            <div *ngIf="!allDay">
+                <div class="form-group half-width">
+                    <label for="timeStart">Uhrzeit von</label>
+                    <nb-form-field>
+                        <nb-icon nbPrefix icon="clock-outline"></nb-icon>
+                        <input
+                                nbInput
+                                id="timeStart"
+                                type="time"
+                                [(ngModel)]="startTime"
+                                name="timeStart"
+                                required
+                        />
+                    </nb-form-field>
+                </div>
+                <div class="form-group half-width">
+                    <label for="timeEnd">bis</label>
+                    <nb-form-field>
+                        <nb-icon nbPrefix icon="clock-outline"></nb-icon>
+                        <input
+                                nbInput
+                                id="timeEnd"
+                                type="time"
+                                [(ngModel)]="endTime"
+                                name="timeEnd"
+                                required
+                        />
+                    </nb-form-field>
+                </div>
+            </div>
+
+            <div class="form-group" id="search-group">
+                <input
+                        nbInput
+                        [(ngModel)]="searchQuery"
+                        [ngModelOptions]="{standalone: true}"
+                        (input)="filterMembers(searchQuery)"
+                        placeholder="Suche nach Mitglied..."
+                        class="umd-search-input"
+                />
+                <ul *ngIf="filteredMembers.length > 0" class="umd-dropdown-list">
+                    <li *ngFor="let m of filteredMembers" (click)="onSelect(m)">
+                        {{ m.name }}
+                    </li>
+                </ul>
+            </div>
+
+            <div *ngIf="timeError" class="error-message">
+                Die Endzeit muss nach der Startzeit liegen.
+            </div>
+
+            <p *ngIf="selectedMembers.length > 0">Ausgewählte Mitglieder:</p>
+            <div *ngIf="selectedMembers.length > 0" class="selected-members">
+                <div *ngFor="let member of selectedMembers" class="member">
+                    <span class="member-name">{{ member.name }}</span>
+                    <button type="button" (click)="removeMember(member)">X</button>
+                </div>
+            </div>
+
+            <button nbButton status="success" type="submit">Speichern</button>
+        </form>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,119 @@
+<nb-card>
+    <nb-card-header>
+        <h1>Maturaball</h1>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="form-layout">
+            <!-- Linke Seite: Formular -->
+            <div class="form-section">
+                <form>
+                    <!-- Maturaball-Motto -->
+                    <div class="form-group">
+                        <label for="motto">Maturaball-Motto</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="edit-outline"></nb-icon>
+                            <input nbInput id="motto" type="text" placeholder="Gib das Motto ein" [(ngModel)]="formData.motto" name="motto" required/>
+                        </nb-form-field>
+                    </div>
+
+                    <!-- Datum und Uhrzeit -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="date">Datum</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="calendar-outline"></nb-icon>
+                                <input nbInput id="date" type="date" [(ngModel)]="formData.date" name="date" required/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="time">Uhrzeit</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="clock-outline"></nb-icon>
+                                <input nbInput id="time" type="time" [(ngModel)]="formData.time" name="time" required/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Straße & Hausnummer -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="street">Straße</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="home-outline"></nb-icon>
+                                <input nbInput id="street" type="text" [(ngModel)]="formData.street" name="street" placeholder="Straße" required/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="houseNumber">Hausnummer</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="home-outline"></nb-icon>
+                                <input nbInput id="houseNumber" type="text" [(ngModel)]="formData.houseNumber" name="houseNumber" placeholder="Hausnr." required/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Ort und PLZ -->
+                    <div class="form-group row">
+                        <div class="form-group half-width">
+                            <label for="zip">PLZ</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="pin-outline"></nb-icon>
+                                <input nbInput id="zip" type="text" [(ngModel)]="formData.zip" name="zip" placeholder="Postleitzahl" required/>
+                            </nb-form-field>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="city">Ort</label>
+                            <nb-form-field>
+                                <nb-icon nbPrefix icon="map-outline"></nb-icon>
+                                <input nbInput id="city" type="text" [(ngModel)]="formData.city" name="city" placeholder="Ort" required/>
+                            </nb-form-field>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Rechte Seite: Ablauf -->
+            <div class="textarea-section">
+                <div class="header-with-icon">
+                    <label>Ablauf des Maturaballs</label>
+                    <button nbButton ghost (click)="addDayPlanEntry()" class="add-button">
+                        <nb-icon icon="plus-circle-outline"></nb-icon>
+                    </button>
+                </div>
+
+                <div *ngFor="let entry of formData.dayPlan; let i = index" class="form-group row dayplan-row">
+                    <div class="form-group half-width">
+                        <label>Name</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="edit-outline"></nb-icon>
+                            <input nbInput type="text" [(ngModel)]="entry.name" name="entryName{{i}}" placeholder="Programmpunkt" required/>
+                        </nb-form-field>
+                    </div>
+                    <div class="form-group half-width">
+                        <label>Uhrzeit</label>
+                        <nb-form-field>
+                            <nb-icon nbPrefix icon="clock-outline"></nb-icon>
+                            <input nbInput type="time" [(ngModel)]="entry.time" name="entryTime{{i}}" required/>
+                        </nb-form-field>
+                    </div>
+                    <button nbButton ghost status="danger" (click)="removeDayPlanEntry(i)" class="remove-button">
+                        <nb-icon icon="minus-circle-outline"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <!-- Submit Button -->
+        <div id="button-container">
+            <div id="submitButton">
+                <button nbButton status="primary" (click)="submit()" fullWidth>Speichern</button>
+            </div>
+
+            <div id="deleteButton">
+                <button nbButton status="control" (click)="closeEvent()" fullWidth>Schließen</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

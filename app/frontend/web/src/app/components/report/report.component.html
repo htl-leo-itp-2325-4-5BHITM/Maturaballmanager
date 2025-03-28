@@ -1,0 +1,97 @@
+<nb-card>
+    <nb-card-header>
+        <div class="header">
+            <h2>{{ title }}</h2>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="search-sort-container">
+            <!-- Suchfeld -->
+            <div class="form-group">
+                <nb-form-field appearance="outline" class="w-100">
+                    <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                    <input nbInput placeholder="Suchen..." (input)="onSearch($event)"/>
+                </nb-form-field>
+            </div>
+
+            <div id="body-sort-input-innerBox">
+                <div>
+                    <button nbButton size="small" (click)="toggleFilterMenu()">
+                        <nb-icon icon="funnel-outline"></nb-icon>
+                        Sortieren
+                    </button>
+
+                    <!-- Dropdown-Menü für die Filteroptionen -->
+                    <div *ngIf="filterMenuVisible" class="filter-menu">
+                        <button nbButton ghost size="small" *ngFor="let col of columns" (click)="onSort(col.key)">
+                            Nach {{ col.title }} sortieren
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- Hinzufügen Button -->
+                <button nbButton status="primary" size="small" (click)="addButtonCallback()">
+                    <nb-icon icon="plus-outline"></nb-icon>
+                    {{ addButtonLabel }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabelle -->
+        <div class="table-responsive">
+            <table class="table table-striped modern-table">
+                <thead>
+                <tr>
+                    <th *ngFor="let col of columns">{{ col.title }}</th>
+                    <th *ngIf="actions.length > 0">Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let row of filteredData | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }"
+                    [class.disabled-row]="isRowDisabled(row)" (click)="editCallback(row)">
+
+                    <td *ngFor="let col of columns">
+                      <span *ngIf="col.key === 'website'"
+                            [innerHTML]="col.format ? col.format(row[col.key]) : row[col.key]"
+                            (click)="$event.stopPropagation()"></span>
+                        <span *ngIf="col.key !== 'website'" (click)="$event.stopPropagation()">
+                        {{ col.format ? col.format(row[col.key]) : row[col.key] }}
+                      </span>
+                    </td>
+
+
+                    <td *ngIf="actions.length > 0" class="action-buttons">
+                        <button
+                                *ngFor="let action of actions"
+                                nbButton
+                                size="small"
+                                [status]="action.status"
+                                (click)="onActionClick($event, action.callback, row)"
+                                [nbTooltip]="action.tooltip"
+                                nbTooltipPlacement="top"
+                                [disabled]="action.disabled ? action.disabled(row) : false"
+                        >
+                            <nb-icon [icon]="action.icon"></nb-icon>
+                        </button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Keine Daten gefunden -->
+        <div *ngIf="filteredData.length === 0" class="no-data text-center mt-4">
+            <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
+            <p class="mt-2">Keine Daten gefunden.</p>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <div class="count mt-4 text-right" *ngIf="filteredData.length != 0">
+            <p>{{ titleForCount }}: {{ filteredData.length }}</p>
+        </div>
+    </nb-card-footer>
+</nb-card>

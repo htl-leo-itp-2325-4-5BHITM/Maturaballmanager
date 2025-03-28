@@ -1,0 +1,92 @@
+<nb-card>
+    <nb-card-header>
+        <div class="header">
+            <h5>Benutzerverwaltung</h5>
+            <div>
+                <button nbButton status="primary" size="small" (click)="openAddMemberDialog()">
+                    <nb-icon icon="plus-outline"></nb-icon> Mitglieder hinzufügen
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="body-header">
+            <p>Mitglieder</p>
+            <div id="body-header-innerBox">
+                <div>
+                    <button nbButton size="small" (click)="toggleFilterMenu()">
+                        <nb-icon icon="funnel-outline"></nb-icon> Sortieren
+                    </button>
+
+                    <div *ngIf="filterMenuVisible" class="filter-menu">
+                        <button
+                                nbButton
+                                ghost
+                                size="small"
+                                *ngFor="let header of headers; let i = index"
+                                (click)="onSort(getColumnKey(i))"
+                        >
+                            Nach {{ header }} sortieren
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <nb-form-field appearance="outline" class="w-100">
+                        <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                        <input nbInput placeholder="Suchen..." (input)="onSearch($event)" />
+                    </nb-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-striped modern-table">
+                <thead>
+                <tr>
+                    <th *ngFor="let header of headers; let i = index" (click)="onSort(getColumnKey(i))">
+                        {{ header }}
+                        <nb-icon
+                                *ngIf="sortColumn === getColumnKey(i)"
+                                [icon]="sortDirection === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"
+                        ></nb-icon>
+                    </th>
+                    <th></th> <!-- Spalte für Löschen-Button -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let member of filteredMembers" (click)="editMember(member)">
+                    <td>{{ member.id }}</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.email }}</td>
+                    <!-- Rollen als freundliche Label-Liste -->
+                    <td>{{ getRolesAsLabel(member.roles) }}</td>
+                    <td>{{ member.lastLogin | date: 'HH:mm dd.MM.yyyy' }}</td>
+                    <td>
+                        <button
+                                nbButton
+                                status="danger"
+                                size="small"
+                                (click)="deleteMember($event, member)"
+                        >
+                            <nb-icon icon="trash-2-outline"></nb-icon>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="filteredMembers.length === 0" class="no-data text-center mt-4">
+            <nb-icon icon="alert-circle-outline" status="warning" size="large"></nb-icon>
+            <p class="mt-2">Keine Mitglieder gefunden.</p>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <div class="member-count mt-4 text-right">
+            <p>Mitglieder: {{ totalMembers }}</p>
+        </div>
+    </nb-card-footer>
+</nb-card>

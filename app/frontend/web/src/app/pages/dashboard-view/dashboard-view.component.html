@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+    <!-- Total Earnings with Progress -->
+    <!--<nb-card class="dashboard-card large-card">
+      <nb-card-header>Total Earnings</nb-card-header>
+      <nb-card-body>
+        <h2>{{ totalEarnings | currency }}</h2>
+        <div class="progress-container">
+          <div class="progress-bar" [style.width.%]="earningsProgress"></div>
+        </div>
+        <p>{{ totalEarnings | currency }} / {{ earningsTarget | currency }} reached</p>
+      </nb-card-body>
+    </nb-card>-->
+    <nb-card class="dashboard-card small-card">
+        <nb-card-header>Kerndaten</nb-card-header>
+        <nb-card-body>
+            <p><strong>Motto:</strong> {{ activeProm?.name }}</p>
+            <p><strong>Datum:</strong> {{ formatDate(activeProm?.date) }}</p>
+            <p><strong>Uhrzeit:</strong> {{ formatTime(activeProm?.time) }}</p>
+            <p><strong>Adresse:</strong>
+                {{ activeProm?.address?.street }} {{ activeProm?.address?.houseNumber }},
+                {{ activeProm?.address?.city }}
+                ({{ activeProm?.address?.country }})
+            </p>
+        </nb-card-body>
+    </nb-card>
+
+    <nb-card class="dashboard-card small-card">
+        <nb-card-header>Maturaballleitung</nb-card-header>
+        <nb-card-body>
+            <table style="width: 100%;">
+                <tbody>
+                <tr *ngFor="let member of maturaleitungMembers">
+                    <td style="width: 35%"><strong>{{ member.firstName }} {{ member.lastName }}</strong></td>
+                    <td>{{ member.realmRoles.join(', ') }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </nb-card-body>
+    </nb-card>
+
+
+
+    <nb-card class="dashboard-card small-card">
+        <nb-card-header>Countdown zum Event</nb-card-header>
+        <nb-card-body>
+            <app-countdown-timer [targetDate]="eventDate"></app-countdown-timer>
+        </nb-card-body>
+    </nb-card>
+
+   <!-- <nb-card class="dashboard-card medium-card">
+        <nb-card-header>Earnings by Category</nb-card-header>
+        <nb-card-body>
+            <div echarts [options]="chartOption" class="echart"></div>
+        </nb-card-body>
+    </nb-card>-->
+
+    <!--<nb-card class="dashboard-card small-card">
+      <nb-card-header>Tickets and Tables Sold</nb-card-header>
+      <nb-card-body>
+        <p>Tickets Sold: {{ ticketsSold }}</p>
+        <p>Tables Sold: {{ tablesSold }}</p>
+      </nb-card-body>
+    </nb-card>-->
+
+</div>

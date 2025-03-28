@@ -1,0 +1,31 @@
+### Get all team members which are currently responsible for the prom.
+GET http://localhost:8080/api/team-members/team
+
+### Get the user details from one specific keycloakId (from Keycloak)
+GET http://localhost:8080/api/team-members/{{keycloakId}}
+
+### Search for a keycloak user by a search term.
+GET http://localhost:8080/api/team-members?
+    query={{Suchbegriff}}
+
+### Get the user details from one specific keycloakId (from Database)
+GET http://localhost:8080/api/team-members/{{id}}
+
+### Delete by ID
+DELETE http://localhost:8080/api/team-members/{{id}}
+
+### Update by ID, look at DTO for structure
+PUT http://localhost:8080/api/team-members/{{id}}
+Content-Type: application/json
+
+{
+
+}
+
+### Adds TeamMember by TeamMemberDTO
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+
+}

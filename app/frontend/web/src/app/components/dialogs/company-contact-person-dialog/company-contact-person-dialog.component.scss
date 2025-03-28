@@ -1,0 +1,139 @@
+.dialog-card {
+  width: 55vw; /* Festgelegte Breite für Konsistenz */
+  height: 80vh; /* Maximale Höhe basierend auf der Ansichtshöhe */
+}
+
+#contact-body-box{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.contact-list {
+  flex: 1; /* Flexibles Layout für die Kontaktliste */
+  max-height: 100%; /* Begrenzte Höhe */
+  overflow-y: auto; /* Vertikales Scrollen aktivieren */
+  padding-right: 16px; /* Abstand rechts für den Scrollbalken */
+}
+
+.inner-box{
+  width: 50%;
+}
+
+.new-contact-form{
+  display: flex;
+  padding-left: 5%;
+  border-left: solid lightgray 1px;
+  height: 100%;
+}
+
+.form-group{
+  width: 100%;
+  margin-bottom: 4%;
+}
+
+.form-group input{
+  margin-top: 1%;
+}
+
+.new-contact-headline{
+  font-size:1.6em;
+  font-weight: bold;
+}
+
+.form-actions button{
+  margin-right: 3%;
+}
+
+.contact-names {
+  display: flex;
+  align-items: center; // Zentrieren der Inhalte vertikal
+  gap: 5px; // Abstand zwischen den beiden Texten
+  margin:0;
+}
+
+.contact-item{
+  border-bottom: lightgray 1px solid;
+  margin-right: 3%;
+  padding: 2%;
+  padding-left: 5%;
+}
+
+.contact-item:hover{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#contact-top-box {
+  display: flex;                 /* Flex-Container für #contact-top-box */
+  justify-content: space-between;  /* Abstand zwischen Inhalten, z.B. Position und Actions */
+  align-items: center;            /* Vertikal zentrieren der Inhalte */
+}
+
+.contact-actions {
+  display: flex;
+  justify-content: flex-end;       /* Den Button ganz rechts platzieren */
+  align-items: center;             /* Vertikal zentrieren des Buttons */
+}
+
+.contact-actions button{
+  all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%
+}
+
+
+nb-radio-group{
+  display: flex;
+  flex-direction: row;
+}
+
+#title-group{
+  display: flex;
+  flex-direction: row;
+}
+
+#title-group input{
+  width: 90%;
+}
+
+#names-group{
+  display: flex;
+  flex-direction: row;
+}
+
+#names-group input{
+  width: 95%;
+}
+
+#header-box{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#close{
+  display: flex;
+  justify-content: flex-end;       /* Den Button ganz rechts platzieren */
+  align-items: center;
+}
+
+.error{
+  color: red;
+}
+
+#cancelButton{
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+}
+
+#cancelButton:hover{
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
+}

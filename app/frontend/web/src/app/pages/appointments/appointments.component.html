@@ -1,0 +1,14 @@
+<nb-card>
+    <nb-card-body>
+        <div id="left-pane">
+            <nb-calendar [(date)]="date" (dateChange)="onDateChange($event)" size="large"></nb-calendar>
+            <button nbButton (click)="setOpenForm()">Termin eintragen</button>
+        </div>
+        <div class="right-pane" *ngIf="openForm">
+            <app-appointment-form [date]="date"></app-appointment-form>
+        </div>
+        <div class="right-pane" *ngIf="!openForm">
+            <app-appointment-list [date]="date" [appointments]="appointments"></app-appointment-list>
+        </div>
+    </nb-card-body>
+</nb-card>

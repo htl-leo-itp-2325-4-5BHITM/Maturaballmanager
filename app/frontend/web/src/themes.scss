@@ -1,0 +1,58 @@
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default';
+
+$nb-themes: nb-register-theme(
+                (
+                        color-primary-100: #e4f3fb,
+                        color-primary-200: #c8e7f6,
+                        color-primary-300: #a9d8ef,
+                        color-primary-400: #9ed5f3,
+                        color-primary-500: #73bde2,
+                        color-primary-600: #6cb6dd,  // zentrale Farbe
+                        color-primary-700: #5793b4,
+                        color-primary-800: #3d6e88,
+                        color-primary-900: #294c62,
+
+                        //button
+                        button-filled-danger-background-color: #e74c3c,
+                        button-filled-danger-border-color: #e74c3c,
+
+                        button-filled-primary-hover-background-color: #5793b4,
+                        button-filled-primary-hover-border-color: #5793b4,
+
+
+                        text-basic-color: color-basic-800,
+                        text-disabled-color: color-basic-600,
+
+                        // layout
+                        layout-background-color: #F3F3F3,
+
+                        accordion-padding: 0rem,
+
+                        //dialog green button
+                        button-filled-success-hover-background-color: #219f5c,
+                        button-filled-success-hover-border-color: #219f5c,
+                        button-filled-success-border-color: #2ecc71,
+                        button-filled-success-background-color: #2ecc71,
+
+
+                        // card
+                        card-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px,
+                ),
+                default,
+                default
+);
+
+
+/*
+color-primary-100: #faf7ff,
+                        color-primary-200: #ece3ff,
+                        color-primary-300: #d5bfff,
+                        color-primary-400: #b18aff,
+                        color-primary-500: blue,
+                        color-primary-600: red,
+                        color-primary-700: #5a37b8,
+                        color-primary-800: #3e2494,
+                        color-primary-900: #29157a,
+ */

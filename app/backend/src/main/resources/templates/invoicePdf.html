@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Rechnung #{model.id}</title>
+    <!-- ... style ... -->
+</head>
+
+<body>
+<div class="header" style="width: 100%">
+    <div style="height: 10%; display: flex; justify-content: flex-end; align-items: center; margin-bottom: 2%;">
+        <img src="data:image/png;base64,{base64Logo}" alt="Schullogo" style="max-width: 120px; margin-right: 20px">
+        <img src="data:image/png;base64,{base64LeoBallLogo}" alt="LeoBall-Logo" style="max-width: 120px;">
+    </div>
+
+    <div style="margin-bottom: 30px; margin-top: 30px">
+        <h1 style="margin: 0; font-size: 2em;">Rechnung{#if isCopy} - Kopie{/if}</h1>
+    </div>
+</div>
+
+
+<div class="addresses" style="display: flex; width:100%; height: 10%;font-size: 12px;align-items: flex-start;">
+
+    <div class="to" style="width: 70%;">
+        <p style="margin: 1px; padding: 0;">{model.companyName}</p>
+        {#if model.contactPersonName}<p style="margin: 1px; padding: 0;">z.H. {model.contactPersonName}</p>
+        {/if}
+        <p style="margin: 1px; padding: 0;">{model.companyStreet} {model.companyHouseNumber}</p>
+        <p style="margin: 1px; padding: 0;">{model.companyPostalCode} {model.companyCity}</p>
+    </div>
+
+    <div class="from" style="width: 30%;">
+        <p style="margin: 1px; padding: 0;">{senderName}</p>
+        <p style="margin: 1px; padding: 0;">Maturaballkomitee der HTL Leonding</p>
+        <p style="margin: 1px; padding: 0;">{senderStreet} {senderHouseNumber}</p>
+        <p style="margin: 1px; padding: 0;">{senderPostalCode} {senderCity}</p>
+    </div>
+</div>
+
+<div class="content">
+    <p style="font-size: 12px; margin-top: 55px">
+        <strong>Rechnungsnummer:</strong> {model.id},
+        <strong>Rechnungsdatum:</strong> {formattedInvoiceDate}
+    </p>
+    <h2 style="font-size: 20px;">Erwerb einer Werbeleistung im Rahmen des Maturaballs 2025 der HTL
+        Leonding</h2>
+
+    <br>
+    <p style="font-size: 12px">Die Leistung umfasst:</p>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+        <thead>
+        <tr>
+            <th style="background-color: #f0f0f0; padding: 8px; text-align: left;">Leistung</th>
+            <th style="background-color: #f0f0f0; padding: 8px; text-align: left;">Beschreibung</th>
+            <th style="background-color: #f0f0f0; padding: 8px; text-align: left;">Preis (€)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {#for benefit in model.benefits}
+            <tr>
+                <td style="padding: 8px; border-bottom: 1px solid black;">{benefit.name}</td>
+                <td style="padding: 8px; border-bottom: 1px solid black;">{benefit.description}</td>
+                <td style="padding: 8px; border-bottom: 1px solid black;">{benefit.price} €</td>
+            </tr>
+        {/for}
+        <!-- Gesamtbetrag als letzte Zeile -->
+        <tr>
+            <td style="padding: 8px; border-top: 2px solid black; font-weight: bold;" colspan="2">Gesamtbetrag</td>
+            <td style="padding: 8px; border-top: 2px solid black; font-weight: bold;">{model.totalAmount} €</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <p style="font-size: 12px;margin-top: 30px">
+        Bitte überweisen Sie den oben genannten Betrag bis spätestens
+        {formattedPaymentDeadline} auf folgendes Konto:
+    </p>
+
+    <div class="bank-details">
+        <p style="font-size: 12px; margin: 1px; padding: 0;"><strong>Bank:</strong> {bankAccount.bankName}</p>
+        <p style="font-size: 12px; margin: 1px; padding: 0;"><strong>Kontoinhaber:</strong> {bankAccount.accountHolder}</p>
+        <p style="font-size: 12px; margin: 1px; padding: 0;"><strong>IBAN:</strong> {bankAccount.iban}</p>
+        <p style="font-size: 12px; margin: 1px; padding: 0;"><strong>BIC:</strong> {bankAccount.bic}</p>
+        <p style="font-size: 12px; margin: 1px; padding: 0;"><strong>Verwendungszweck:</strong> "Maturaball - #{model.id}"</p>
+    </div>
+
+    <br>
+    <div class="content">
+        <p style="font-size: 12px;">
+            Wir bitten Sie außerdem höflichst, als Rückversicherung für Ihr Unternehmen
+            und uns als Komitee, die Rechnung zu signieren und uns postalisch oder
+            elektronisch zu retournieren.
+        </p>
+        <p style="font-size: 12px;">
+            Bei Fragen zur Rechnung wenden Sie sich bitte an mich, erreichbar unter
+            maturaballkomitee@htl-leonding.ac.at.
+        </p>
+    </div>
+
+    <br>
+    <div class="signature">
+        <p style="font-size: 12px;">Mit freundlichen Grüßen</p>
+        <p class="name" style="font-size: 12px;">{senderName}</p>
+    </div>
+
+</body>
+</html>

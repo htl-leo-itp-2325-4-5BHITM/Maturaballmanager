@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rechnung</title>
+    <style type="text/css">
+        /* Ihr bestehendes CSS bleibt unverändert */
+        body {
+            font-family: Arial, sans-serif;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            width: 100%;
+            background-color: #f4f4f4;
+            padding: 20px 0;
+        }
+
+        .email-content {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border: 1px solid #dddddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .email-header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .email-header img {
+            max-width: 150px;
+        }
+
+        .email-body {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .email-body p {
+            margin-bottom: 15px;
+        }
+
+        .email-footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #dddddd;
+        }
+
+        .email-footer img {
+            max-width: 100px;
+            margin-top: 10px;
+        }
+
+        .strong {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="email-content">
+        <div class="email-header">
+            <img src="cid:school_logo" alt="Schullogo">
+        </div>
+        <div class="email-body">
+            <p>
+                {#if invoice.contactPerson != null}
+                    {#if invoice.contactPerson.gender == 'male'}
+                        Sehr geehrter Herr
+                        {#if invoice.contactPerson.prefixTitle != null} {invoice.contactPerson.prefixTitle}{/if}
+                        {invoice.contactPerson.lastName}
+                        {#if invoice.contactPerson.suffixTitle != null} {invoice.contactPerson.suffixTitle}{/if},
+                    {#else if invoice.contactPerson.gender == 'female'}
+                        Sehr geehrte Frau
+                        {#if invoice.contactPerson.prefixTitle != null} {invoice.contactPerson.prefixTitle}{/if}
+                        {invoice.contactPerson.lastName}
+                        {#if invoice.contactPerson.suffixTitle != null} {invoice.contactPerson.suffixTitle}{/if},
+                    {#else}
+                        Sehr geehrte Damen und Herren,
+                    {/if}
+                {#else}
+                    Sehr geehrte Damen und Herren,
+                {/if}
+            </p>
+            <p>Anbei erhalten Sie Ihre Rechnung mit der Nummer <span class="strong">#{invoice.id}</span>.</p>
+            <p><strong>Gesamtbetrag:</strong> {invoice.totalAmount} €</p>
+            <p>Weitere Details entnehmen Sie bitte dem angehängten PDF-Dokument.</p>
+            <p>Mit freundlichen Grüßen<br/>{senderName}</p>
+        </div>
+        <div class="email-footer">
+            <p>&copy; {currentYear} HTBLA Leonding. Alle Rechte vorbehalten.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

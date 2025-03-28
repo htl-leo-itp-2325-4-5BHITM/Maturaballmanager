@@ -1,0 +1,10 @@
+<app-report
+        [title]="'Unternehmen verwalten'"
+        [titleForCount] = "'Unternehmen'"
+        [data]="companies"
+        [columns]="columns"
+        [actions]="actions"
+        [addButtonLabel]="'Unternehmen hinzufügen'"
+        [addButtonCallback]="openCreateDialog.bind(this)"
+        [editCallback]="openEditDialog.bind(this)"
+></app-report>

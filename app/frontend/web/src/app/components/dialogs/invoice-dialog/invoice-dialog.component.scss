@@ -1,0 +1,107 @@
+/* src/app/components/dialogs/invoice-dialog/invoice-dialog.component.scss */
+
+nb-card {
+  width: 100%;
+}
+
+nb-card-header {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+nb-card-body {
+  padding: 2rem;
+}
+
+.form-group label {
+  font-weight: 600;
+}
+
+.text-danger {
+  font-size: 0.875rem;
+  color: #e74c3c;
+}
+
+nb-card-footer {
+  padding: 1.5rem;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  nb-card-body {
+    padding: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Adjust z-index for nb-datepicker overlay */
+nb-layout nb-datepicker-container {
+  z-index: 1000; /* Adjust the value as needed */
+}
+
+.fixed-dialog-width {
+  width: 600px !important; /* Festlegen der gewünschten Breite */
+}
+
+@media (max-width: 768px) {
+  .fixed-dialog-width {
+    width: 90% !important; /* Anpassung für kleinere Bildschirme */
+  }
+}
+
+.invoice-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.nb-form-field {
+  width: 100%;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.875rem;
+}
+
+.nb-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+
+#cancelButton{
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+  margin-left: 1rem;
+}
+
+#cancelButton:hover{
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
+}

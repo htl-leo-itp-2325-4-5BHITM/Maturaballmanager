@@ -1,0 +1,170 @@
+nb-card{
+  height: 51em;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //margin-bottom: 1.5rem;
+}
+
+.search-sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sort-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-responsive {
+  max-height: 38em;
+  overflow-y: auto;
+  border-bottom: 1px #f4f4f4 solid;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Hintergrundfarbe für die fixierte Kopfzeile */
+  z-index: 1; /* Damit die Kopfzeile über dem Tabelleninhalt bleibt */
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+tr{
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+tbody tr:hover {
+  color: lightgray;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+tbody tr.disabled-row {
+  color: darkgray;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+tbody tr.disabled-row:hover {
+  color: darkgray; /* Optional, um sicherzustellen, dass die Farbe beim Hover nicht geändert wird */
+  box-shadow: none; /* Entfernt den Hover-Effekt */
+}
+
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.modern-table th {
+  font-weight: bold;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  text-align: left;
+}
+
+.modern-table td {
+  padding: 0.75rem;
+  background-color: #fff;
+  border-radius: 0.25rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-buttons button {
+  padding: 0.5rem;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #6c757d;
+  margin-top: 2rem;
+}
+
+.filter-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  z-index: 10;
+  margin-top: 0.5rem;
+}
+
+.filter-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+}
+
+#body-sort-input-innerBox {
+  display: flex;
+  flex-direction: row;
+}
+
+#body-sort-input-innerBox div{
+  margin-right: 1rem;
+}
+
+
+
+
+// pagination (optional)
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-container .form-group {
+  width: 150px;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  .search-sort-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .pagination-container .form-group {
+    width: 100%;
+  }
+}

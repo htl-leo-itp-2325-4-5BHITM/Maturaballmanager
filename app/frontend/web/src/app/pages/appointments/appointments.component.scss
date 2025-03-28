@@ -1,0 +1,23 @@
+nb-card {
+  display: flex;
+  height: 51em;
+  width: 100%;
+}
+
+nb-card-body{
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+#left-pane{
+  width: 30%;
+}
+
+.right-pane {
+  width: 70%;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}

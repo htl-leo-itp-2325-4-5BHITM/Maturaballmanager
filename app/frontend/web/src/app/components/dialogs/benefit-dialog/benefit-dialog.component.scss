@@ -1,0 +1,21 @@
+nb-card{
+  width: 32em;
+}
+
+.form-group{
+  margin-bottom: 1em;
+  width: 100%;
+}
+#cancelButton{
+  color: #05348c;
+  font-weight: bold;
+  border-bottom: 1px solid #055c8c;
+  margin-left: 1rem;
+}
+
+#cancelButton:hover{
+  color: #6b6e6e;
+  cursor: pointer;
+  border-bottom: 1px solid #6b6e6e;
+
+}

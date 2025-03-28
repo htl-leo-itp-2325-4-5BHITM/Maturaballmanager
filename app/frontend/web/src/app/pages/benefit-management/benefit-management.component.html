@@ -1,0 +1,10 @@
+<app-report
+        [title]="'Gegenleistungen verwalten'"
+        [titleForCount] = "'Gegenleistungen'"
+        [data]="benefits"
+        [columns]="columns"
+        [actions]="actions"
+        [addButtonLabel]="'Gegenleistung hinzufügen'"
+        [addButtonCallback]="openCreateDialog.bind(this)"
+        [editCallback]="openEditDialog.bind(this)"
+></app-report>

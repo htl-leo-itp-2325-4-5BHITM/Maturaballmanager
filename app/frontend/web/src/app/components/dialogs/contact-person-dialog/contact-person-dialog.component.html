@@ -1,0 +1,73 @@
+<nb-card class="dialog-card">
+    <nb-card-header>
+        <div class="header-title">
+            <nb-icon icon="person-outline"></nb-icon> {{ title }}
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form" class="form-container">
+            <div class="form-group">
+                <label for="prefixTitle">Präfix Titel</label>
+                <input nbInput fullWidth formControlName="prefixTitle" placeholder="Präfix Titel" />
+            </div>
+            <div class="form-group">
+                <label for="firstName">Vorname*</label>
+                <input nbInput fullWidth formControlName="firstName" placeholder="Vorname" />
+                <div *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched" class="error">
+                    <div *ngIf="form.get('firstName')?.errors?.['required']">Vorname ist erforderlich.</div>
+                    <div *ngIf="form.get('firstName')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Nachname*</label>
+                <input nbInput fullWidth formControlName="lastName" placeholder="Nachname" />
+                <div *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched" class="error">
+                    <div *ngIf="form.get('lastName')?.errors?.['required']">Nachname ist erforderlich.</div>
+                    <div *ngIf="form.get('lastName')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="suffixTitle">Suffix Titel</label>
+                <input nbInput fullWidth formControlName="suffixTitle" placeholder="Suffix Titel" />
+            </div>
+            <div class="form-group">
+                <label>Geschlecht*</label>
+                <nb-radio-group formControlName="gender">
+                    <nb-radio value="M">Männlich</nb-radio>
+                    <nb-radio value="W">Weiblich</nb-radio>
+                    <nb-radio value="D">Divers</nb-radio>
+                </nb-radio-group>
+                <div *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched" class="error">
+                    <div *ngIf="form.get('gender')?.errors?.['required']">Geschlecht ist erforderlich.</div>
+                    <div *ngIf="form.get('gender')?.errors?.['pattern']">Ungültige Auswahl.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="position">Position*</label>
+                <input nbInput fullWidth formControlName="position" placeholder="Position" />
+                <div *ngIf="form.get('position')?.invalid && form.get('position')?.touched" class="error">
+                    <div *ngIf="form.get('position')?.errors?.['required']">Position ist erforderlich.</div>
+                    <div *ngIf="form.get('position')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="personalEmail">Persönliche E-Mail</label>
+                <input nbInput fullWidth formControlName="personalEmail" placeholder="Persönliche E-Mail" />
+                <div *ngIf="form.get('personalEmail')?.invalid && form.get('personalEmail')?.touched" class="error">
+                    Bitte eine gültige E-Mail-Adresse eingeben.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="personalPhone">Persönliches Telefon</label>
+                <input nbInput fullWidth formControlName="personalPhone" placeholder="Persönliches Telefon" />
+                <div *ngIf="form.get('personalPhone')?.invalid && form.get('personalPhone')?.touched" class="error">
+                    Bitte eine gültige Telefonnummer eingeben.
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="footer-actions">
+        <button nbButton status="basic" (click)="cancel()">Abbrechen</button>
+        <button nbButton status="success" (click)="submit()">Speichern</button>
+    </nb-card-footer>
+</nb-card>

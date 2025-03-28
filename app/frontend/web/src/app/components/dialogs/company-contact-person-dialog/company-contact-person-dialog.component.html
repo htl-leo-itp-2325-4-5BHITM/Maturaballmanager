@@ -1,0 +1,137 @@
+<nb-card class="dialog-card">
+    <nb-card-header>
+        <div id="header-box">
+            <div class="header-title">
+                <nb-icon icon="people-outline"></nb-icon>
+                Kontaktpersonen
+            </div>
+            <div id="close">
+                <nb-icon icon="close-outline" (click)="close()"></nb-icon>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div id="contact-body-box">
+            <div class="inner-box">
+                <!-- Liste der Kontakte -->
+                <div *ngIf="contacts && contacts.length > 0" class="contact-list">
+                    <div *ngFor="let contact of contacts; let i = index" class="contact-item"
+                         (click)="fillFormWithContact(contact)">
+                        <div class="contact-details">
+                            <div id="contact-top-box">
+                                <p>{{ contact.position }}</p>
+                                <div class="contact-actions">
+                                    <button (click)="deleteContact(i, $event)">
+                                        <nb-icon icon="trash-outline"></nb-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <!--<p *ngIf="contact.gender === 'M'"> Herr</p>
+                            <p *ngIf="contact.gender === 'W'">Frau</p>
+                            <p *ngIf="contact.gender === 'D'">Divers</p>-->
+
+                            <div class="contact-names">
+                                <p><strong>{{ contact.gender === 'M' ? 'Herr' : 'Frau'}}</strong></p>
+                                <p *ngIf="contact.prefixTitle"><strong>{{ contact.prefixTitle }}</strong></p>
+                                <p><strong>{{ contact.firstName }} {{ contact.lastName }}</strong></p>
+                                <p *ngIf="contact.suffixTitle"><strong>{{ contact.suffixTitle }}</strong></p>
+                            </div>
+                            <p>{{ contact.personalEmail }}</p>
+                            <p *ngIf="contact.personalPhone">{{ contact.personalPhone }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bei keiner Kontaktperson -->
+                <div *ngIf="contacts?.length === 0" class="no-contacts">
+                    <p>Keine Kontaktpersonen vorhanden.</p>
+                </div>
+            </div>
+
+            <!-- Formular für neuen Kontakt -->
+            <div class="inner-box">
+                <div class="new-contact-form">
+                    <form [formGroup]="newContactForm" class="form-container">
+                        <p class="new-contact-headline" *ngIf="updateContact">Kontakt bearbeiten</p>
+                        <p class="new-contact-headline" *ngIf="!updateContact">Kontakt hinzufügen</p>
+
+                        <div class="form-group">
+                            <label>Geschlecht*</label>
+                            <nb-radio-group formControlName="gender">
+                                <nb-radio *ngFor="let gender of ['M', 'W']" [value]="gender">
+                                    {{ gender === 'M' ? 'Herr' : 'Frau'}}
+                                </nb-radio>
+                            </nb-radio-group>
+                        </div>
+
+                        <div id="title-group">
+                            <div class="form-group">
+                                <label for="prefixTitle">Präfix Titel</label>
+                                <input nbInput fullWidth id="prefixTitle" formControlName="prefixTitle"
+                                       placeholder="z. B. Dr., Prof."/>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Suffix Titel</label>
+                                <input nbInput fullWidth id="suffixTitle" formControlName="suffixTitle"
+                                       placeholder="z. B. PhD., M.Sc"/>
+                            </div>
+                        </div>
+
+                        <div id="names-group">
+                            <div class="form-group">
+                                <label for="firstName">Vorname*</label>
+                                <input nbInput fullWidth id="firstName" formControlName="firstName"
+                                       placeholder="Vorname"/>
+                                <div *ngIf="newContactForm.get('firstName')?.invalid && newContactForm.get('firstName')?.touched"
+                                     class="error">
+                                    Vorname ist erforderlich.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Nachname*</label>
+                                <input nbInput fullWidth id="lastName" formControlName="lastName"
+                                       placeholder="Nachname"/>
+                                <div *ngIf="newContactForm.get('lastName')?.invalid && newContactForm.get('lastName')?.touched"
+                                     class="error">
+                                    Nachname ist erforderlich.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position*</label>
+                            <input nbInput fullWidth id="position" formControlName="position" placeholder="Position"/>
+                            <div *ngIf="newContactForm.get('position')?.invalid && newContactForm.get('position')?.touched"
+                                 class="error">
+                                Position ist erforderlich.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="personalEmail">Persönliche E-Mail*</label>
+                            <input nbInput fullWidth id="personalEmail" formControlName="personalEmail"
+                                   placeholder="E-Mail"/>
+                            <div *ngIf="newContactForm.get('personalEmail')?.invalid && newContactForm.get('personalEmail')?.touched"
+                                 class="error">
+                                Persönliche E-Mail ist erforderlich.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="personalPhone">Persönliches Telefon</label>
+                            <input nbInput fullWidth id="personalPhone" formControlName="personalPhone"
+                                   placeholder="Telefonnummer"/>
+                        </div>
+
+                        <div class="form-actions">
+                            <button nbButton status="success" [disabled]="!this.newContactForm.valid" (click)="saveContact()">Speichern</button>
+                            <!--<button nbButton status="basic" (click)="resetNewContactForm()">Abbrechen</button>-->
+                            <span id="cancelButton" (click)="resetNewContactForm()">
+                                Abbrechen
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,11 @@
+<!-- src/app/components/confirm-dialog/confirm-dialog.component.html -->
+<nb-card>
+    <nb-card-header>{{ title }}</nb-card-header>
+    <nb-card-body>
+        <p>{{ message }}</p>
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton style="margin-right: 0.5em" status="danger" (click)="confirm()">Bestätigen</button>
+        <button nbButton status="basic" (click)="cancel()">Abbrechen</button>
+    </nb-card-footer>
+</nb-card>

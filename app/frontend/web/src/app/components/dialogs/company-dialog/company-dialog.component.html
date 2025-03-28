@@ -1,0 +1,130 @@
+<!-- src/app/components/company-dialog/company-dialog.component.html -->
+
+<nb-card class="dialog-card">
+    <nb-card-header>
+        <div class="header-title">
+            <nb-icon icon="briefcase-outline"></nb-icon>
+            {{ title }}
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="form" class="form-container">
+            <!-- General Company Information -->
+            <div class="form-group">
+                <label for="name">Firmenname*</label>
+                <input nbInput fullWidth id="name" formControlName="name" placeholder="Firmenname"/>
+                <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="error">
+                    <div *ngIf="form.get('name')?.errors?.['required']">Firmenname ist erforderlich.</div>
+                    <div *ngIf="form.get('name')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="industry">Branche*</label>
+                <input nbInput fullWidth id="industry" formControlName="industry" placeholder="Branche"/>
+                <div *ngIf="form.get('industry')?.invalid && form.get('industry')?.touched" class="error">
+                    <div *ngIf="form.get('industry')?.errors?.['required']">Branche ist erforderlich.</div>
+                    <div *ngIf="form.get('industry')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input nbInput fullWidth id="website" formControlName="website" placeholder="Website"/>
+                <div *ngIf="form.get('website')?.invalid && form.get('website')?.touched" class="error">
+                    Bitte eine gültige URL eingeben.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="officeEmail">Büro E-Mail*</label>
+                <input nbInput fullWidth id="officeEmail" formControlName="officeEmail" placeholder="Büro E-Mail"/>
+                <div *ngIf="form.get('officeEmail')?.invalid && form.get('officeEmail')?.touched" class="error">
+                    <div *ngIf="form.get('officeEmail')?.errors?.['required']">Büro-E-Mail-Adresse ist erforderlich.
+                    </div>
+                    <div *ngIf="form.get('officeEmail')?.errors?.['maxlength']">Maximale Länge überschritten.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="officePhone">Büro Telefon</label>
+                <input nbInput fullWidth id="officePhone" formControlName="officePhone" placeholder="Büro Telefon"/>
+                <div *ngIf="form.get('officePhone')?.invalid && form.get('officePhone')?.touched" class="error">
+                    Bitte eine gültige Telefonnummer eingeben.
+                </div>
+            </div>
+
+            <!--<div class="contact-link">
+                <a (click)="navigateToContacts()">Kontaktpersonen verwalten</a>
+            </div>-->
+
+            <div class="checkbox-group">
+                <nb-checkbox formControlName="includeAddress">Adresse hinzufügen</nb-checkbox>
+            </div>
+
+            <div *ngIf="showAddress" style="margin-top: 2vh">
+                <div formGroupName="address" class="address-group">
+                    <div class="row">
+                        <div class="form-group half-width">
+                            <label for="street">Straße*</label>
+                            <input nbInput fullWidth id="street" formControlName="street" placeholder="Straße"/>
+                            <div *ngIf="form.get('address.street')?.invalid && form.get('address.street')?.touched"
+                                 class="error">
+                                Straße ist erforderlich.
+                            </div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="houseNumber">Hausnummer*</label>
+                            <input nbInput fullWidth id="houseNumber" formControlName="houseNumber"
+                                   placeholder="Hausnummer"/>
+                            <div *ngIf="form.get('address.houseNumber')?.invalid && form.get('address.houseNumber')?.touched"
+                                 class="error">
+                                Hausnummer ist erforderlich.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group half-width">
+                            <label for="postalCode">Postleitzahl*</label>
+                            <input nbInput fullWidth id="postalCode" formControlName="postalCode"
+                                   placeholder="Postleitzahl"/>
+                            <div *ngIf="form.get('address.postalCode')?.invalid && form.get('address.postalCode')?.touched"
+                                 class="error">
+                                <div *ngIf="form.get('address.postalCode')?.errors?.['required']">Postleitzahl ist
+                                    erforderlich.
+                                </div>
+                                <div *ngIf="form.get('address.postalCode')?.errors?.['pattern']">Bitte eine gültige
+                                    Postleitzahl eingeben.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="city">Stadt*</label>
+                            <input nbInput fullWidth id="city" formControlName="city" placeholder="Stadt"/>
+                            <div *ngIf="form.get('address.city')?.invalid && form.get('address.city')?.touched"
+                                 class="error">
+                                Stadt ist erforderlich.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="footer-actions">
+        <div class="button-group">
+            <!--<button nbButton status="basic" id="cancelButton" (click)="cancel()">
+                 <nb-icon icon="close-circle-outline"></nb-icon> Abbrechen
+             </button>-->
+            <button nbButton status="success" [disabled]="!isFormValid()" (click)="submit()">
+                <nb-icon icon="save-outline"></nb-icon>
+                Speichern
+            </button>
+            <div class="spacer"></div>
+            <span id="cancelButton" (click)="cancel()">
+                Abbrechen
+            </span>
+        </div>
+    </nb-card-footer>
+</nb-card>

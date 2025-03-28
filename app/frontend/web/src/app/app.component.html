@@ -1,0 +1,19 @@
+<div *ngIf="showLayout">
+    <nb-layout id="nb-layout">
+        <nb-layout-header fixed>
+           <nb-action class="menu-button" icon="menu-2-outline" (click)="toggleSidebar()"></nb-action>
+            <img id="logo" (click)="backToLogin()" src="assets/logo/LeoBall.png" alt="LeoBall">
+        </nb-layout-header>
+        <nb-sidebar class="menu-sidebar" responsive start tag="menu-sidebar" state="collapsed">
+            <app-navigation-bar></app-navigation-bar>
+        </nb-sidebar>
+        <nb-layout-column>
+            <router-outlet></router-outlet>
+        </nb-layout-column>
+    </nb-layout>
+</div>
+
+<div *ngIf="!showLayout">
+    <router-outlet></router-outlet>
+</div>
+

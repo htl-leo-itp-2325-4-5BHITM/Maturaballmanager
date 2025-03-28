@@ -1,0 +1,10 @@
+<app-report
+        [title]="'Rechnungen verwalten'"
+        [titleForCount]="'Rechnungen'"
+        [data]="invoices"
+        [columns]="columns"
+        [actions]="actions"
+        [addButtonLabel]="'Rechnung hinzufügen'"
+        [addButtonCallback]="openCreateDialog.bind(this)"
+        [editCallback]="openEditDialog.bind(this)"
+></app-report>

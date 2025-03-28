@@ -1,0 +1,120 @@
+nb-card{
+  height: 51em;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //margin-bottom: 1.5rem;
+}
+
+.body-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px #f1f1f1 solid;
+}
+
+#body-header-innerBox {
+  display: flex;
+  flex-direction: row;
+}
+
+#body-header-innerBox div{
+  margin-left: 1rem;
+}
+
+.table-container {
+  max-height: 38em;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Hintergrundfarbe für die fixierte Kopfzeile */
+  z-index: 1; /* Damit die Kopfzeile über dem Tabelleninhalt bleibt */
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+tbody tr:hover {
+  color: lightgray;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.modern-table th {
+  font-weight: bold;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  text-align: left;
+}
+
+.modern-table td {
+  padding: 0.75rem;
+  background-color: #fff;
+  border-radius: 0.25rem;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  color: #6c757d;
+}
+
+.text-right{
+  padding-top: 1rem;
+}
+
+
+.filter-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  z-index: 10;
+  margin-top: 0.5rem;
+}
+
+.filter-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 0 5px 5px 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  right: 0;
+}

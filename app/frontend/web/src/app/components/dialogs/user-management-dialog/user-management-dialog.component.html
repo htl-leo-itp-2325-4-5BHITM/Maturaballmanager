@@ -1,0 +1,57 @@
+<nb-card class="umd-card" [ngStyle]="{'height': member ? '55vh' : '35vh'}">
+    <nb-card-header>
+        <h6>{{ isEditing ? 'Mitglied bearbeiten' : 'Mitglied hinzufügen' }}</h6>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="search-section" *ngIf="!isEditing">
+            <input
+                    nbInput
+                    [(ngModel)]="searchQuery"
+                    (input)="filterMembers(searchQuery)"
+                    placeholder="Suche nach Mitglied..."
+                    class="umd-search-input"
+            />
+
+            <ul *ngIf="filteredMembers.length > 0" class="umd-dropdown-list">
+                <li *ngFor="let m of filteredMembers" (click)="onSelect(m)">
+                    {{ m.name }}
+                </li>
+            </ul>
+        </div>
+
+        <div class="member-section" *ngIf="member">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input nbInput id="name" [(ngModel)]="member.name" readonly placeholder="Name"/>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-Mail:</label>
+                <input nbInput id="email" [(ngModel)]="member.email" readonly />
+            </div>
+
+            <div class="form-group">
+                <label>Rollen:</label>
+                <nb-select
+                        [multiple]="true"
+                        placeholder="Wähle eine oder mehrere Rollen"
+                        [(ngModel)]="selectedRoles"
+                >
+                    <nb-option *ngFor="let r of roles" [value]="r.value">
+                        {{ r.label }}
+                    </nb-option>
+                </nb-select>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <div class="umd-footer">
+            <span class="umd-cancel" (click)="cancel()">Abbrechen</span>
+            <button nbButton status="success" (click)="submit()">
+                <nb-icon icon="save-outline"></nb-icon> {{ isEditing ? 'Aktualisieren' : 'Speichern' }}
+            </button>
+        </div>
+    </nb-card-footer>
+</nb-card>

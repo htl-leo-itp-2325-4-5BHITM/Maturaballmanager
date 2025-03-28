@@ -1,0 +1,51 @@
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #F3F3F3;
+}
+
+nb-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 4vh 2vw;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: none;
+  border-radius: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* LeoBall Logo */
+#logo{
+  width: 90%;
+}
+
+nb-card-header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-bottom: 1vh;
+}
+
+/* button */
+#loginButton{
+  //background-color: $primary-color;
+ // border-color: $primary-color;
+}
+
+#loginButton:hover{
+//  background-color: $secondary-color;
+  //border-color: $primary-color;
+}
+
+#loginButton:hover{
+  //background-color: $secondary-color;
+  //border-color: $secondary-color;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 3px, rgba(0, 0, 0, 0.23) 0px 3px 3px;
+}
